@@ -1,6 +1,6 @@
 <?php
 
-include('lib/password.php');
+header('Content-type: application/json; charset=utf-8');
 
 $db = new mysqli('localhost', 'root', '', 'stpeter_school');
 $db->set_charset("utf8");
@@ -13,7 +13,7 @@ if (!empty($_GET['usuarios']))
 	while($fila = $query->fetch_object())
 		$usuarios[] = $fila;
 
-	echo json_encode($usuarios);
+	echo json_encode($usuarios, JSON_UNESCAPED_UNICODE);
 }
 else if (!empty($_GET['alumno']))
 {

@@ -26,7 +26,7 @@
                     <label class="form-input">
                         <i class="material-icons">person</i>
                         <input type="text" id="dniAlu" autofocus="true" required />
-                        <span class="label">DNI</span>
+                        <span class="label">Usuario</span>
                         <span class="underline"></span>
                     </label>
 
@@ -82,16 +82,10 @@
                                     },
                                     success: function(result)
                                     {
-                                        if (result == 'true')
+                                        if (result)
                                         {
-                                            let oUsuario = academia.getUsuario(usuario);
-                                            console.log(oUsuario);
-                                            if (oUsuario instanceof Administrador)
-                                                oUsuario.tipo = 'administrador';
-                                            else if (oUsuario instanceof Profesor)
-                                                oUsuario.tipo = 'profesor';
-                                            else
-                                                oUsuario.tipo = 'alumno';
+                                            let oUsuario = academia.getUsuario(result.dni);
+                                            oUsuario.tipo = result.tipo;
                                             sessionStorage.setItem('usuario', JSON.stringify(oUsuario));
 
                                             btn.classList.add('granted');

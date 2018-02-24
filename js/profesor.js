@@ -176,8 +176,14 @@ function addCalificacion()
 {
 	var sCurso = frmAddNotaAlumno.selectCursoCalificar.value;
 	var dni = this.getAttribute("data-dni");
-	var sDescripcion = frmAddNotaAlumno.txtDescr.value;
+	var sTarea = frmAddNotaAlumno.txtDescr.value;
 	var fNota = frmAddNotaAlumno.txtNota.value;
+
+	let matriculas = academia.getMatriculas();
+	let oMatricula = null
+	for (let i=0; i<matriculas.length && oMatricula == null; i++)
+		if (matriculas[i].alumno == dni && matriculas[i].curso == sCurso)
+			oMatricula = matriculas[i];
 
 	var mensajes = document.querySelectorAll('#frmAddNotaAlumno .text-error');
 	for (var i=0; i<mensajes.length; i++)
@@ -227,7 +233,7 @@ function addCalificacion()
 		}
 		else
 		{
-			academia.addCalificacionesAlu(dni, new Calificacion(sDescripcion, fNota, sCurso));
+			academia.addCalificacionesAlu(dni, new Calificacion(oMatricula.numero, sDescripcion, fNota));
 			frmAddNotaAlumno.txtDescr.value = "";
 			frmAddNotaAlumno.txtNota.value = "";
 			ocultarFormularioCalificar();
@@ -243,6 +249,12 @@ function modificarCalificacion()
 	var desc = this.getAttribute("data-desc");
 	var nota = this.parentNode.parentNode.querySelector('input[type="number"]');
 	var curso = this.getAttribute("data-curso");
+
+	let matriculas = academia.getMatriculas();
+	let oMatricula = null
+	for (let i=0; i<matriculas.length && oMatricula == null; i++)
+		if (matriculas[i].alumno == dni && matriculas[i].curso == curso)
+			oMatricula = matriculas[i];
 
 	var mensajes = document.querySelectorAll('#tablaNotasAlumno .text-error');
 	for (var i=0; i<mensajes.length; i++)
@@ -261,7 +273,7 @@ function modificarCalificacion()
 		nota.parentNode.appendChild(div);
 	}
 	else
-		academia.modificarNotaAlumno(oAlumno.dni, new Calificacion(desc, nota.value, curso));
+		academia.modificarNotaAlumno(oAlumno.dni, new Calificacion(oMatricula.numero, desc, nota.value));
 }
 
 function consultarNotas(sDni,SFiltro)
