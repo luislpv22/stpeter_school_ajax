@@ -5,8 +5,9 @@ datosIniciales();
 function datosIniciales()
 {
 	cargarUsuarios();
+	cargarCursos();
 	//cargarCalificaciones();
-	//cargarMatriculas();
+	cargarMatriculas();
 	/*else
 	{
 		var tUsuarios = JSON.parse(sessionStorage.tUsuarios);
@@ -111,13 +112,9 @@ function cargarUsuarios()
         url: "api/usuarios.php",
         type: "GET",
         async: false,
-        data:
+        data: { 'usuarios': 1 },
+        success: function(usuarios)
         {
-            'usuarios': 1
-        },
-        success: function(result)
-        {
-            let usuarios = JSON.parse(result);
             for (let i=0; i<usuarios.length; i++)
             {
             	if (usuarios[i].tipo == 'alumno')
@@ -128,7 +125,9 @@ function cargarUsuarios()
 				        url: "api/usuarios.php",
 				        type: "GET",
 				        data: { 'alumno': usuarios[i].dni },
-				        success: function(result) { estadoCobro = result; }
+				        success: function(result) {
+				        	estadoCobro = result;
+				        }
 				    });
             		academia.addUsuario(new Alumno(usuarios[i].nombre, usuarios[i].password, usuarios[i].apellidos, usuarios[i].dni, usuarios[i].telefono, usuarios[i].direccion, usuarios[i].email, usuarios[i].activo, estadoCobro));
             	}
@@ -141,50 +140,52 @@ function cargarUsuarios()
     });
 }
 
-function cargarCursos(oCursos)
+function cargarCursos()
 {
-	for (var i=0; i<oCursos.length; i++)
-	{
-		var codigo = oCursos[i].getElementsByTagName("codigo")[0].textContent;
-		var idioma = oCursos[i].getElementsByTagName("idioma")[0].textContent;
-		var duracion = oCursos[i].getElementsByTagName("duracion")[0].textContent;
-		var precio = oCursos[i].getElementsByTagName("precio")[0].textContent;
-		var tipo = oCursos[i].getElementsByTagName("tipo")[0].textContent;
-		var nivel = oCursos[i].getElementsByTagName("nivel")[0].textContent;
-		var activo = oCursos[i].getElementsByTagName("activo")[0].textContent;
-		var listadoAlumnos = oCursos[i].querySelector("listadoAlumnos").children;
-
-		oCurso = new Curso (codigo, idioma, duracion, precio, tipo, nivel, activo);
-
-		if (listadoAlumnos.length > 0)
-			for (var j=0; j<listadoAlumnos.length; j++) 
-				oCurso.listaAlumnos.push(listadoAlumnos[j].textContent);
-
-		academia.addCurso(oCurso);
-	}
+    $.ajax(
+    {
+        url: "api/cursos.php",
+        type: "GET",
+        async: false,
+        data: { 'cursos': 1 },
+        success: function(cursos)
+        {
+            for (let i=0; i<cursos.length; i++)
+            {
+        		let oCurso = new Curso(cursos[i].codigo, cursos[i].idioma, cursos[i].duracion, cursos[i].precio, cursos[i].tipo, cursos[i].nivel, cursos[i].activo);
+			    $.ajax(
+			    {
+			        url: "api/matriculas.php",
+			        type: "GET",
+			        data: { 'curso': cursos[i].codigo },
+			        success: function(result) {
+			    		oCurso.listaAlumnos = result;	
+			        }
+			    });
+			    academia.addCurso(oCurso);
+            }
+        }
+    });
 }
 
-function cargarMatriculas(oMatriculas)
+function cargarMatriculas()
 {
-	for (var i=0; i<oMatriculas.length; i++)
-	{
-		var dni = oMatriculas[i].getAttribute('dni');
-		var estado = oMatriculas[i].getElementsByTagName("estado")[0].textContent;
-		var codigoMatri = oMatriculas[i].getElementsByTagName("codigo")[0].textContent;
-
-		var oAlumno = academia.getUsuario(dni);
-
-		var listadoCursos = oMatriculas[i].querySelector("listaCursos");
-		var cursos = listadoCursos.querySelectorAll("codigo");
-
-		if (cursos.length !=0)
-		{
-			for (var j=0; j<cursos.length; j++) 
-				oAlumno.listaCursos.push(cursos[j].textContent);
-
-			academia.addMatricula(new Matricula(codigoMatri, estado, oAlumno.dni, oAlumno.listaCursos));
-		}
-	}
+    $.ajax(
+    {
+        url: "api/matriculas.php",
+        type: "GET",
+        async: false,
+        data: { 'matriculas': 1 },
+        success: function(matriculas)
+        {
+        	for (var i=0; i<matriculas.length; i++)
+        	{
+        		let oAlumno = academia.getUsuario(matriculas[i].alumno);
+        		oAlumno.listaCursos.push(matriculas[i].curso);
+				academia.addMatricula(new Matricula(matriculas[i].numero, matriculas[i].estado, matriculas[i].alumno, matriculas[i].curso));
+			}
+        }
+    });
 }
 
 function cargarCalificaciones(oCalificaciones)

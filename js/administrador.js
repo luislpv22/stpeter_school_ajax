@@ -310,16 +310,7 @@ function mostrarPagina(pagina)
 			fila.insertCell(-1).appendChild(document.createTextNode(matriculas[i].dniAlumno));
 			fila.insertCell(-1).appendChild(document.createTextNode(oAlumno.nombre));
 			fila.insertCell(-1).appendChild(document.createTextNode(oAlumno.apellidos));
-
-			//para mostrar los códigos de las asignaturas de la matrícula
-			var celdaCursos = fila.insertCell(-1);
-			for (var j=0; j<matriculas[i].listaCursosMatri.length; j++)
-			{
-				var div = document.createElement("div");
-				var oCurso = academia.getCurso(matriculas[i].listaCursosMatri[j]);
-				div.textContent = oCurso.idioma+" "+oCurso.nivel+" "+oCurso.tipo;
-				celdaCursos.appendChild(div);
-			}
+			fila.insertCell(-1).appendChild(document.createTextNode(matriculas[i].listaCursosMatri));
 
 			var swActivo = switchActivo();
 			var sEstado = "";
