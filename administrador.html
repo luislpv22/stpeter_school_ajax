@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>St. Peter School - Página principal</title>
+
+	<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css" />
+	<link rel="stylesheet" type="text/css" href="css/panel.css">
+	<link rel="stylesheet" type="text/css" href="css/estiloGestionMatricula.css">
+	<script>
+		if (typeof sessionStorage.usuario === 'undefined')
+			location.href = "login.html";
+	</script>
+</head>
+<body>
+	<div class="wrapper">
+		<nav id="sidebar">
+			<!-- Sidebar Header -->
+			<div class="sidebar-header">
+				<h3>St. Peter School</h3>
+				<strong>St.P</strong>
+			</div>
+
+			<div class="usuario">
+				<div class="nombre"></div>
+				<button id="btnCerrarSesion" name="btnCerrarSesion" class="btn btn-default btn-sm">Cerrar Sesión</button>
+			</div>
+
+			<!-- Sidebar Links -->
+			<ul class="list-unstyled components">
+				<li class="active"><a href="#cursos" id="btnCursos"><i class="glyphicon glyphicon-education"></i>Cursos</a></li>
+				<li><a href="#alumnos" id="btnAlumnos"><i class="glyphicon glyphicon-user"></i>Alumnos</a></li>
+				<li><a href="#profesores" id="btnProfesores"><i class="glyphicon glyphicon-briefcase"></i>Profesores</a></li>
+				<li><a href="#administradores" id="btnAdministradores"><i class="glyphicon glyphicon-cog"></i>Administradores</a></li>
+				<li><a href="#matriculaciones" id="btnMatriculas"><i class="glyphicon glyphicon-book"></i>Matriculaciones</a></li>
+			</ul>
+		</nav>
+
+		<div id="content">
+			<!--<button type="button" id="sidebarCollapse" class="btn btn-default navbar-btn"><i class="glyphicon glyphicon-menu-hamburger"></i></button>--><br/>
+
+			<div id="txtInformacion" class="alert alert-dismissible hide"><span></span><button type="button" class="close" data-dismiss="alert">&times;</button></div>
+
+			<div id="paginaCursos" class="container-fluid">
+				<legend>Lista de cursos</legend>
+				<div class="form-inline">
+					<label for="selectFiltrarCursos" class="control-label">Filtrar por estado:</label>
+					&nbsp;&nbsp;
+					<select id="selectFiltrarCursos" class="form-control">
+						<option value="todo">Todos</option>
+						<option value="si" selected>Activos</option>
+						<option value="no">Inactivos</option>
+					</select>
+				</div>
+				<br/>
+				<table id="tablaCursos" class="table table-striped">
+					<thead>
+						<tr>
+							<th width="15%">#</th>
+							<th width="15%">Idioma</th>
+							<th width="10%">Nivel</th>
+							<th width="15%">Tipo</th>
+							<th width="10%">Duración</th>
+							<th width="10%">Precio</th>
+							<th width="10%">Activo</th>
+							<th width="15%">Acciones</th>
+						</tr>
+					</thead>
+				</table>
+				<input type="button" id="btnAddCurso" class="btn btn-success" data-toggle="modal" data-target="#modal" value="Añadir curso" />
+			</div>
+			<div id="paginaAlumnos" class="container-fluid hidden">
+				<legend>Lista de alumnos</legend>
+				<div class="form-inline">
+					<label for="selectFiltrarAlumnos" class="control-label">Filtrar por estado:</label>
+					&nbsp;&nbsp;
+					<select id="selectFiltrarAlumnos" class="form-control">
+						<option value="todo">Todos</option>
+						<option value="si" selected>Activos</option>
+						<option value="no">Inactivos</option>
+					</select>
+				</div>
+				<br/>
+				<table id="tablaAlumnos" class="table table-striped">
+					<thead>
+						<tr>
+							<th width="10%">DNI</th>
+							<th width="10%">Nombre</th>
+							<th width="15%">Apellidos</th>
+							<th width="15%">E-mail</th>
+							<th width="20%">Dirección</th>
+							<th width="10%">Activo</th>
+							<th width="15%">Acciones</th>
+						</tr>
+					</thead>
+				</table>
+				<input type="button" id="btnAddAlumno" class="btn btn-success" data-toggle="modal" data-target="#modal" value="Añadir alumno" />
+			</div>
+			<div id="paginaProfesores" class="container-fluid hidden">
+				<legend>Lista de profesores</legend>
+				<div class="form-inline">
+					<label for="selectFiltrarProfesores" class="control-label">Filtrar por estado:</label>
+					&nbsp;&nbsp;
+					<select id="selectFiltrarProfesores" class="form-control">
+						<option value="todo">Todos</option>
+						<option value="si" selected>Activos</option>
+						<option value="no">Inactivos</option>
+					</select>
+				</div>
+				<br/>
+				<table id="tablaProfesores" class="table table-striped">
+					<thead>
+						<tr>
+							<th width="15%">DNI</th>
+							<th width="15%">Nombre</th>
+							<th width="10%">Apellidos</th>
+							<th width="25%">E-mail</th>
+							<th width="10%">Activo</th>
+							<th width="15%">Acciones</th>
+						</tr>
+					</thead>
+				</table>
+				<input type="button" id="btnAddProfesor" class="btn btn-success" data-toggle="modal" data-target="#modal" value="Añadir profesor" />
+			</div>
+			<div id="paginaAdministradores" class="container-fluid hidden">
+				<legend>Lista de administradores</legend>
+				<div class="form-inline">
+					<label for="selectFiltrarAdministradores" class="control-label">Filtrar por estado:</label>
+					&nbsp;&nbsp;
+					<select id="selectFiltrarAdministradores" class="form-control">
+						<option value="todo">Todos</option>
+						<option value="si" selected>Activos</option>
+						<option value="no">Inactivos</option>
+					</select>
+				</div>
+				<br/>
+				<table id="tablaAdministradores" class="table table-striped">
+					<thead>
+						<tr>
+							<th width="15%">DNI</th>
+							<th width="15%">Nombre</th>
+							<th width="10%">Apellidos</th>
+							<th width="25%">E-mail</th>
+							<th width="10%">Activo</th>
+							<th width="15%">Acciones</th>
+						</tr>
+					</thead>
+				</table>
+				<input type="button" id="btnAddAdministrador" class="btn btn-success" data-toggle="modal" data-target="#modal" value="Añadir administrador" />
+			</div>
+			<div id="paginaMatriculaciones" class="container-fluid hidden">
+				<h3>Lista de matrículas</h3>
+				<table id="tablaMatriculas" class="table table-striped">
+					<thead>
+						<tr>
+							<th width="5%">#</th>
+							<th width="10%">DNI</th>
+							<th width="10%">Nombre</th>
+							<th width="15%">Apellidos</th>
+							<th width="20%">Cursos</th>
+							<th width="10%">Estado</th>
+							<th width="10%">Acciones</th>
+						</tr>
+					</thead>
+				</table>
+			</div>
+		<div>
+	</div>
+
+	<div class="modal fade" id="modal">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title">Editar curso</h4>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<div class="container-fluid">
+						<form id="formEditarCurso" class="form-horizontal">
+							<div class="form-group row">
+								<label class="col-sm-2">Código:</label>
+								<div class="col-sm-4">
+									<input type="text" class="form-control" name="codigo" readonly />
+								</div>
+							</div>
+							<div class="form-group row">
+								<label class="col-sm-2">Idioma:</label>
+								<div class="col-sm-8">
+									<select name="idioma" class="form-control">
+										<option value="Inglés">Inglés</option>
+										<option value="Francés">Francés</option>
+										<option value="Alemán">Alemán</option>
+									</select>
+								</div>
+							</div>
+							<div class="form-group row">
+								<label class="col-sm-2">Nivel:</label>
+								<div class="col-sm-8">
+									<select name="nivel" class="form-control">
+										<option value="A1">A1</option>
+										<option value="A2">A2</option>
+										<option value="B1">B1</option>
+										<option value="B2">B2</option>
+									</select>
+								</div>
+							</div>
+							<div class="form-group row">
+								<label class="col-sm-2">Tipo:</label>
+								<div class="col-sm-8">
+									<select name="tipo" class="form-control">
+										<option value="Presencial">Presencial</option>
+										<option value="Semipresencial">Semipresencial</option>
+										<option value="Distancia">A Distancia</option>
+									</select>
+								</div>
+							</div>
+							<div class="form-group row">
+								<label class="col-sm-2">Duración:</label>
+								<div class="col-sm-8">
+									<div class="input-group select-group">
+										<input type="number" class="form-control" name="duracion1" />
+										<select name="duracion2" class="form-control">
+											<option value="dias">Días</option>
+											<option value="semanas">Semanas</option>
+											<option value="meses">Meses</option>
+										</select>
+									</div>
+								</div>
+							</div>
+							<div class="form-group row">
+								<label class="col-sm-2">Precio:</label>
+								<div class="col-sm-4">
+									<div class="input-group">
+										<input type="number" step=".05" class="form-control" name="precio" value="0.00" />
+										<span class="input-group-addon">€</span>
+									</div>
+								</div>
+							</div>
+							<input type="hidden" name="activo" value="" />
+						</form>
+						<!-- form Mod Matricula-->
+
+						<form id="formModMatri" class="form-horizontal">
+							<div class="form-group row">
+								<label class="col-sm-2">Numéro:</label>
+								<div class="col-sm-4">
+									<input type="text" class="form-control" name="numMatri" readonly />
+								</div>
+							</div>
+							<div class="form-group row">
+								<label class="col-sm-2">DNI:</label>
+								<div class="col-sm-4">
+									<input type="text" class="form-control" name="dniMatri" readonly />
+								</div>
+							</div>
+							<div class="form-group row">
+								<label class="col-sm-2">Cursos:</label>
+								<div class="col-sm-8">
+									<select id="seleCurMatri" name="seleCurMatri" value="listaCurso" class="form-control" multiple="multiple">
+									</select>
+								</div>
+							</div>
+							<input type="hidden" name="activo" value="" />
+						</form>
+
+						<!-- -->
+						<form id="formEditarAlumno" class="form-horizontal">
+							<div class="form-group">
+								<label class="col-md-2 control-label" for="dniAlu">DNI:</label>
+								<div class="col-md-8">
+									<input id="dniAlu" name="dni" type="text" placeholder="DNI" class="form-control" required readonly>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-md-2 control-label" for="password">Contraseña:</label>
+								<div class="col-md-8">
+									<input id="passAlu" name="password" type="password" placeholder="Contraseña" class="form-control" required>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-md-2 control-label" for="nombreAlu">Nombre:</label>
+								<div class="col-md-8">
+									<input id="nombreAlu" name="nombre" type="text" placeholder="Nombre" class="form-control" required>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-md-2 control-label" for="apellidoAlu">Apellidos:</label>
+								<div class="col-md-8">
+									<input id="apellidoAlu" name="apellidos" type="text" placeholder="Apellidos" class="form-control" required>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-md-2 control-label" for="emailAlu">Email:</label>
+								<div class="col-md-8">
+									<input id="emailAlu" name="email" type="text" placeholder="Email" class="form-control" required>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-md-2 control-label" for="telefonoAlu">Teléfono:</label>
+								<div class="col-md-8">
+									<input id="telefonoAlu" name="telefono" type="text" placeholder="Teléfono" class="form-control" required>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-md-2 control-label" for="direAlu">Dirección:</label>
+								<div class="col-md-8">
+									<input id="direAlu" name="direccion" type="text" placeholder="Dirección" class="form-control" required>
+								</div>
+							</div>
+						</form>
+						<form id="formEditarProfesor" class="form-horizontal">
+							<div class="form-group">
+								<label class="col-md-2 control-label" for="dniProf">DNI:</label>
+								<div class="col-md-8">
+									<input id="dniProf" name="dni" type="text" placeholder="DNI" class="form-control" required readonly>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-md-2 control-label" for="passProf">Contraseña:</label>
+								<div class="col-md-8">
+									<input id="passProf" name="password" type="password" placeholder="Contraseña" class="form-control" required>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-md-2 control-label" for="nombreProf">Nombre:</label>
+								<div class="col-md-8">
+									<input id="nombreProf" name="nombre" type="text" placeholder="Nombre" class="form-control" required>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-md-2 control-label" for="apellidosProf">Apellidos:</label>
+								<div class="col-md-8">
+									<input id="apellidosProf" name="apellidos" type="text" placeholder="Apellidos" class="form-control" required>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-md-2 control-label" for="emailProf">Email:</label>
+								<div class="col-md-8">
+									<input id="emailProf" name="email" type="text" placeholder="Email" class="form-control" required>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-md-2 control-label" for="telefonoProf">Teléfono:</label>
+								<div class="col-md-8">
+									<input id="telefonoProf" name="telefono" type="text" placeholder="Teléfono" class="form-control" required>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-md-2 control-label" for="direProf">Dirección:</label>
+								<div class="col-md-8">
+									<input id="direProf" name="direccion" type="text" placeholder="Dirección" class="form-control" required>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-md-2 control-label" for="selectCursosProf">Cursos:</label>
+								<div class="col-md-8">
+									<select id="selectCursosProf" name="cursos" class="form-control" multiple="multiple">
+									</select>
+								</div>
+							</div>
+						</form>
+						<form id="formEditarAdministrador" class="form-horizontal">
+							<div class="form-group">
+								<label class="col-md-2 control-label" for="dniAdmin">DNI:</label>
+								<div class="col-md-8">
+									<input id="dniAdmin" name="dni" type="text" placeholder="DNI" class="form-control" required readonly>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-md-2 control-label" for="password">Contraseña:</label>
+								<div class="col-md-8">
+									<input id="passAdmin" name="password" type="password" placeholder="Contraseña" class="form-control" required>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-md-2 control-label" for="nombreAdmin">Nombre:</label>
+								<div class="col-md-8">
+									<input id="nombreAdmin" name="nombre" type="text" placeholder="Nombre" class="form-control" required>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-md-2 control-label" for="apellidoAdmin">Apellidos:</label>
+								<div class="col-md-8">
+									<input id="apellidoAdmin" name="apellidos" type="text" placeholder="Apellidos" class="form-control" required>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-md-2 control-label" for="emailAdmin">Email:</label>
+								<div class="col-md-8">
+									<input id="emailAdmin" name="email" type="text" placeholder="Email" class="form-control" required>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-md-2 control-label" for="telefonoAdmin">Teléfono:</label>
+								<div class="col-md-8">
+									<input id="telefonoAdmin" name="telefono" type="text" placeholder="Teléfono" class="form-control" required>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-md-2 control-label" for="direAdmin">Dirección:</label>
+								<div class="col-md-8">
+									<input id="direAdmin" name="direccion" type="text" placeholder="Dirección" class="form-control" required>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-success">Guardar</button>
+					<button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script type="text/javascript" src="js/jquery.min.js"></script>
+	<script type="text/javascript" src="js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="js/bootstrap-confirmation.min.js"></script>
+	<script type="text/javascript" src="js/objetos.js"></script>
+	<script type="text/javascript" src="js/principal.js"></script>
+	<script type="text/javascript" src="js/validaciones.js"></script>
+	<script type="text/javascript" src="js/administrador.js"></script>
+
+</body>
+</html>

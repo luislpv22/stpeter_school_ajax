@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<listaMatriculas>
+<matricula dni="21345687M">
+   <codigo>1</codigo>
+	<listaCursos>
+	<curso>
+	  <codigo>ENA2P</codigo>
+	</curso>
+   </listaCursos>
+   <estado>activa</estado>
+</matricula>
+
+<matricula dni="23645812R">
+ <codigo>2</codigo>
+ <listaCursos>
+	<curso>
+	  <codigo>ENA2P</codigo>
+	</curso>
+  </listaCursos>
+  <estado>activa</estado>
+</matricula>
+
+<matricula dni="42010210B">
+ <codigo>3</codigo>
+  <listaCursos>
+	<curso>
+	  <codigo>ENA2P</codigo>
+	</curso>
+  </listaCursos>
+  <estado>activa</estado>
+</matricula>
+
+<matricula dni="04568915V">
+<codigo>4</codigo>
+  <listaCursos>
+	<curso>
+	  <codigo>ENB1S</codigo>
+	</curso>
+  </listaCursos>
+  <estado>activa</estado>
+</matricula>
+
+<matricula dni="95425821Q">
+   <codigo>5</codigo>
+  <listaCursos>
+	<curso>
+	  <codigo>ENB1S</codigo>
+	</curso>
+  </listaCursos>
+  <estado>activa</estado>
+</matricula>
+
+<matricula dni="54629812T">
+ <codigo>6</codigo>
+  <listaCursos>
+	<curso>
+	  <codigo>ENB2D</codigo>
+	</curso>
+	<curso>
+	  <codigo>FRB1S</codigo>
+	</curso>
+  </listaCursos>
+  <estado>inactiva</estado>
+</matricula>
+
+<matricula dni="23420102E">
+   <codigo>7</codigo>
+  <listaCursos>
+	<curso>
+	  <codigo>FRA2P</codigo>
+	</curso>
+  </listaCursos>
+  <estado>activa</estado>
+</matricula>
+
+<matricula dni="72158961T">
+   <codigo>8</codigo>
+  <listaCursos>
+	<curso>
+	  <codigo>FRA2P</codigo>
+	</curso>
+  </listaCursos>
+  <estado>activa</estado>
+</matricula>
+</listaMatriculas>

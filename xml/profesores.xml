@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<listaProfesores>
+<profesor>
+	<nombre>Profesor</nombre>
+	<password>profesor</password>
+	<apellidos>1</apellidos>
+	<dni>profesor</dni>
+	<telefono>951357258</telefono>
+	<direccion>C/ Puerto Urraca</direccion>
+	<email>ivanSales@gmail.com</email>
+	<activo>si</activo>
+	<estadoCobro>pendiente</estadoCobro>
+	<listadoCursos>
+		<curso>ENA2P</curso>
+		<curso>ENB1S</curso>
+		<curso>FRA2P</curso>
+	</listadoCursos>
+</profesor>
+<profesor>
+	<nombre>Emilio</nombre>
+	<password>123</password>
+	<apellidos>Fernandez</apellidos>
+	<dni>74448961T</dni>
+	<telefono>951888258</telefono>
+	<direccion>C/ Fantasia Arcoiris</direccion>
+	<email>emilbest@gmail.com</email>
+	<activo>si</activo>
+	<estadoCobro>pendiente</estadoCobro>
+	<listadoCursos>
+		<curso>FRB1S</curso>
+		<curso>FRA2P</curso>
+	</listadoCursos>
+</profesor>
+<profesor>
+	<nombre>Ivan</nombre>
+	<password>1234</password>
+	<apellidos>Elegante</apellidos>
+	<dni>2438331P</dni>
+	<telefono>954219822</telefono>
+	<direccion>C/ Sales Man</direccion>
+	<email>salesivancito@gmail.com</email>
+	<activo>si</activo>
+	<estadoCobro>pendiente</estadoCobro>
+	<listadoCursos>
+		<curso>DEA2P</curso>
+	</listadoCursos>
+</profesor>
+<profesor>
+	<nombre>Diego</nombre>
+	<password>1111</password>
+	<apellidos>Bernabeu</apellidos>
+	<dni>4938911Z</dni>
+	<telefono>954122234</telefono>
+	<direccion>C/ Java Script</direccion>
+	<email>diegoplus@gmail.com</email>
+	<activo>si</activo>
+	<estadoCobro>pendiente</estadoCobro>
+	<listadoCursos>
+		<curso>ENA2P</curso>
+		<curso>ENB1S</curso>
+		<curso>DEB2P</curso>
+		<curso>DEB1P</curso>
+		<curso>FRB1S</curso>
+	</listadoCursos>
+</profesor>
+<profesor>
+	<nombre>Puidgemont</nombre>
+	<password>referendum</password>
+	<apellidos>Girona</apellidos>
+	<dni>1132211C</dni>
+	<telefono>648523964</telefono>
+	<direccion>C/ Dinamarca</direccion>
+	<email>pugiEvolution@gmail.com</email>
+	<activo>si</activo>
+	<estadoCobro>pendiente</estadoCobro>
+	<listadoCursos>
+		<curso>ENB2D</curso>
+		<curso>FRA2P</curso>
+		<curso>FRB1S</curso>
+	</listadoCursos>
+</profesor>
+</listaProfesores>

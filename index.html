@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+    <title>St. Peter School - Página principal</title>
+
+    <link rel="stylesheet" href="css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="css/estiloGestionMatricula.css">
+    <script>
+        if (typeof sessionStorage.usuario === 'undefined')
+            location.href = "login.html";
+    </script>
+</head>
+<body>
+    <script type="text/javascript" src="js/objetos.js"></script>
+    <script type="text/javascript" src="js/principal.js"></script>
+    <script>
+        var sesion = JSON.parse(sessionStorage.usuario);
+        //document.querySelector('.navbar .usuario').innerHTML = sesion.nombre;
+
+        if (sesion.tipo == 'administrador')
+            location.href = "administrador.html";
+        else if (sesion.tipo == 'profesor')
+            location.href = "profesor.html";
+        else
+            location.href = "alumno.html";
+
+        //var btnCerrarSesion= document.querySelector("#btnCerrarSesion");
+        //btnCerrarSesion.addEventListener("click", cerrarSesion, false);
+    </script>
+</body>
+</html>

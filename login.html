@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+    <title>St. Peter School - Iniciar sesión</title>
+
+    <link rel="stylesheet" type="text/css" href="css/login.css">
+    <script>
+        if (typeof sessionStorage.usuario !== 'undefined')
+            location.href = "index.html";
+    </script>
+</head>
+<body>	
+    <div id="login-form">
+        <div class="tile">
+            <div class="tile-header">
+                <h2 style="color: white; opacity: .75; font-size: 2.5rem; display: flex; justify-content: center; align-items: center; height: 100%;">St. Peter School</h2>
+            </div>
+            <div class="tile-body">
+                <div class="panel panel-default" id="panelMensajes">
+                    <div class="panel-body" id="divTextoMensaje">
+                        <p id="pTextoMensaje"></p>
+                    </div>
+                </div>
+                <form class="form-horizontal" id="loginForm" name="formLogin" action="login.html">
+                    <label class="form-input">
+                        <i class="material-icons">person</i>
+                        <input type="text" id="dniAlu" autofocus="true" required />
+                        <span class="label">DNI</span>
+                        <span class="underline"></span>
+                    </label>
+
+                    <label class="form-input">
+                        <i class="material-icons">lock</i>
+                        <input type="password" id="passAlu" required />
+                        <span class="label">Contraseña</span>
+                        <div class="underline"></div>
+                    </label>
+
+                    <div class="submit-container clearfix" style="margin-top: 2rem;">          
+                        <button id="submit" type="submit" class="btn btn-irenic float-right" tabindex="0">
+                            <span>Iniciar sesión</span>
+                        </button>
+                        <div class="login-pending">
+                            <div class=spinner>
+                                <span class="dot1"></span>
+                                <span class="dot2"></span>
+                            </div>
+                            <div class="login-granted-content">
+                                <i class="material-icons">done</i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <script type="text/javascript" src="js/jquery.min.js"></script>
+                    <script type="text/javascript" src="js/objetos.js"></script>
+                    <script type="text/javascript" src="js/principal.js"></script>
+                    <script>
+                        var btn = document.getElementById("submit");
+                        var loginForm = document.getElementById("loginForm");
+
+                        function signIn(oEvento)
+                        {
+                            oEvento.preventDefault();
+
+                            if (loginForm.checkValidity())
+                            {
+                                btn.classList.add('pending');
+
+                                let usuario = $('#dniAlu').val();
+                                let password = $('#passAlu').val();
+
+                                $.ajax(
+                                {
+                                    url: "api/login.php",
+                                    type: "POST",
+                                    data:
+                                    {
+                                        'usuario': usuario,
+                                        'password': password
+                                    },
+                                    success: function(result)
+                                    {
+                                        console.log(result);
+                                        if (result == 'true')
+                                        {
+                                            let oUsuario = academia.getUsuario(usuario);
+                                            btn.classList.add('granted');
+                                            window.setTimeout(function() { location.href = "index.html"; }, 700);
+                                            sessionStorage.setItem('usuario', JSON.stringify(oUsuario));
+                                        }
+                                        else
+                                        {
+                                            btn.classList.remove('pending');
+                                        }
+                                    }
+                                });
+                            }
+                        }
+
+                        loginForm.addEventListener("submit", signIn);
+                    </script>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

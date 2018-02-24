@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<listaCursos>
+<curso>
+	<codigo>ENA2P</codigo>
+	<idioma>Inglés</idioma>
+	<duracion>4 meses</duracion>
+	<precio>400</precio>
+	<tipo>Presencial</tipo>
+	<nivel>A2</nivel>
+	<listadoAlumnos>
+		<dni>21345687M</dni>
+		<dni>23645812R</dni>
+		<dni>42010210B</dni>
+	</listadoAlumnos>
+	<activo>si</activo>
+</curso>
+<curso>
+	<codigo>ENB1S</codigo>
+	<idioma>Inglés</idioma>
+	<duracion>8 meses</duracion>
+	<precio>1200</precio>
+	<tipo>Semipresencial</tipo>
+	<nivel>B1</nivel>
+	<listadoAlumnos>
+		<dni>04568915V</dni>
+		<dni>95425821Q</dni>
+	</listadoAlumnos>
+	<activo>si</activo>
+</curso>
+<curso>
+	<codigo>ENB2D</codigo>
+	<idioma>Inglés</idioma>
+	<duracion>15 meses</duracion>
+	<precio>1500</precio>
+	<tipo>Distancia</tipo>
+	<nivel>B2</nivel>
+	<listadoAlumnos>
+		<dni>54629812T</dni>
+	</listadoAlumnos>
+	<activo>si</activo>
+</curso>
+<curso>
+	<codigo>FRA2P</codigo>
+	<idioma>Francés</idioma>
+	<duracion>5 meses</duracion>
+	<precio>500</precio>
+	<tipo>Presencial</tipo>
+	<nivel>A2</nivel>
+	<listadoAlumnos>
+		<dni>23420102E</dni>
+		<dni>72158961T</dni>
+	</listadoAlumnos>
+	<activo>si</activo>
+</curso>
+<curso>
+	<codigo>FRB1S</codigo>
+	<idioma>Francés</idioma>
+	<duracion>10 meses</duracion>
+	<precio>900</precio>
+	<tipo>Semipresencial</tipo>
+	<nivel>B1</nivel>
+	<listadoAlumnos>
+		<dni>54629812T</dni>
+	</listadoAlumnos>
+	<activo>si</activo>
+</curso>
+<curso>
+	<codigo>DEA2P</codigo>
+	<idioma>aleman</idioma>
+	<duracion>4 meses</duracion>
+	<precio>500</precio>
+	<tipo>Presencial</tipo>
+	<nivel>A2</nivel>
+	<listadoAlumnos>
+	</listadoAlumnos>
+	<activo>si</activo>
+</curso>
+<curso>
+	<codigo>DEB1P</codigo>
+	<idioma>aleman</idioma>
+	<duracion>8 meses</duracion>
+	<precio>1000</precio>
+	<tipo>Presencial</tipo>
+	<nivel>B1</nivel>
+	<listadoAlumnos>
+	</listadoAlumnos>
+	<activo>no</activo>
+</curso>
+<curso>
+	<codigo>DEB2P</codigo>
+	<idioma>aleman</idioma>
+	<duracion>12 meses</duracion>
+	<precio>1500</precio>
+	<tipo>Presencial</tipo>
+	<nivel>B2</nivel>
+	<listadoAlumnos>
+	</listadoAlumnos>
+	<activo>no</activo>
+</curso>
+</listaCursos>
