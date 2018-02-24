@@ -19,13 +19,13 @@ USE `stpeter_school`;
 CREATE TABLE `usuarios` (
   `dni` varchar(9) NOT NULL,
   `nombre` varchar(30) NOT NULL,
-  `apellido` varchar(60) NOT NULL,
+  `apellidos` varchar(60) NOT NULL,
   `usuario` varchar(60) NOT NULL UNIQUE,
   `password` varchar(30) NOT NULL,
   `email` varchar(60) NOT NULL,
   `telefono` int(9) NOT NULL,
   `direccion` varchar(60) NOT NULL,
-  `activo` varchar(30) NOT NULL,
+  `activo` tinyint(1) NOT NULL DEFAULT 1,
   `tipo` varchar(30) NOT NULL,
   PRIMARY KEY (`dni`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -34,7 +34,7 @@ CREATE TABLE `usuarios` (
 -- Volcado de datos para la tabla `usuarios`
 --
 
-INSERT INTO `usuarios` (`dni`, `nombre`, `apellido`, `usuario`, `password`, `email`, `telefono`, `direccion`, `activo`, `tipo`) VALUES
+INSERT INTO `usuarios` (`dni`, `nombre`, `apellidos`, `usuario`, `password`, `email`, `telefono`, `direccion`, `activo`, `tipo`) VALUES
 ('23420102E', 'Carlos', 'Prieto', 'Carlos1', '1234', 'carlos@gmail.com', 624153852, 'C/ Mandel', 1, 'profesor'),
 ('54629812T', 'Rocio', 'Villar', 'Rocio1', '1234', 'rocio@gmail.com', 978645312, 'C/ Avenida del Salesman 23', 1, 'profesor'),
 ('42010210B', 'Sonia', 'Sanchez', 'Sonia1', '1234', 'sonia@gmail.com', 912345678, 'C/ Capitán Apodaca 4', 1, 'alumno'),
@@ -51,6 +51,37 @@ INSERT INTO `usuarios` (`dni`, `nombre`, `apellido`, `usuario`, `password`, `ema
 ('11111111R', 'Andrea', 'Villar', 'Andrea1', '1234', 'andreaAd@gmail.com', 978645312, 'C/ Avenida del Salesman 23', 1, 'administrador'),
 ('33333333P', 'Manuel', 'Perez', 'Manuel1', '1234', 'manuelAd@gmail.com', 912546212, 'C/ Avenida del Cid 29', 1, 'administrador'),
 ('administrador', 'administrador', 'administrador', 'administrador', 'administrador', 'administrador@gmail.com', 612458910, 'C/ Puerto Rico 14', 1, 'administrador');
+
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `alumnos`
+--
+
+CREATE TABLE `alumnos` (
+  `dni` varchar(9) NOT NULL,
+  `estadoCobro` varchar(60) NOT NULL,
+  FOREIGN KEY (`dni`) REFERENCES `usuarios` (`dni`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Volcado de datos para la tabla `alumnos`
+--
+
+INSERT INTO `alumnos` (`dni`, `estadoCobro`) VALUES
+('23420102E', 'pendiente'),
+('54629812T', 'pendiente'),
+('42010210B', 'pendiente'),
+('24568716R', 'pagado'),
+('12456879E', 'pendiente'),
+('68789122A', 'pagado'),
+('46231111Z', 'pendiente'),
+('98765432D', 'pagado'),
+('85214796Y', 'pendiente'),
+('45625815Q', 'pagado'),
+('alumno', 'pendiente'),
+('72158961T', 'pendiente');
 
 
 -- --------------------------------------------------------

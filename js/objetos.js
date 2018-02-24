@@ -170,10 +170,8 @@ class Academia
 			if (this._usuarios[i].dni == oUsuario.dni)
 				bEncontrado = true;
 
-		if (!bEncontrado) {
+		if (!bEncontrado)
 			this._usuarios.push(oUsuario);
-			this.actualizarSesionUsuarios();
-		}
 
 		return !bEncontrado;
 	}

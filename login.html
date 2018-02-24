@@ -74,6 +74,7 @@
                                 {
                                     url: "api/login.php",
                                     type: "POST",
+                                    aysnc: true,
                                     data:
                                     {
                                         'usuario': usuario,
@@ -81,13 +82,20 @@
                                     },
                                     success: function(result)
                                     {
-                                        console.log(result);
                                         if (result == 'true')
                                         {
                                             let oUsuario = academia.getUsuario(usuario);
-                                            btn.classList.add('granted');
-                                            window.setTimeout(function() { location.href = "index.html"; }, 700);
+                                            console.log(oUsuario);
+                                            if (oUsuario instanceof Administrador)
+                                                oUsuario.tipo = 'administrador';
+                                            else if (oUsuario instanceof Profesor)
+                                                oUsuario.tipo = 'profesor';
+                                            else
+                                                oUsuario.tipo = 'alumno';
                                             sessionStorage.setItem('usuario', JSON.stringify(oUsuario));
+
+                                            btn.classList.add('granted');
+                                            location.href = "index.html";
                                         }
                                         else
                                         {

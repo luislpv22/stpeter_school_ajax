@@ -4,28 +4,10 @@ datosIniciales();
 
 function datosIniciales()
 {
-	if (typeof sessionStorage.tUsuarios === 'undefined')
-	{
-		//sustituir por llamadas a AJAX
-
-	   // var oXMLAlumnos = loadXMLDoc("xml/alumnos.xml");
-	   // var oAlumnos = oXMLAlumnos.getElementsByTagName("alumno");
-		cargarAlumnos(oAlumnos);
-
-	    //var oXMLProfesores = loadXMLDoc("xml/profesores.xml");
-		//var oProfesores = oXMLProfesores.getElementsByTagName("profesor");
-		cargarProfesores(oProfesores);
-
-	    //var oXMLAdministradores = loadXMLDoc("xml/administradores.xml");
-		//var oAdministradores = oXMLAdministradores.getElementsByTagName("administrador");
-		cargarAdministradores(oAdministradores);
-		academia.actualizarSesionUsuarios();
-
-		//var oXMLCalificaciones = loadXMLDoc("xml/calificaciones.xml");
-		//var oCalificaciones = oXMLCalificaciones.getElementsByTagName("alumno");
-		cargarCalificaciones(oCalificaciones);
-	}
-	else
+	cargarUsuarios();
+	//cargarCalificaciones();
+	//cargarMatriculas();
+	/*else
 	{
 		var tUsuarios = JSON.parse(sessionStorage.tUsuarios);
 
@@ -83,7 +65,7 @@ function datosIniciales()
 		var tMatriculas = JSON.parse(sessionStorage.tMatriculas);
 		for (var i=0; i<tMatriculas.length; i++)
 			academia.addMatricula(tMatriculas[i]);
-	}
+	}*/
 }
 
 function iniciarSesion(oEvento)
@@ -122,63 +104,41 @@ function cerrarSesion()
 
 
 /******** validación y alta de alumno*************************/
-function cargarAlumnos(oAlumnos)
+function cargarUsuarios()
 {
-	for (var i=0; i<oAlumnos.length; i++)
-	{
-		var nombre = oAlumnos[i].getElementsByTagName("nombre")[0].textContent;
-		var pass = oAlumnos[i].getElementsByTagName("password")[0].textContent;
-		var apellidos = oAlumnos[i].getElementsByTagName("apellidos")[0].textContent;
-		var dni = oAlumnos[i].getElementsByTagName("dni")[0].textContent;
-		var telefono = oAlumnos[i].getElementsByTagName("telefono")[0].textContent;
-		var direccion = oAlumnos[i].getElementsByTagName("direccion")[0].textContent;
-		var email = oAlumnos[i].getElementsByTagName("email")[0].textContent;
-		var activo = oAlumnos[i].getElementsByTagName("activo")[0].textContent;
-		var estadoCobro = oAlumnos[i].getElementsByTagName("estadoCobro")[0].textContent;
-
-		academia.addUsuario(new Alumno(nombre, pass, apellidos, dni, telefono, direccion, email, activo, estadoCobro));
-	}
-}
-function cargarProfesores(oProfesores)
-{
-	for (var i=0; i<oProfesores.length; i++)
-	{
-		var nombre = oProfesores[i].getElementsByTagName("nombre")[0].textContent;
-		var pass = oProfesores[i].getElementsByTagName("password")[0].textContent;
-		var apellidos = oProfesores[i].getElementsByTagName("apellidos")[0].textContent;
-		var dni = oProfesores[i].getElementsByTagName("dni")[0].textContent;
-		var telefono = oProfesores[i].getElementsByTagName("telefono")[0].textContent;
-		var direccion = oProfesores[i].getElementsByTagName("direccion")[0].textContent;
-		var email = oProfesores[i].getElementsByTagName("email")[0].textContent;
-		var activo = oProfesores[i].getElementsByTagName("activo")[0].textContent;
-		var salario = oProfesores[i].getElementsByTagName("estadoCobro")[0].textContent;
-		var listadoCursos = oProfesores[i].querySelector("listadoCursos").children;
-
-		var oProfesor = new Profesor(nombre, pass, apellidos, dni, telefono, direccion, email, activo, salario);
-
-		if (listadoCursos.length > 0)
-			for (var j=0; j<listadoCursos.length; j++)
-				oProfesor.addCurso(listadoCursos[j].textContent);
-
-		academia.addUsuario(oProfesor);
-	}
-}
-function cargarAdministradores(oAdministradores)
-{
-	for (var i=0; i<oAdministradores.length; i++)
-	{
-		var nombre = oAdministradores[i].getElementsByTagName("nombre")[0].textContent;
-		var pass = oAdministradores[i].getElementsByTagName("password")[0].textContent;
-		var apellidos = oAdministradores[i].getElementsByTagName("apellidos")[0].textContent;
-		var dni = oAdministradores[i].getElementsByTagName("dni")[0].textContent;
-		var telefono = oAdministradores[i].getElementsByTagName("telefono")[0].textContent;
-		var direccion = oAdministradores[i].getElementsByTagName("direccion")[0].textContent;
-		var email = oAdministradores[i].getElementsByTagName("email")[0].textContent;
-		var activo = oAdministradores[i].getElementsByTagName("activo")[0].textContent;
-		var salario = oAdministradores[i].getElementsByTagName("estadoCobro")[0].textContent;
-
-		academia.addUsuario(new Administrador(nombre, pass, apellidos, dni, telefono, direccion, email, activo, salario));
-	}
+    $.ajax(
+    {
+        url: "api/usuarios.php",
+        type: "GET",
+        async: false,
+        data:
+        {
+            'usuarios': 1
+        },
+        success: function(result)
+        {
+            let usuarios = JSON.parse(result);
+            for (let i=0; i<usuarios.length; i++)
+            {
+            	if (usuarios[i].tipo == 'alumno')
+            	{
+            		let estadoCobro = '';
+				    $.ajax(
+				    {
+				        url: "api/usuarios.php",
+				        type: "GET",
+				        data: { 'alumno': usuarios[i].dni },
+				        success: function(result) { estadoCobro = result; }
+				    });
+            		academia.addUsuario(new Alumno(usuarios[i].nombre, usuarios[i].password, usuarios[i].apellidos, usuarios[i].dni, usuarios[i].telefono, usuarios[i].direccion, usuarios[i].email, usuarios[i].activo, estadoCobro));
+            	}
+            	else if (usuarios[i].tipo == 'profesor')
+            		academia.addUsuario(new Profesor(usuarios[i].nombre, usuarios[i].password, usuarios[i].apellidos, usuarios[i].dni, usuarios[i].telefono, usuarios[i].direccion, usuarios[i].email, usuarios[i].activo));
+            	else if (usuarios[i].tipo == 'administrador')
+            		academia.addUsuario(new Administrador(usuarios[i].nombre, usuarios[i].password, usuarios[i].apellidos, usuarios[i].dni, usuarios[i].telefono, usuarios[i].direccion, usuarios[i].email, usuarios[i].activo));
+            }
+        }
+    });
 }
 
 function cargarCursos(oCursos)

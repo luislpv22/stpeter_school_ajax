@@ -51,7 +51,7 @@ function mostrarPagina(pagina)
 			fila.setAttribute("data-activo", cursos[i].bArchivado);
 
 			var acciones = fila.insertCell(-1);
-			if (cursos[i].bArchivado == "si")
+			if (cursos[i].bArchivado == 1)
 			{
 				var btnEditar = document.createElement("input");
 				btnEditar.type = "button";
@@ -116,7 +116,7 @@ function mostrarPagina(pagina)
 			fila.setAttribute("data-activo", alumnos[i].activo);
 
 			var acciones = fila.insertCell(-1);
-			if (alumnos[i].activo == "si")
+			if (alumnos[i].activo == 1)
 			{
 				var btnEditar = document.createElement("input");
 				btnEditar.type = "button";
@@ -180,7 +180,7 @@ function mostrarPagina(pagina)
 			fila.setAttribute("data-activo", profesores[i].activo);
 
 			var acciones = fila.insertCell(-1);
-			if (profesores[i].activo == "si")
+			if (profesores[i].activo == 1)
 			{
 				var btnEditar = document.createElement("input");
 				btnEditar.type = "button";
@@ -245,7 +245,7 @@ function mostrarPagina(pagina)
 
 			var acciones = fila.insertCell(-1);
 
-			if (administradores[i].activo == "si")
+			if (administradores[i].activo == 1)
 			{
 				var btnEditar = document.createElement("input");
 				btnEditar.type = "button";
