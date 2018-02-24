@@ -28,7 +28,7 @@ CREATE TABLE `usuarios` (
   `activo` tinyint(1) NOT NULL DEFAULT 1,
   `tipo` varchar(30) NOT NULL,
   PRIMARY KEY (`dni`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Volcado de datos para la tabla `usuarios`
@@ -45,12 +45,12 @@ INSERT INTO `usuarios` (`dni`, `nombre`, `apellidos`, `usuario`, `password`, `em
 ('98765432D', 'Adrian', 'Gonzalez', 'Adrian1', '1234', 'adrian@gmail.com', 900012345, 'C/ PHP 7', 0, 'alumno'),
 ('85214796Y', 'Clara', 'De Guis', 'Clara1', '1234', 'clara@gmail.com', 910289463, 'C/ Montreal', 1, 'alumno'),
 ('45625815Q', 'Emilio', 'Marquez', 'Emilio1', '1234', 'emilio@gmail.com', 901023567, 'C/ Avenida del Insert', 0, 'profesor'),
-('profesor', 'profesor', 'profesor', 'profesor', 'profesor', 'profesor@gmail.com', 901023567, 'C/ Undefined', 0, 'profesor'),
-('alumno', 'alumno', 'alumno', 'alumno', 'alumno', 'alumno@gmail.com', 910289463, 'C/ alumno', 1, 'alumno'),
+('66666666B', 'profesor', 'profesor', 'profesor', 'profesor', 'profesor@gmail.com', 901023567, 'C/ Undefined', 0, 'profesor'),
+('88888888P', 'alumno', 'alumno', 'alumno', 'alumno', 'alumno@gmail.com', 910289463, 'C/ alumno', 1, 'alumno'),
 ('72158961T', 'Ivan', 'Mendez', 'Ivan1', '1234', 'ivanSales@gmail.com', 612458910, 'C/ Puerto Delete', 1, 'alumno'),
 ('11111111R', 'Andrea', 'Villar', 'Andrea1', '1234', 'andreaAd@gmail.com', 978645312, 'C/ Avenida del Salesman 23', 1, 'administrador'),
 ('33333333P', 'Manuel', 'Perez', 'Manuel1', '1234', 'manuelAd@gmail.com', 912546212, 'C/ Avenida del Cid 29', 1, 'administrador'),
-('administrador', 'administrador', 'administrador', 'administrador', 'administrador', 'administrador@gmail.com', 612458910, 'C/ Puerto Rico 14', 1, 'administrador');
+('44444444C', 'administrador', 'administrador', 'administrador', 'administrador', 'administrador@gmail.com', 612458910, 'C/ Puerto Rico 14', 1, 'administrador');
 
 
 -- --------------------------------------------------------
@@ -63,7 +63,7 @@ CREATE TABLE `alumnos` (
   `dni` varchar(9) NOT NULL,
   `estadoCobro` varchar(60) NOT NULL,
   FOREIGN KEY (`dni`) REFERENCES `usuarios` (`dni`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Volcado de datos para la tabla `alumnos`
@@ -80,7 +80,7 @@ INSERT INTO `alumnos` (`dni`, `estadoCobro`) VALUES
 ('98765432D', 'pagado'),
 ('85214796Y', 'pendiente'),
 ('45625815Q', 'pagado'),
-('alumno', 'pendiente'),
+('88888888P', 'pendiente'),
 ('72158961T', 'pendiente');
 
 
@@ -97,23 +97,25 @@ CREATE TABLE `cursos` (
   `precio` int(10) NOT NULL,
   `tipo` varchar(60) NOT NULL,
   `nivel` varchar(60) NOT NULL,
-  `activo` varchar(60) NOT NULL,
+  `activo` tinyint(1) NOT NULL DEFAULT 1,
   `profesor` varchar(9) NOT NULL,
   PRIMARY KEY (`codigo`),
   FOREIGN KEY (`profesor`) REFERENCES `usuarios` (`dni`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-
+--
+-- Volcado de datos para la tabla `cursos`
+--
 
 INSERT INTO `cursos` (`codigo`, `idioma`, `duracion`, `precio`, `tipo`, `nivel`, `activo`, `profesor`) VALUES
-('DEA2P', 'Aleman', '4 meses', 500, 'Presencial', 'A2', 'si', '45625815Q'),
-('DEB1P', 'Aleman', '8 meses', 1000, 'Presencial', 'B1', 'no', '46231111Z'),
-('DEB2P', 'Aleman', '12 meses', 1500, 'Presencial', 'B2', 'no', '46231111Z'),
-('ENA2P', 'Inglés', '4 meses', 400, 'Presencial', 'A2', 'si', '45625815Q'),
-('ENB1S', 'Inglés', '8 meses', 1200, 'Semipresencial', 'B1', 'si', 'profesor'),
-('ENB2D', 'Inglés', '4 meses', 400, 'Presencial', 'A2', 'si', '45625815Q'),
-('FRA2P', 'Francés', '5 meses', 500, 'Semipresencial', 'B1', 'si', 'profesor'),
-('FRB1S', 'Francés', '10 meses', 900, 'Presencial', 'A2', 'si', 'profesor');
+('DEA2P', 'Aleman', '4 meses', 500, 'Presencial', 'A2', 1, '45625815Q'),
+('DEB1P', 'Aleman', '8 meses', 1000, 'Presencial', 'B1', 0, '46231111Z'),
+('DEB2P', 'Aleman', '12 meses', 1500, 'Presencial', 'B2', 0, '46231111Z'),
+('ENB1S', 'Inglés', '8 meses', 1200, 'Semipresencial', 'B1', 1, '66666666B'),
+('ENA2P', 'Inglés', '4 meses', 400, 'Presencial', 'A2', 1, '45625815Q'),
+('ENB2D', 'Inglés', '4 meses', 400, 'Presencial', 'A2', 1, '45625815Q'),
+('FRA2P', 'Francés', '5 meses', 500, 'Semipresencial', 'B1', 1, '66666666B'),
+('FRB1S', 'Francés', '10 meses', 900, 'Presencial', 'A2', 1, '66666666B');
 
 
 -- -------------------------------------------------------
@@ -129,27 +131,59 @@ CREATE TABLE `matriculas` (
   `estado` varchar(60) NOT NULL,
   PRIMARY KEY (`numero`),
   FOREIGN KEY (`alumno`) REFERENCES `usuarios` (`dni`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--
+-- Volcado de datos para la tabla `matriculas`
+--
 
 INSERT INTO `matriculas` (`numero`, `alumno`, `curso`, `estado`) VALUES
-(1, '12456879E', 'DEA2P', 'activa'),
-(2, '12456879E', 'ENB1S', 'activa'),
-(3, '23420102E', 'DEB2P', 'activa'),
-(4, '23420102E', 'FRB1S', 'activa'),
-(5, '24568716R', 'FRB1S', 'activa'),
-(6, '24568716R', 'ENB2D', 'inactiva'),
-(7, '42010210B', 'FRA2P', 'inactiva'),
-(8, '45625815Q', 'DEB2P', 'activa'),
-(9, '46231111Z', 'ENB1S', 'activa'),
-(10, '46231111Z', 'ENA2P', 'activa'),
-(11, '54629812T', 'DEA2P', 'activa'),
-(12, '68789122A', 'ENA2P', 'inactiva'),
-(13, '85214796Y', 'DEB2P', 'activa'),
-(14, '98765432D', 'FRB1S', 'activa'),
-(15, 'alumno', 'DEB2P', 'activa'),
-(16, 'alumno', 'FRB1S', 'inactiva');
+(1, '12456879E', 'activa'),
+(2, '12456879E', 'activa'),
+(3, '23420102E', 'activa'),
+(4, '23420102E', 'activa'),
+(5, '24568716R', 'activa'),
+(6, '24568716R', 'inactiva'),
+(7, '42010210B', 'inactiva'),
+(8, '45625815Q', 'activa'),
+(9, '46231111Z', 'activa'),
+(10, '46231111Z', 'activa'),
+(11, '54629812T', 'activa'),
+(12, '68789122A', 'inactiva'),
+(13, '85214796Y', 'activa'),
+(14, '98765432D', 'activa'),
+(15, '88888888P', 'activa'),
+(16, '88888888P', 'inactiva');
 
+
+-- -------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `matriculas_cursos`
+--
+
+CREATE TABLE `matriculas_cursos` (
+  `matricula` int(20) NOT NULL,
+  `curso` varchar(60) NOT NULL,
+  FOREIGN KEY (`matricula`) REFERENCES `matriculas` (`numero`) ON DELETE CASCADE ON UPDATE CASCADE,
+  FOREIGN KEY (`curso`) REFERENCES `cursos` (`codigo`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Volcado de datos para la tabla `matriculas_cursos`
+--
+
+INSERT INTO `matriculas_cursos` (`matricula`, `curso`) VALUES
+(1, 'ENA2P'),
+(2, 'ENA2P'),
+(3, 'ENA2P'),
+(4, 'ENB1S'),
+(5, 'ENB1S'),
+(6, 'ENB2D'),
+(6, 'FRB1S'),
+(7, 'FRA2P'),
+(8, 'FRA2P'),
+(10, 'ENA2P');
 
 
 
@@ -165,41 +199,43 @@ CREATE TABLE `notas` (
   `nota` decimal(2,0) NOT NULL,
   UNIQUE (`curso`, `examen`),
   FOREIGN KEY (`curso`) REFERENCES `matriculas` (`numero`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-
+--
+-- Volcado de datos para la tabla `notas`
+--
 
 INSERT INTO `notas` (`curso`, `examen`, `Nota`) VALUES
-(1,'Examen 1' , '8'),
-(1,'Examen 2' , '5'),
-(1,'Examen 3' , '9'),
-(1,'Examen 4' , '4'),
-(2,'Examen 1' , '2'),
-(2,'Examen 2' , '5'),
-(2,'Examen 3' , '6'),
-(2,'Examen 4' , '7'),
-(3,'Examen 1' , '8'),
-(3,'Examen 2' , '2'),
-(3,'Examen 3' , '0'),
-(3,'Examen 4' , '1'),
-(4,'Examen 1' , '4'),
-(4,'Examen 2' , '6'),
-(4,'Examen 3' , '8'),
-(4,'Examen 4' , '9'),
-(5,'Examen 1' , '10'),
-(5,'Examen 2' , '3'),
-(5,'Examen 3' , '6'),
-(6,'Examen 1' , '7'),
-(6,'Examen 2' , '3'),
-(6,'Examen 3' , '4'),
-(7,'Examen 1' , '5'),
-(7,'Examen 2' , '6'),
-(7,'Examen 3' , '8'),
-(8,'Examen 1' , '9'),
-(8,'Examen 2' , '1'),
-(9,'Examen 1' , '2'),
-(9,'Examen 2' , '3'),
-(9,'Examen 3' , '6');
+(1, 'Examen 1', '8'),
+(1, 'Examen 2', '5'),
+(1, 'Examen 3', '9'),
+(1, 'Examen 4', '4'),
+(2, 'Examen 1', '2'),
+(2, 'Examen 2', '5'),
+(2, 'Examen 3', '6'),
+(2, 'Examen 4', '7'),
+(3, 'Examen 1', '8'),
+(3, 'Examen 2', '2'),
+(3, 'Examen 3', '0'),
+(3, 'Examen 4', '1'),
+(4, 'Examen 1', '4'),
+(4, 'Examen 2', '6'),
+(4, 'Examen 3', '8'),
+(4, 'Examen 4', '9'),
+(5, 'Examen 1', '10'),
+(5, 'Examen 2', '3'),
+(5, 'Examen 3', '6'),
+(6, 'Examen 1', '7'),
+(6, 'Examen 2', '3'),
+(6, 'Examen 3', '4'),
+(7, 'Examen 1', '5'),
+(7, 'Examen 2', '6'),
+(7, 'Examen 3', '8'),
+(8, 'Examen 1', '9'),
+(8, 'Examen 2', '1'),
+(9, 'Examen 1', '2'),
+(9, 'Examen 2', '3'),
+(9, 'Examen 3', '6');
 
 -- --------------------------------------------------------
 

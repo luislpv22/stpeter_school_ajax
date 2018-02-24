@@ -1,3 +1,70 @@
+
+ $( function() 
+ {
+
+	$("#enlaceMisDatos").click(cargaDatosAlumno);
+	$("#enlaceMatricular").click(cargaAltaMatricula);
+	/*$("#mnuAltaCasa").click(cargaAltaCasa);*/ //aqui iria la de curso, dejarlo para el último
+	$("#enlaceBaja").click(cargarBajaMatricula);
+
+
+	function cargaDatosAlumno() {
+	    // Oculto todos los formularios menos este
+	    $("form:not('#frmModUsuario')").hide("normal");
+
+
+	    // Verifico si ya he cargado el formulario antes
+	   if ($('#frmModUsuario').length == 0) {
+	        $("<div>").appendTo('#formularios').load("html/alumno/alumoddatos.html",
+	            function() {
+	                $.getScript("html/alumno/alumoddatos.js");
+	                 cargarDatosUsuario();
+	            });
+
+	    } else {
+	        // Lo muestro si está oculto
+	        $('#frmModUsuario').show("normal");
+
+	    }
+	}
+
+	function cargaAltaMatricula() {
+	    // Oculto todos los formularios menos este
+	    $("form:not('#frmAltaMod')").hide("normal");
+
+	    // Verifico si ya he cargado el formulario antes
+	    if ($('#frmAltaMod').length == 0) {
+	        $("<div>").appendTo('#formularios').load("html/alumno/alumatricula.html",
+	            function() {
+	                $.getScript("html/alumno/optionIdioma.js");
+	            });
+
+	    } else {
+	        // Lo muestro si está oculto
+	        $('#frmAltaMod').show("normal");
+	    }
+	}
+
+
+
+	function cargarBajaMatricula() {
+	    // Oculto todos los formularios menos este
+	    $("form:not('#frmDarBaja')").hide("normal");
+
+	    // Verifico si ya he cargado el formulario antes
+	    if ($('#frmDarBaja').length == 0) {
+	        $("<div>").appendTo('#formularios').load("html/alumno/alueliminar.html", function(){$.getScript("html/alumno/alueliminar.js"); });
+
+	    } else {
+	        // Lo muestro si está oculto
+	        $('#frmDarBaja').show("normal");
+	    }
+	}
+
+   } );
+
+
+
 function resetearCamposModMatricula()
 {
 	var input = document.querySelectorAll('#frmModUsuario input');

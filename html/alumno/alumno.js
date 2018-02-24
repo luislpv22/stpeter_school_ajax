@@ -1,84 +1,18 @@
-<!DOCTYPE html>
-<html>
-<head>
-	<meta content="text/html; charset=utf-8" http-equiv="Content-Type">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>St. Peter School - Página principal</title>
-
-	<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css" />
-	<link rel="stylesheet" type="text/css" href="css/panel.css">
-	<link rel="stylesheet" type="text/css" href="css/estiloGestionMatricula.css">
-	<script>
-		if (typeof sessionStorage.usuario === 'undefined')
-			location.href = "login.html";
-	</script>
-</head>
-<body>
-	<div class="wrapper">
-		<nav id="sidebar">
-			<!-- Sidebar Header -->
-			<div class="sidebar-header">
-				<h3>St. Peter School</h3>
-				<strong>St.P</strong>
-			</div>
-
-			<div class="usuario">
-				<div class="nombre"></div>
-				<button id="btnCerrarSesion" name="btnCerrarSesion" class="btn btn-default btn-sm">Cerrar Sesión</button>
-			</div>
-
-			<!-- Sidebar Links -->
-			<ul class="list-unstyled components">
-				<li class="active">
-					<a href="#frmModUsuario" id="enlaceMisDatos"><i class="glyphicon glyphicon-user"></i>Mis Datos</a>
-				</li>
-				<li>
-					<a href="#frmAltaMatri" id="enlaceMatricular"><i class="glyphicon glyphicon-education"></i>Matricularme</a>
-				</li>
-				<li>
-					<a href="#pageSubmenu1" data-toggle="collapse" aria-expanded="false"><i class="glyphicon glyphicon-book"></i>Cursos</a>
-					<ul class="collapse list-unstyled" id="pageSubmenu1">
-					</ul>
-				</li>
-
-				<li><a href="#capaDarBaja" id="enlaceBaja"><i class="glyphicon glyphicon-remove"></i>Darme de baja</a></li>
-			</ul>
-		</nav>
-
-		<div id="content">
-			<!--<button type="button" id="sidebarCollapse" class="btn btn-default navbar-btn"><i class="glyphicon glyphicon-menu-hamburger"></i></button>--><br/>
-
-			<!-- hasta aqui todo lo relacionado con el menú -->
-
-			<div class="container-fluid">
-				<!-- formulario modificar datos alumno -->
-				<div id="formularios"></div>
-			</div>
-		</div>
-	</div>
-
-	<script type="text/javascript" src="js/jquery.min.js"></script>
-	<script type="text/javascript" src="js/bootstrap.min.js"></script>
-	<script type="text/javascript" src="js/objetos.js"></script>
-	<script type="text/javascript" src="js/principal.js"></script>
-	<script type="text/javascript" src="js/alumno.js"></script>
-	<script type="text/javascript" src="js/validaciones.js"></script>
-	<script>
 
 		if (typeof(sesion) === "undefined")
 			var sesion = JSON.parse(sessionStorage.usuario);
 
 		document.querySelector('#sidebar .usuario .nombre').appendChild(document.createTextNode(sesion.nombre));
 
-		if (sesion.tipo != 'alumno')
-			location.href = "index.html";
+		/*if (sesion.tipo != 'alumno')
+			location.href = "index.html";*/
 
 		var btnCerrarSesion= document.querySelector("#btnCerrarSesion");
 		btnCerrarSesion.addEventListener("click", cerrarSesion, false);
 
 		/*zona de configuración de eventos*/
 
-		/*var enlaces = document.getElementsByTagName("a");
+		var enlaces = document.getElementsByTagName("a");
 		for (var i = 0; i < enlaces.length ; i++) 
 		{  
 			enlaces[i].addEventListener("click", function (event)
@@ -86,11 +20,11 @@
 				event.preventDefault();
 				mostrar(event);
 			}, false);
-		}*/
+		}
 
 		document.querySelector("#enlaceMisDatos").click();
 
-		/*var btnModDatosAlu= document.querySelector("#btnModDatosUsu");
+		var btnModDatosAlu= document.querySelector("#btnModDatosUsu");
 		btnModDatosUsu.addEventListener("click", comprobarFrmModDatosUsu, false);
 		//var btnResetModDatosAlu= document.querySelector("#btnResetModDatosAlu");
 
@@ -117,7 +51,7 @@
 			academia.borrarUsuario(sesion.dni);
 			location.href = "login.html";
 
-		}, false); */
+		}, false); 
 
 
 		menuCursoUsuario(); //llamada al método para que cargue los cursos en los que esté inicialmente matriculado
@@ -171,7 +105,7 @@
 		}
 
 		/* zona para mostrar y ocultar div*/
-		/*function mostrar(oEvento)
+		function mostrar(oEvento)
 		{
 
 			var menus = document.querySelectorAll('nav li');
@@ -221,7 +155,4 @@
 				cargarListadoCurso(oEvento);
 
 			}
-		}*/
-	</script>
-</body>
-</html>
+		}
