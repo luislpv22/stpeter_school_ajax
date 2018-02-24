@@ -65,7 +65,7 @@ class Calificacion
 {
 	constructor(iMatricula, sTarea, fNota)
 	{
-		this.matricula = sCodigoCurso;
+		this.matricula = iMatricula;
 		this.tarea     = sTarea;
 		this.nota      = fNota;
 	}
