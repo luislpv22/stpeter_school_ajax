@@ -103,7 +103,20 @@ CREATE TABLE `cursos` (
   FOREIGN KEY (`profesor`) REFERENCES `usuarios` (`dni`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
--- --------------------------------------------------------
+
+
+INSERT INTO `cursos` (`codigo`, `idioma`, `duracion`, `precio`, `tipo`, `nivel`, `activo`, `profesor`) VALUES
+('DEA2P', 'Aleman', '4 meses', 500, 'Presencial', 'A2', 'si', '45625815Q'),
+('DEB1P', 'Aleman', '8 meses', 1000, 'Presencial', 'B1', 'no', '46231111Z'),
+('DEB2P', 'Aleman', '12 meses', 1500, 'Presencial', 'B2', 'no', '46231111Z'),
+('ENA2P', 'Inglés', '4 meses', 400, 'Presencial', 'A2', 'si', '45625815Q'),
+('ENB1S', 'Inglés', '8 meses', 1200, 'Semipresencial', 'B1', 'si', 'profesor'),
+('ENB2D', 'Inglés', '4 meses', 400, 'Presencial', 'A2', 'si', '45625815Q'),
+('FRA2P', 'Francés', '5 meses', 500, 'Semipresencial', 'B1', 'si', 'profesor'),
+('FRB1S', 'Francés', '10 meses', 900, 'Presencial', 'A2', 'si', 'profesor');
+
+
+-- -------------------------------------------------------
 
 --
 -- Estructura de tabla para la tabla `matriculas`
@@ -117,6 +130,27 @@ CREATE TABLE `matriculas` (
   PRIMARY KEY (`numero`),
   FOREIGN KEY (`alumno`) REFERENCES `usuarios` (`dni`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+
+INSERT INTO `matriculas` (`numero`, `alumno`, `curso`, `estado`) VALUES
+(1, '12456879E', 'DEA2P', 'activa'),
+(2, '12456879E', 'ENB1S', 'activa'),
+(3, '23420102E', 'DEB2P', 'activa'),
+(4, '23420102E', 'FRB1S', 'activa'),
+(5, '24568716R', 'FRB1S', 'activa'),
+(6, '24568716R', 'ENB2D', 'inactiva'),
+(7, '42010210B', 'FRA2P', 'inactiva'),
+(8, '45625815Q', 'DEB2P', 'activa'),
+(9, '46231111Z', 'ENB1S', 'activa'),
+(10, '46231111Z', 'ENA2P', 'activa'),
+(11, '54629812T', 'DEA2P', 'activa'),
+(12, '68789122A', 'ENA2P', 'inactiva'),
+(13, '85214796Y', 'DEB2P', 'activa'),
+(14, '98765432D', 'FRB1S', 'activa'),
+(15, 'alumno', 'DEB2P', 'activa'),
+(16, 'alumno', 'FRB1S', 'inactiva');
+
+
 
 
 -- --------------------------------------------------------
@@ -133,6 +167,39 @@ CREATE TABLE `notas` (
   FOREIGN KEY (`curso`) REFERENCES `matriculas` (`numero`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+
+
+INSERT INTO `notas` (`curso`, `examen`, `Nota`) VALUES
+(1,'Examen 1' , '8'),
+(1,'Examen 2' , '5'),
+(1,'Examen 3' , '9'),
+(1,'Examen 4' , '4'),
+(2,'Examen 1' , '2'),
+(2,'Examen 2' , '5'),
+(2,'Examen 3' , '6'),
+(2,'Examen 4' , '7'),
+(3,'Examen 1' , '8'),
+(3,'Examen 2' , '2'),
+(3,'Examen 3' , '0'),
+(3,'Examen 4' , '1'),
+(4,'Examen 1' , '4'),
+(4,'Examen 2' , '6'),
+(4,'Examen 3' , '8'),
+(4,'Examen 4' , '9'),
+(5,'Examen 1' , '10'),
+(5,'Examen 2' , '3'),
+(5,'Examen 3' , '6'),
+(6,'Examen 1' , '7'),
+(6,'Examen 2' , '3'),
+(6,'Examen 3' , '4'),
+(7,'Examen 1' , '5'),
+(7,'Examen 2' , '6'),
+(7,'Examen 3' , '8'),
+(8,'Examen 1' , '9'),
+(8,'Examen 2' , '1'),
+(9,'Examen 1' , '2'),
+(9,'Examen 2' , '3'),
+(9,'Examen 3' , '6');
 
 -- --------------------------------------------------------
 
