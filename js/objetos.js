@@ -61,26 +61,13 @@ class Administrador extends Persona
 	}
 }
 
-class Contabilidad
-{
-	constructor(sTipo, bEstado, fImporte, sAsunto, dtFecha_ven)
-	{
-		this.tipo      = sTipo;
-		this.estado    = bEstado;
-		this.importe   = fImporte;
-		this.asunto    = sAsunto;
-		this.fecha_ven = dtFecha_ven;
-	}
-}
-
-
 class Calificacion
 {
-	constructor(sDescripcion, fNota, sCodigoCurso)
+	constructor(iMatricula, sTarea, fNota)
 	{
-		this.descripcion = sDescripcion;
-		this.nota        = fNota;
-		this.curso       = sCodigoCurso;
+		this.matricula = sCodigoCurso;
+		this.tarea     = sTarea;
+		this.nota      = fNota;
 	}
 }
 
@@ -104,27 +91,14 @@ class Curso
 	}
 }
 
-class Aula
-{
-	constructor(sCodigo, iEdificio, iPlanta, iAula, iCapacidad, sTipo)
-	{
-		this.codigo    = sCodigo;
-		this.edificio  = iEdificio;
-		this.planta    = iPlanta;
-		this.aula      = iAula;
-		this.capacidad = iCapacidad;
-		this.tipo      = sTipo;
-	}
-}
-
 class Matricula
 {
-	constructor(iNumero, sEstado, sDniAlumno, sListaCursosMatri)
+	constructor(iNumero, sEstado, sDniAlumno, sCurso)
 	{
 		this.numero  = iNumero;
 		this.estado  = sEstado;
 		this.dniAlumno = sDniAlumno;
-		this.listaCursosMatri = sListaCursosMatri;
+		this.curso = sCurso;
 	}
 }
 
@@ -153,8 +127,7 @@ class Academia
 			this._matriculas.push(oMatricula);
 
 			var oAlumno = this.getUsuario(oMatricula.dniAlumno);
-			for (var i=0; i<oMatricula.listaCursosMatri.length; i++)
-				oAlumno.addCurso(oMatricula.listaCursosMatri[i]);
+			oAlumno.addCurso(oMatricula.curso);
 
 			this.modificarUsuario(oAlumno);
 			sessionStorage.setItem('tMatriculas', JSON.stringify(this._matriculas));
@@ -431,8 +404,6 @@ class Academia
 		for (var i=0; i<this._usuarios.length; i++) 
 			if (this._usuarios[i].dni == dni)
 				this._usuarios[i].addNota(oCalificacion);
-
-		this.actualizarSesionUsuarios();
 	}
 
 	cambiarEstadoMatri(oMatri)

@@ -310,7 +310,7 @@ function mostrarPagina(pagina)
 			fila.insertCell(-1).appendChild(document.createTextNode(matriculas[i].dniAlumno));
 			fila.insertCell(-1).appendChild(document.createTextNode(oAlumno.nombre));
 			fila.insertCell(-1).appendChild(document.createTextNode(oAlumno.apellidos));
-			fila.insertCell(-1).appendChild(document.createTextNode(matriculas[i].listaCursosMatri));
+			fila.insertCell(-1).appendChild(document.createTextNode(matriculas[i].curso));
 
 			var swActivo = switchActivo();
 			var sEstado = "";
@@ -871,7 +871,7 @@ function editarMatricula()
 		oP.value = listaCursos[i].codigo;
 		oP.textContent = listaCursos[i].idioma+", "+listaCursos[i].nivel+", "+listaCursos[i].tipo;
 
-		if (oMatricula.listaCursosMatri.includes(listaCursos[i].codigo))
+		if (oMatricula.curso == listaCursos[i].codigo)
 			oP.selected = "selected";
 
 		form.seleCurMatri.appendChild(oP);
@@ -885,44 +885,36 @@ function editarMatricula()
 
 function guardarMatricula()
 {
-	if (comprobarFormMatricula()==true)
+	if (comprobarFormMatricula())
 	{
 		var form = document.getElementById("formModMatri");
-
 		var dataEstado = this.getAttribute("data-estado");
 
 		var sNumero = form.numMatri.value;
 		var sDni = form.dniMatri.value;
-		var sLisCursos =[];
+		var sCurso = "";
 
 		listaOp=document.querySelectorAll("OPTION");
 		for (var i = 0; i < listaOp.length; i++) {
 			if (listaOp[i].selected)
-				sLisCursos.push(listaOp[i].value);
+				sCurso = listaOp[i].value;
 		}
 
-		var oMatricula = new Matricula (sNumero, dataEstado, sDni, sLisCursos);
-
-		//quitar curso y notas que se hayan quitado
-		var listCurOriginal = academia.getUsuario(sDni).listaCursos; 
-		var cursosQuitarAlu = [];
-		var indice=0;
-		for (var i = 0; i < listCurOriginal.length; i++) 
-		{
-			if (!sLisCursos.includes(listCurOriginal[i]))
-			{
-				cursosQuitarAlu[indice] = listCurOriginal[i];
-				indice++;
-			}
-		}
+		var oMatricula = new Matricula(sNumero, dataEstado, sDni, sCurso);
+		var oAlumno = academia.getUsuario(sDni); 
 
 		if (sNumero != null)
 		{
+			// quitar curso y notas que se hayan quitado
+			oAlumno.listaCursos.splice(oAlumno.listaCursos.indexOf(sCurso), 1);
 			academia.modificarMatricula(oMatricula);
-			academia.borrarCursosAlumno(sDni, cursosQuitarAlu);
 		}
 		else
+		{
+			oAlumno.listaCursos.push(sCurso);
 			academia.addMatricula(oMatricula);
+		}
+		academia.modificarAlumno(oAlumno);
 
 		mostrarPagina('matriculaciones');
 		document.querySelector('#modal .close').click();

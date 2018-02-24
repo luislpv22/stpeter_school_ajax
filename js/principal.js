@@ -6,67 +6,8 @@ function datosIniciales()
 {
 	cargarUsuarios();
 	cargarCursos();
-	//cargarCalificaciones();
 	cargarMatriculas();
-	/*else
-	{
-		var tUsuarios = JSON.parse(sessionStorage.tUsuarios);
-
-		for (var i=0; i<tUsuarios.length; i++)
-		{
-			var oUsuario = null;
-			var us = tUsuarios[i];
-	    	if (us.tipo == 'administrador') {
-	    		oUsuario = new Administrador(us.nombre, us.password, us.apellidos, us.dni, us.telefono, us.direccion, us.correo, us.activo, us.salario);
-	    	}
-	    	else if (us.tipo == 'profesor')
-	    	{
-	    		oUsuario = new Profesor(us.nombre, us.password, us.apellidos, us.dni, us.telefono, us.direccion, us.correo, us.activo, us.salario);
-				oUsuario.listaCursos = us.listaCursos;
-	    	}
-	    	else
-	    	{
-	    		oUsuario = new Alumno(us.nombre, us.password, us.apellidos, us.dni, us.telefono, us.direccion, us.correo, us.activo, us.estadoCobro);
-	    		oUsuario.listaCursos = us.listaCursos;
-	    		oUsuario.listaCalificaciones = us.listaCalificaciones;
-	    	}
-
-	    	academia.addUsuario(oUsuario);
-    	}
-	}
-
-	if (typeof sessionStorage.tCursos === 'undefined')
-	{
-		//sustituir por ajax
-		//var oXMLCursos = loadXMLDoc("xml/cursos.xml");
-		//var oCursos = oXMLCursos.getElementsByTagName("curso");
-		cargarCursos(oCursos);
-		var tCursos = academia.getCursos();
-		sessionStorage.setItem('tCursos', JSON.stringify(tCursos));
-	}
-	else
-	{
-		var tCursos = JSON.parse(sessionStorage.tCursos);
-		for (var i=0; i<tCursos.length; i++)
-			academia.addCurso(tCursos[i]);
-	}
-
-
-	if (typeof sessionStorage.tMatriculas === 'undefined')
-	{
-		// sustituir por ajax
-		var oXMLMatriculas = loadXMLDoc("xml/matriculas.xml");
-		var oMatriculas = oXMLMatriculas.getElementsByTagName("matricula");
-		cargarMatriculas(oMatriculas);
-		var tMatriculas = academia.getMatriculas();
-		sessionStorage.setItem('tMatriculas', JSON.stringify(tMatriculas));
-	}
-	else
-	{
-		var tMatriculas = JSON.parse(sessionStorage.tMatriculas);
-		for (var i=0; i<tMatriculas.length; i++)
-			academia.addMatricula(tMatriculas[i]);
-	}*/
+	cargarCalificaciones();
 }
 
 function iniciarSesion(oEvento)
@@ -188,25 +129,20 @@ function cargarMatriculas()
     });
 }
 
-function cargarCalificaciones(oCalificaciones)
+function cargarCalificaciones()
 {
-	for (var i=0; i<oCalificaciones.length; i++)
-	{
-		var dni = oCalificaciones[i].getAttribute('dni');
-		
-		var listaCalificaciones = oCalificaciones[i].querySelectorAll("calificacion");
-		
-		// por si tiene notas de más de 1 curso
-		for (var j=0; j<listaCalificaciones.length; j++) 
-		{
-			var descripcion = listaCalificaciones[j].querySelector("descripcion").textContent;
-			var nota = listaCalificaciones[j].querySelector("nota").textContent;
-			var codCurso = listaCalificaciones[j].querySelector("curso").textContent;
-			var oCalificacion = new Calificacion(descripcion, nota, codCurso);
-			academia.addCalificacionesAlu(dni, oCalificacion);
-		}
-
-	}
+    $.ajax(
+    {
+        url: "api/calificaciones.php",
+        type: "GET",
+        async: false,
+        data: { 'calificaciones': 1 },
+        success: function(calificaciones)
+        {
+        	for (var i=0; i<calificaciones.length; i++)
+				academia.addCalificacionesAlu(new Calificacion(calificaciones[i].matricula, calificaciones[i].tarea, calificaciones[i].nota));
+        }
+    });
 }
 
 /*esta validación la dejo aqui porque puede servir casi perfecto tanto para crear alumnos, profesores, y administrativos*/
