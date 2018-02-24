@@ -6,21 +6,23 @@ function datosIniciales()
 {
 	if (typeof sessionStorage.tUsuarios === 'undefined')
 	{
-	    var oXMLAlumnos = loadXMLDoc("xml/alumnos.xml");
-		var oAlumnos = oXMLAlumnos.getElementsByTagName("alumno");
+		//sustituir por llamadas a AJAX
+
+	   // var oXMLAlumnos = loadXMLDoc("xml/alumnos.xml");
+	   // var oAlumnos = oXMLAlumnos.getElementsByTagName("alumno");
 		cargarAlumnos(oAlumnos);
 
-	    var oXMLProfesores = loadXMLDoc("xml/profesores.xml");
-		var oProfesores = oXMLProfesores.getElementsByTagName("profesor");
+	    //var oXMLProfesores = loadXMLDoc("xml/profesores.xml");
+		//var oProfesores = oXMLProfesores.getElementsByTagName("profesor");
 		cargarProfesores(oProfesores);
 
-	    var oXMLAdministradores = loadXMLDoc("xml/administradores.xml");
-		var oAdministradores = oXMLAdministradores.getElementsByTagName("administrador");
+	    //var oXMLAdministradores = loadXMLDoc("xml/administradores.xml");
+		//var oAdministradores = oXMLAdministradores.getElementsByTagName("administrador");
 		cargarAdministradores(oAdministradores);
 		academia.actualizarSesionUsuarios();
 
-		var oXMLCalificaciones = loadXMLDoc("xml/calificaciones.xml");
-		var oCalificaciones = oXMLCalificaciones.getElementsByTagName("alumno");
+		//var oXMLCalificaciones = loadXMLDoc("xml/calificaciones.xml");
+		//var oCalificaciones = oXMLCalificaciones.getElementsByTagName("alumno");
 		cargarCalificaciones(oCalificaciones);
 	}
 	else
@@ -52,8 +54,9 @@ function datosIniciales()
 
 	if (typeof sessionStorage.tCursos === 'undefined')
 	{
-		var oXMLCursos = loadXMLDoc("xml/cursos.xml");
-		var oCursos = oXMLCursos.getElementsByTagName("curso");
+		//sustituir por ajax
+		//var oXMLCursos = loadXMLDoc("xml/cursos.xml");
+		//var oCursos = oXMLCursos.getElementsByTagName("curso");
 		cargarCursos(oCursos);
 		var tCursos = academia.getCursos();
 		sessionStorage.setItem('tCursos', JSON.stringify(tCursos));
@@ -68,6 +71,7 @@ function datosIniciales()
 
 	if (typeof sessionStorage.tMatriculas === 'undefined')
 	{
+		// sustituir por ajax
 		var oXMLMatriculas = loadXMLDoc("xml/matriculas.xml");
 		var oMatriculas = oXMLMatriculas.getElementsByTagName("matricula");
 		cargarMatriculas(oMatriculas);
