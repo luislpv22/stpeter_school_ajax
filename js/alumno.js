@@ -278,29 +278,14 @@ function addCursoMatri(oEvento)
 
 		if (!sesion.listaCursos.includes(oCurso.codigo))
 		{
+
 			oMatricula = new Matricula(academia.codNuevaMatri(), "activa", sesion.dni, oCurso);
-			$.ajax(
+			if (!academia.addMatricula(oMatricula))
 			{
-				url: "api/alumno.php",
-				type: "POST",
-				aysnc: true,
-				data: {'matricular': JSON.stringify(oMatricula)},
-				dataType: "JSON",
-				success: function(result)
-				{
-					if (result == true)
-					{
-						academia.addMatricula(oMatricula);
-						academia.actualizarSesionUsuarios(); //no sirve no actualiza la sesion.
-					}
-					else
-					{
-						document.querySelector("#txtInformacion span").textContent = "Se ha producido un error al insertar";
-						document.querySelector("#txtInformacion").classList.remove("alert-success", "alert-warning", "alert-danger", "hide");
-						document.querySelector("#txtInformacion").classList.add("alert-danger");
-					}
-				}
-			});
+				document.querySelector("#txtInformacion span").textContent = "Se ha producido un error al insertar";
+				document.querySelector("#txtInformacion").classList.remove("alert-success", "alert-warning", "alert-danger", "hide");
+				document.querySelector("#txtInformacion").classList.add("alert-danger");
+			}
 		}
 		else
 		{

@@ -124,12 +124,31 @@ class Academia
 
 		if (!bEncontrado)
 		{
-			this._matriculas.push(oMatricula);
+			var datosCorrectos=false;
+			$.ajax(
+			{
+				url: "api/alumno.php",
+				type: "POST",
+				aysnc: false,
+				data: {'matricular': JSON.stringify(oMatricula)},
+				dataType: "JSON",
+				success: function(result)
+				{
+					if (result == true)
+					{
+						datosCorrectos=true;
+					}
+				}
+			});
 
-			var oAlumno = this.getUsuario(oMatricula.dniAlumno);
-			oAlumno.addCurso(oMatricula.curso);
-			this.modificarUsuario(oAlumno);
-			sessionStorage.setItem('tMatriculas', JSON.stringify(this._matriculas));
+			if (datosCorrectos == true)
+			{
+				this._matriculas.push(oMatricula);
+				var oAlumno = this.getUsuario(oMatricula.dniAlumno);
+				oAlumno.addCurso(oMatricula.curso);
+				this.modificarUsuario(oAlumno);
+				sessionStorage.setItem('tMatriculas', JSON.stringify(this._matriculas));
+			}
 		}
 
 		return !bEncontrado;
