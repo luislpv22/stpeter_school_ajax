@@ -9,7 +9,7 @@ var btnCerrarSesion = document.querySelector("#btnCerrarSesion");
 btnCerrarSesion.addEventListener("click", cerrarSesion, false);
 
 btnModDatosUsu = document.querySelector("#btnModDatosProf");
-btnModDatosUsu.addEventListener("click", comprobarFrmModDatosProf, false);
+btnModDatosUsu.addEventListener("click", validarFormUsuario, false);
 
 function resetearCamposModMatriculaProf()
 {

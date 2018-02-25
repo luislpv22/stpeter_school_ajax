@@ -1,9 +1,8 @@
 <?php
 
-include('lib/password.php');
+include('database.php');
 
-$db = new mysqli('localhost', 'root', '', 'stpeter_school');
-$db->set_charset("utf8");
+$db = conexion_db();
 
 if (!empty($_POST['datos']))
 {

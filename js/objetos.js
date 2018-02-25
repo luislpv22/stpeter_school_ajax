@@ -324,15 +324,12 @@ class Academia
 
 	getMatricula(numero)
 	{
-		var oMatri= null;
-		for (var i = 0; i < this._matriculas.length; i++) 
-		{
+		let oMatricula = null;
+		for (let i=0; i<this._matriculas.length; i++) 
 			if (this._matriculas[i].numero == numero)
-			{
-				oMatri=this._matriculas[i];
-			}
-		}
-		return oMatri;
+				oMatricula = this._matriculas[i];
+
+		return oMatricula;
 	}
 
 	getCursos()

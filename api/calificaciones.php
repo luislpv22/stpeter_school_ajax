@@ -2,12 +2,13 @@
 
 header('Content-type: application/json; charset=utf-8');
 
-$db = new mysqli('localhost', 'root', '', 'stpeter_school');
-$db->set_charset("utf8");
+include('database.php');
 
-if (!empty($_GET['dni']))
+$db = conexion_db();
+
+if (!empty($_GET['calificaciones']))
 {
-	$sql = "SELECT n.matricula, n.tarea, n.nota FROM notas n, matriculas m WHERE m.alumno='".$_GET['dni']."' AND n.matricula=m.numero";
+	$sql = "SELECT * FROM notas";
 	$query = $db->query($sql);
 	$calificaciones = array();
 	while ($fila = $query->fetch_object())

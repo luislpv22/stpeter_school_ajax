@@ -2,8 +2,9 @@
 
 header('Content-type: application/json; charset=utf-8');
 
-$db = new mysqli('localhost', 'root', '', 'stpeter_school');
-$db->set_charset("utf8");
+include('database.php');
+
+$db = conexion_db();
 
 if (!empty($_GET['cursos']))
 {
