@@ -184,6 +184,7 @@ function addCalificacion()
 {
 	var sCurso = frmAddNotaAlumno.selectCursoCalificar.value;
 	var dni = this.getAttribute("data-dni");
+	var curso = this.getAttribute("data-curso");
 	var sDescripcion = frmAddNotaAlumno.txtDescr.value;
 	var fNota = frmAddNotaAlumno.txtNota.value;
 
@@ -245,7 +246,8 @@ function addCalificacion()
 			frmAddNotaAlumno.txtDescr.value = "";
 			frmAddNotaAlumno.txtNota.value = "";
 			ocultarFormularioCalificar();
-			actualizarTablaNotas(dni);
+			actualizarTablaNotas(dni,curso);
+			
 		}
 	}
 }
@@ -437,6 +439,7 @@ function actualizarTablaNotas(dni,curso)
 	}
 
 	document.getElementById("btnAddNota").setAttribute("data-dni", oAlumno.dni);
+	document.getElementById("btnAddNota").setAttribute("data-curso", curso);
 	actualizaSelectCalificar(oAlumno.dni);
 
 }
@@ -456,6 +459,7 @@ function mostrarFormularioCalificar()
 	document.getElementById("btnCerrarModal").classList.add("ocultar");
 
 	var dni = document.querySelector("#btnAddNota").getAttribute("data-dni");
+	var curso = document.querySelector("#btnAddNota").getAttribute("data-curso");
 
 	var btnGuardar = document.createElement("button");
 	btnGuardar.id = "btnGuardarNota";
@@ -463,6 +467,7 @@ function mostrarFormularioCalificar()
 	btnGuardar.classList.add("btn", "btn-success");
 	btnGuardar.textContent = "Guardar";
 	btnGuardar.setAttribute("data-dni", dni);
+	btnGuardar.setAttribute("data-curso", curso);
 	btnGuardar.addEventListener("click", addCalificacion);
 
 	var btnCancelar = document.createElement("button");
