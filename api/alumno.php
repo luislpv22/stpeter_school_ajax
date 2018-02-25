@@ -13,8 +13,6 @@ if (!empty($_POST['datos']))
 	$sql = "UPDATE usuarios
         SET telefono = '".$oDatos->telefono."', direccion = '".$oDatos->direccion."', email = '".$oDatos->correo."', password = '".$oDatos->password."'
         WHERE dni = '".$oDatos->dni."'";
-
-
 	$query = $db->query($sql);
 	$afectados= $db->affected_rows;
 
@@ -95,6 +93,25 @@ else if (!empty($_POST["datosCurso"]))
 	$respuesta = array($duracion, $precio, $codigo);
 	$datosAenviar= json_encode($respuesta);
 	echo $datosAenviar;
+}
+else if (!empty($_POST["matricular"]))
+{
+	header('Content-type: application/json; charset=utf-8');
+	$sMatricula=$_POST['matricular'];
+	$oMatricula= json_decode($sMatricula);
+
+	$sql = "INSERT INTO MATRICULAS (numero, alumno, curso, estado) values ('".$oMatricula->numero."','".$oMatricula->dniAlumno."','".$oMatricula->curso->codigo."','activa')";
+
+	$query = $db->query($sql);
+	if ( $db->affected_rows == 0)
+	{
+		$info=false;
+	}
+	else
+	{
+		$info=true;
+	}
+	echo json_encode($info);
 }
 
 

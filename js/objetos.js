@@ -128,7 +128,6 @@ class Academia
 
 			var oAlumno = this.getUsuario(oMatricula.dniAlumno);
 			oAlumno.addCurso(oMatricula.curso);
-
 			this.modificarUsuario(oAlumno);
 			sessionStorage.setItem('tMatriculas', JSON.stringify(this._matriculas));
 		}
