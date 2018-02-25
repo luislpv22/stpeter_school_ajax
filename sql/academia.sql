@@ -138,53 +138,22 @@ CREATE TABLE `matriculas` (
 --
 
 INSERT INTO `matriculas` (`numero`, `alumno`, `curso`, `estado`) VALUES
-(1, '12456879E', 'activa'),
-(2, '12456879E', 'activa'),
-(3, '23420102E', 'activa'),
-(4, '23420102E', 'activa'),
-(5, '24568716R', 'activa'),
-(6, '24568716R', 'inactiva'),
-(7, '42010210B', 'inactiva'),
-(8, '45625815Q', 'activa'),
-(9, '46231111Z', 'activa'),
-(10, '46231111Z', 'activa'),
-(11, '54629812T', 'activa'),
-(12, '68789122A', 'inactiva'),
-(13, '85214796Y', 'activa'),
-(14, '98765432D', 'activa'),
-(15, '88888888P', 'activa'),
-(16, '88888888P', 'inactiva');
-
-
--- -------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `matriculas_cursos`
---
-
-CREATE TABLE `matriculas_cursos` (
-  `matricula` int(20) NOT NULL,
-  `curso` varchar(60) NOT NULL,
-  FOREIGN KEY (`matricula`) REFERENCES `matriculas` (`numero`) ON DELETE CASCADE ON UPDATE CASCADE,
-  FOREIGN KEY (`curso`) REFERENCES `cursos` (`codigo`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---
--- Volcado de datos para la tabla `matriculas_cursos`
---
-
-INSERT INTO `matriculas_cursos` (`matricula`, `curso`) VALUES
-(1, 'ENA2P'),
-(2, 'ENA2P'),
-(3, 'ENA2P'),
-(4, 'ENB1S'),
-(5, 'ENB1S'),
-(6, 'ENB2D'),
-(6, 'FRB1S'),
-(7, 'FRA2P'),
-(8, 'FRA2P'),
-(10, 'ENA2P');
-
+(1, '12456879E', 'DEA2P', 'activa'),
+(2, '12456879E', 'ENB1S', 'activa'),
+(3, '23420102E', 'DEB2P', 'activa'),
+(4, '23420102E', 'FRB1S', 'activa'),
+(5, '24568716R', 'FRB1S', 'activa'),
+(6, '24568716R', 'ENB2D', 'inactiva'),
+(7, '42010210B', 'FRA2P', 'inactiva'),
+(8, '45625815Q', 'DEB2P', 'activa'),
+(9, '46231111Z', 'ENB1S', 'activa'),
+(10, '46231111Z', 'ENA2P', 'activa'),
+(11, '54629812T', 'DEA2P', 'activa'),
+(12, '68789122A', 'ENA2P', 'inactiva'),
+(13, '85214796Y', 'DEB2P', 'activa'),
+(14, '98765432D', 'FRB1S', 'activa'),
+(15, '88888888P', 'DEB2P', 'activa'),
+(16, '88888888P', 'FRB1S', 'inactiva');
 
 
 -- --------------------------------------------------------
