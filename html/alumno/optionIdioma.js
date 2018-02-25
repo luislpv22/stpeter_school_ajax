@@ -1,5 +1,5 @@
 
-$.get("php/optionIdiomaMatri.php", cargarOption);
+$.get("api/alumno.php?idioma=idioma",cargarOption);
 
 function cargarOption(oDatosDevueltos, sStatus, oAjax)
 {
@@ -25,7 +25,7 @@ $("#selectIdioma").change(function()
 	}
 
 
-	$.post("php/optionNivelMatri.php", idioma, cargarOptionNivel);				
+	$.post("api/alumno.php", idioma, cargarOptionNivel);				
 });
 
 
@@ -33,33 +33,25 @@ function cargarOptionNivel(oDatosDevueltos, sStatus, oAjax)
 {
 	$("#selectNivel").empty(); 
 	$("#selectNivel").append("<option value='0'>Seleccione Nivel</option>");
-
-
-		optNivel=JSON.parse(oDatosDevueltos);
-		for (var i = 0; i < optNivel.length; i++) {
-			$("#selectNivel").append(optNivel[i]);
-		}
+	optNivel=JSON.parse(oDatosDevueltos);
+	for (var i = 0; i < optNivel.length; i++) {
+		$("#selectNivel").append(optNivel[i]);
+	}
 }
-
 
 $("#selectNivel").change(function()
 {
 	var idioma= $('#selectIdioma').val();
 	var nivel= $('#selectNivel').val();
 	var oDatos={idioma:idioma, nivel:nivel};
-
 	cambiarEstadoBoton();
 
 	if (nivel ==0)
-	{
 		resetDatos();
-
-	}
 	
+	 var sDatos = "datosOption=" + JSON.stringify(oDatos);
 
-	 var sDatos = "datos=" + JSON.stringify(oDatos);
-
-	$.post("php/optionTipoMatri.php", sDatos, cargarOptionTipo);				
+	$.post("api/alumno.php", sDatos, cargarOptionTipo);				
 });
 
 function cargarOptionTipo(oDatosDevueltos, sStatus, oAjax)
@@ -73,43 +65,32 @@ function cargarOptionTipo(oDatosDevueltos, sStatus, oAjax)
 		}
 }
 
-
 $("#selectTipo").change(function()
 {
 	var idioma= $('#selectIdioma').val();
 	var nivel= $('#selectNivel').val();
 	var tipo= $('#selectTipo').val();
-
 	cambiarEstadoBoton();
-
 	if (tipo ==0)
-	{
 		resetDatos();
-	}
-
-
+	
 	var oDatos={idioma:idioma, nivel:nivel, tipo:tipo};	
-	var sDatos = "datos=" + JSON.stringify(oDatos);
-
-	$.post("php/optionDatoCurso.php", sDatos, cargarDatosCurso, "json");				
+	var sDatos = "datosCurso=" + JSON.stringify(oDatos);
+	$.post("api/alumno.php", sDatos, cargarDatosCurso, "json");				
 });
 
 function cargarDatosCurso(oDatosDevueltos, sStatus, oAjax)
 {
 	$("#duraCurso").val(""); 
 	$("#preCurso").val(""); 
-
-
 	$("#duraCurso").val(oDatosDevueltos[0]);
 	$("#preCurso").val(oDatosDevueltos[1]);
 	document.querySelector("#preCurso").dataset.codigo = oDatosDevueltos[2];
-
 }
 
 
 function resetDatos()
 {
-
 	$("#duraCurso").val(""); 
 	$("#preCurso").val(""); 
 }

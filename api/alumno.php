@@ -40,14 +40,64 @@ else if (!empty($_REQUEST["usu"]))
 	$respuesta = "Se ha dado de baja";
 	echo $respuesta;
 }
-
-/*else if (!empty($_GET['alumno']))
+else if (!empty($_GET["idioma"]))
 {
-	$sql = "SELECT estadoCobro FROM alumnos WHERE dni='".$_GET['alumno']."'";
+	$sql = "SELECT distinct idioma from  cursos";
 	$query = $db->query($sql);
-	$result = $query->fetch_object();
-	echo $result->estadoCobro;
-}*/
+	$options = array();
+	while ($fila=$query->fetch_ROW())  
+	{
+		$options[]='<option value="'.$fila[0].'">'.$fila[0].'</option>';
+	}
+	$datosAenviar= json_encode($options);
+	echo $datosAenviar;
+}
+else if (!empty($_POST["selectIdioma"]))
+{
+	$sIdioma=$_POST['selectIdioma'];
+	$sql = "SELECT distinct nivel from  cursos where idioma ='".$sIdioma."'";
+	$query = $db->query($sql);
+	$options = array();
+	while ($fila=$query->fetch_ROW())  
+	{
+		$options[]='<option value="'.$fila[0].'">'.$fila[0].'</option>';
+	}
+	$datosAenviar= json_encode($options);
+	echo $datosAenviar;
+}
+else if (!empty($_POST["datosOption"]))
+{
+	$sIdioma=$_POST['datosOption'];
+	$oIdioma= json_decode($sIdioma);
+	$sql = "SELECT distinct tipo from  cursos where idioma ='".$oIdioma->idioma."' and nivel = '".$oIdioma->nivel."'";
+	$query = $db->query($sql);
+	$options = array();
+	while ($fila=$query->fetch_ROW())  
+	{
+		$options[]='<option value="'.$fila[0].'">'.$fila[0].'</option>';
+	}
+	$datosAenviar= json_encode($options);
+	echo $datosAenviar;
+}
+else if (!empty($_POST["datosCurso"]))
+{
+	$sIdioma=$_REQUEST['datosCurso'];
+	$oIdioma= json_decode($sIdioma);
+	$sql = "SELECT duracion, precio, codigo from  cursos where idioma ='".$oIdioma->idioma."' and nivel = '".$oIdioma->nivel."' and tipo='".$oIdioma->tipo."'";
+	$query = $db->query($sql);
+	$options = array();
+	while ($fila=$query->fetch_ROW())  
+	{
+		$duracion=$fila[0];
+		$precio=$fila[1];
+		$codigo=$fila[2];
+	}
+	$respuesta = array($duracion, $precio, $codigo);
+	$datosAenviar= json_encode($respuesta);
+	echo $datosAenviar;
+}
+
+
 
 ?>
 
