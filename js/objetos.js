@@ -163,10 +163,8 @@ class Academia
 			if (this._cursos[i].codigo == oCurso.codigo)
 				bEncontrado = true;
 
-		if (!bEncontrado) {
+		if (!bEncontrado)
 			this._cursos.push(oCurso);
-			sessionStorage.setItem('tCursos', JSON.stringify(this._cursos));
-		}
 
 		return !bEncontrado;
 	}
@@ -271,7 +269,6 @@ class Academia
 				bEncontrado = true;
 			}
 		}
-		sessionStorage.setItem('tMatriculas', JSON.stringify(this._matriculas));
 	}
 
 	getUsuarios()
@@ -363,21 +360,6 @@ class Academia
 		return oCursos;
 	}
 
-	actualizarSesionUsuarios()
-	{
-		var tUsuarios = this._usuarios;
-		for (var i=0; i<tUsuarios.length; i++)
-		{
-			if (tUsuarios[i] instanceof Administrador)
-				tUsuarios[i].tipo = 'administrador';
-			else if (tUsuarios[i] instanceof Profesor)
-				tUsuarios[i].tipo = 'profesor';
-			else
-				tUsuarios[i].tipo = 'alumno';
-		}
-		sessionStorage.setItem('tUsuarios', JSON.stringify(tUsuarios));
-	}
-
 	modificarNotaAlumno(sDni, oCalificacion)
 	{
 		
@@ -388,34 +370,20 @@ class Academia
 				var oCalifca = this._usuarios[i].listaCalificaciones;
        
 				for (var j=0; j<oCalifca.length; j++)
-				{
 					if (oCalifca[j].matricula == oCalificacion.matricula && oCalifca[j].tarea == oCalificacion.tarea)
-					{
-						
 						oCalifca[j].nota = oCalificacion.nota;
-						this.actualizarSesionUsuarios();
-					}
-				}
-
 			}
 		}
-		//console.log(oCalificacion);
-					
-			$.ajax(
-			{
-				url: "api/profesor.php",
-				type: "POST",
-				async: true,
-				data: {'notas': JSON.stringify(oCalificacion)},
-				dataType: "JSON",
-				success: function()
-				{
-					
-						
-						academia.actualizarSesionUsuarios();
-					
-				}
-			});
+
+		$.ajax(
+		{
+			url: "api/profesor.php",
+			type: "POST",
+			async: true,
+			data: {'notas': JSON.stringify(oCalificacion)},
+			dataType: "JSON",
+			success: function() {}
+		});
 
 	}
 
@@ -429,9 +397,7 @@ class Academia
 	{
 		for (var i=0; i<this._usuarios.length; i++) 
 			if (this._usuarios[i].dni == sDni)
-				this._usuarios[i].activo = "no";
-			
-		this.actualizarSesionUsuarios();
+				this._usuarios[i].activo = 0;
 	}
 
 	getCalificaciones(codCurso, dniAlu)
@@ -456,19 +422,15 @@ class Academia
 				this._usuarios[i].addNota(oCalificacion);
 
 	    $.ajax({
-				url: "api/profesor.php",
-				type: "POST",
-				async: true,
-				data: {'add': JSON.stringify(oCalificacion)},
-				dataType: "JSON",
-				success: function()
-				{
-					
-						
-						academia.actualizarSesionUsuarios();
-					
-				}
-			});
+			url: "api/profesor.php",
+			type: "POST",
+			async: true,
+			data: {'add': JSON.stringify(oCalificacion)},
+			dataType: "JSON",
+			success: function()
+			{
+			}
+		});
 	}
 
 	cambiarEstadoMatri(oMatri)
