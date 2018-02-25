@@ -278,14 +278,29 @@ function addCursoMatri(oEvento)
 
 		if (!sesion.listaCursos.includes(oCurso.codigo))
 		{
-
 			oMatricula = new Matricula(academia.codNuevaMatri(), "activa", sesion.dni, oCurso);
-			if (!academia.addMatricula(oMatricula))
+			$.ajax(
 			{
-				document.querySelector("#txtInformacion span").textContent = "Se ha producido un error al insertar";
-				document.querySelector("#txtInformacion").classList.remove("alert-success", "alert-warning", "alert-danger", "hide");
-				document.querySelector("#txtInformacion").classList.add("alert-danger");
-			}
+				url: "api/alumno.php",
+				type: "POST",
+				aysnc: true,
+				data: {'matricular': JSON.stringify(oMatricula)},
+				dataType: "JSON",
+				success: function(result)
+				{
+					if (result == true)
+					{
+						academia.addMatricula(oMatricula);
+						academia.actualizarSesionUsuarios(); //no sirve no actualiza la sesion.
+					}
+					else
+					{
+						document.querySelector("#txtInformacion span").textContent = "Se ha producido un error al insertar";
+						document.querySelector("#txtInformacion").classList.remove("alert-success", "alert-warning", "alert-danger", "hide");
+						document.querySelector("#txtInformacion").classList.add("alert-danger");
+					}
+				}
+			});
 		}
 		else
 		{
@@ -318,6 +333,8 @@ function cargarListadoCurso(oEvento)
 		oParrafo= document.createElement("P");
 		oParrafo.textContent="Opciones de filtrado y ordenación";
 		document.querySelector("#listaCalificaciones").appendChild(oParrafo);
+
+		$("#listaCalificaciones").append('<table id="tablaMatriCurso" class="table table-hover">');
 
 		//crear select para los filtrados
 		oSelect = document.createElement("SELECT");
@@ -393,7 +410,7 @@ function cargarListadoCurso(oEvento)
 			oCelda = oFila.insertCell(-1);
 			oCelda.textContent = " ";
 			oCelda = oFila.insertCell(-1);
-			oCelda.textContent = listaNotas[i].descripcion;
+			oCelda.textContent = listaNotas[i].tarea;
 			oCelda = oFila.insertCell(-1);
 			oCelda.textContent = listaNotas[i].nota;
 			oCelda.dataset.nota = listaNotas[i].nota;
@@ -447,6 +464,36 @@ function filtaTabla()
 		}
 	}
 }
+
+
+function borrartabla()
+{
+	oTabla = document.querySelector('#tablaMatriCurso');
+	for (var i=oTabla.rows.length-1; i>0; i--)
+		oTabla.deleteRow(i);
+}
+
+function crearTabla(cursos)
+{
+	var oTabla = document.querySelector('#tablaMatriCurso');
+	oTBody = oTabla.createTBody();
+
+	for (var i=0; i<cursos.length; i++)
+	{
+		oFila = oTabla.insertRow(-1);       
+		oCelda = oFila.insertCell(-1);
+		oCelda.textContent = cursos[i].tipo;
+		oCelda = oFila.insertCell(-1);
+		oCelda.textContent = cursos[i].idioma;
+		oCelda = oFila.insertCell(-1);
+		oCelda.textContent = cursos[i].nivel;
+		oCelda = oFila.insertCell(-1);
+		oCelda.textContent = cursos[i].duracion;
+		oCelda = oFila.insertCell(-1);
+		oCelda.textContent = cursos[i].precio;
+	}
+}
+
 
 function borrarFiltro(oFilas)
 {
