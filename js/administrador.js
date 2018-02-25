@@ -449,6 +449,12 @@ function desactivarMatricula(e)
 		this.click();
 	}
 
+	//llamada ajax post para cambiar en la base de dato el estado de la matrícula
+	var oDatos={matricula:numero, estado:oMatricula.estado};
+	var sDatos = "cambiarEstado=" + JSON.stringify(oDatos);
+	$.post("api/matriculas.php", sDatos)
+
+
 	academia.modificarMatricula(oMatricula);
 	mostrarPagina('matriculaciones');
 }
