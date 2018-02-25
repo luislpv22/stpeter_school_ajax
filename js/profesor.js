@@ -117,12 +117,18 @@ function mostrarPagina(oEvento)
 function actualizaSelectCalificar(sDni)
 {
 	var oAlumno = academia.getUsuario(sDni);
+	var oProfesor = academia.getUsuario(sesion.dni);
 	var oTablaActu = oAlumno.listaCursos;
+	var oTablaActuProf = oProfesor.listaCursos;
 	var oSelec = document.querySelector("#selectCursoCalificar");
 	var bEnc = false;
 
 	for (var i=0; i<oTablaActu.length; i++)
 	{
+		for (var j = 0; j < oTablaActuProf.length; j++) {
+			
+		if(oTablaActu[i]==oTablaActuProf[j])
+		{
 		var oOption = document.createElement("option");
 		var oCurso = academia.getCurso(oTablaActu[i]);
 		oOption.text = capitalize(oCurso.idioma)+" "+oCurso.nivel+" "+capitalize(oCurso.tipo);
@@ -133,6 +139,8 @@ function actualizaSelectCalificar(sDni)
 
 		if(!bEnc)
 			oSelec.add(oOption);
+	}
+	}
 	}
 }
 
@@ -182,7 +190,7 @@ function addCalificacion()
 	let matriculas = academia.getMatriculas();
 	let oMatricula = null
 	for (let i=0; i<matriculas.length && oMatricula == null; i++)
-		if (matriculas[i].alumno == dni && matriculas[i].curso == sCurso)
+		if (matriculas[i].dniAlumno == dni && matriculas[i].curso == sCurso)
 			oMatricula = matriculas[i];
 
 	var mensajes = document.querySelectorAll('#frmAddNotaAlumno .text-error');
@@ -277,7 +285,7 @@ function modificarCalificacion()
 	}
 	else
 		academia.modificarNotaAlumno(oAlumno.dni, new Calificacion(oMatricula.numero, desc, nota.value));
-	
+
 }
 
 function consultarNotas(sDni,SFiltro)

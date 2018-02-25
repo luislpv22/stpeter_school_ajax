@@ -349,7 +349,7 @@ class Academia
 
 	modificarNotaAlumno(sDni, oCalificacion)
 	{
-		/*
+		
 		for (var i=0; i<this._usuarios.length; i++) 
 		{
 			if (this._usuarios[i].dni == sDni)
@@ -367,7 +367,7 @@ class Academia
 				}
 
 			}
-		}*/
+		}
 		//console.log(oCalificacion);
 					
 			$.ajax(
@@ -423,6 +423,21 @@ class Academia
 		for (var i=0; i<this._usuarios.length; i++) 
 			if (this._usuarios[i].dni == dni)
 				this._usuarios[i].addNota(oCalificacion);
+
+	    $.ajax({
+				url: "api/profesor.php",
+				type: "POST",
+				async: true,
+				data: {'add': JSON.stringify(oCalificacion)},
+				dataType: "JSON",
+				success: function()
+				{
+					
+						
+						academia.actualizarSesionUsuarios();
+					
+				}
+			});
 	}
 
 	cambiarEstadoMatri(oMatri)

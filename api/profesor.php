@@ -24,6 +24,26 @@ $oCalificacion= json_decode($sCalificacion);
 $sql = "UPDATE notas SET nota = ".$oCalificacion->nota." WHERE matricula = '".$oCalificacion->matricula."'";
 $sql .="AND tarea ='".$oCalificacion->tarea."'";
 $query = $db->query($sql);
+}else if (!empty($_POST["add"]))
+{
+	
+	$sCalificacion=$_POST['add'];
+	$oCalificacion= json_decode($sCalificacion);
+
+	$sql = "INSERT INTO NOTAS (matricula, tarea, nota) values ('".$oCalificacion->matricula."','".$oCalificacion->tarea."',".$oCalificacion->nota.")";
+
+	$query = $db->query($sql);
+	/*
+	if ( $db->affected_rows == 0)
+	{
+		$info=false;
+	}
+	else
+	{
+		$info=true;
+	}
+	echo json_encode($info);
+	*/
 }
 
 
