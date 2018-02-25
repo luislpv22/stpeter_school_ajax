@@ -117,12 +117,18 @@ function mostrarPagina(oEvento)
 function actualizaSelectCalificar(sDni)
 {
 	var oAlumno = academia.getUsuario(sDni);
+	var oProfesor = academia.getUsuario(sesion.dni);
 	var oTablaActu = oAlumno.listaCursos;
+	var oTablaActuProf = oProfesor.listaCursos;
 	var oSelec = document.querySelector("#selectCursoCalificar");
 	var bEnc = false;
 
 	for (var i=0; i<oTablaActu.length; i++)
 	{
+		for (var j = 0; j < oTablaActuProf.length; j++) {
+			
+		if(oTablaActu[i]==oTablaActuProf[j])
+		{
 		var oOption = document.createElement("option");
 		var oCurso = academia.getCurso(oTablaActu[i]);
 		oOption.text = capitalize(oCurso.idioma)+" "+oCurso.nivel+" "+capitalize(oCurso.tipo);
@@ -133,6 +139,8 @@ function actualizaSelectCalificar(sDni)
 
 		if(!bEnc)
 			oSelec.add(oOption);
+	}
+	}
 	}
 }
 
@@ -176,13 +184,13 @@ function addCalificacion()
 {
 	var sCurso = frmAddNotaAlumno.selectCursoCalificar.value;
 	var dni = this.getAttribute("data-dni");
-	var sTarea = frmAddNotaAlumno.txtDescr.value;
+	var sDescripcion = frmAddNotaAlumno.txtDescr.value;
 	var fNota = frmAddNotaAlumno.txtNota.value;
 
 	let matriculas = academia.getMatriculas();
 	let oMatricula = null
 	for (let i=0; i<matriculas.length && oMatricula == null; i++)
-		if (matriculas[i].alumno == dni && matriculas[i].curso == sCurso)
+		if (matriculas[i].dniAlumno == dni && matriculas[i].curso == sCurso)
 			oMatricula = matriculas[i];
 
 	var mensajes = document.querySelectorAll('#frmAddNotaAlumno .text-error');
@@ -219,7 +227,7 @@ function addCalificacion()
 
 		for (var i=0; i<oListaNotas.length; i++)
 		{
-			if(oListaNotas[i].curso == sCurso && oListaNotas[i].descripcion == sDescripcion)
+			if(oListaNotas[i].curso == sCurso && oListaNotas[i].tarea == sDescripcion)
 				bEnc = true;
 		}
 
@@ -253,8 +261,11 @@ function modificarCalificacion()
 	let matriculas = academia.getMatriculas();
 	let oMatricula = null
 	for (let i=0; i<matriculas.length && oMatricula == null; i++)
-		if (matriculas[i].alumno == dni && matriculas[i].curso == curso)
+	{
+
+		if (matriculas[i].dniAlumno == dni && matriculas[i].curso == curso)
 			oMatricula = matriculas[i];
+	}
 
 	var mensajes = document.querySelectorAll('#tablaNotasAlumno .text-error');
 	for (var i=0; i<mensajes.length; i++)
@@ -274,6 +285,7 @@ function modificarCalificacion()
 	}
 	else
 		academia.modificarNotaAlumno(oAlumno.dni, new Calificacion(oMatricula.numero, desc, nota.value));
+
 }
 
 function consultarNotas(sDni,SFiltro)
@@ -351,6 +363,7 @@ function consultarNotas(sDni,SFiltro)
 				btn.classList.add("btn", "btn-warning", "btn-sm");
 				btn.setAttribute("data-toggle", "modal");
 				btn.setAttribute("data-target", "#modal");
+				btn.setAttribute("data-curso", oCurso.codigo);
 				btn.setAttribute("data-dni", oUsuario.dni);
 				btn.addEventListener("click", verNotasAlumno);
 				oCelda.appendChild(btn);
@@ -364,10 +377,11 @@ function consultarNotas(sDni,SFiltro)
 function verNotasAlumno()
 {
 	var dni = this.getAttribute("data-dni");
-	actualizarTablaNotas(dni);
+	var curso = this.getAttribute("data-curso");
+	actualizarTablaNotas(dni,curso);
 }
 
-function actualizarTablaNotas(dni)
+function actualizarTablaNotas(dni,curso)
 {
 	var oAlumno = academia.getUsuario(dni);
 
@@ -378,11 +392,16 @@ function actualizarTablaNotas(dni)
 	for (var i=oTabla.rows.length-1; i>0; i--)
 		oTabla.deleteRow(i);
 
-	var tNotas = oAlumno.listaCalificaciones;
+    var tNotas = oAlumno.listaCalificaciones;
+	
+	
 	for (var i=0; i<tNotas.length; i++)
 	{
+		var oMatricula =academia.getMatricula(tNotas[i].matricula);
+		if(oMatricula.curso==curso)
+	{
 		var fila = oTabla.insertRow(-1);
-		fila.insertCell(-1).appendChild(document.createTextNode(tNotas[i].descripcion));
+		fila.insertCell(-1).appendChild(document.createTextNode(tNotas[i].tarea));
 		var oCeldaInput=fila.insertCell(-1)
 		var input = document.createElement("input");
 		input.setAttribute("data-numero", i);
@@ -394,15 +413,14 @@ function actualizarTablaNotas(dni)
 		input.classList.add("form-control");
 		oCeldaInput.appendChild(input);
 
-		fila.insertCell(-1).appendChild(document.createTextNode(tNotas[i].curso));
 		var oCelda=fila.insertCell(-1);
 		var btn = document.createElement("input");
 		btn.type = "button";
 		btn.value = "Modificar";
 		btn.classList.add("btn", "btn-warning", "btn-sm");
 		btn.setAttribute("data-dni", oAlumno.dni);
-		btn.setAttribute("data-desc", tNotas[i].descripcion);
-		btn.setAttribute("data-curso", tNotas[i].curso);
+		btn.setAttribute("data-desc", tNotas[i].tarea);
+		btn.setAttribute("data-curso", curso);
 		btn.addEventListener("click", modificarCalificacion);
 		oCelda.appendChild(btn);
 
@@ -411,14 +429,16 @@ function actualizarTablaNotas(dni)
 		btn2.value = "Borrar";
 		btn2.classList.add("btn", "btn-danger", "btn-sm");
 		btn2.setAttribute("data-dni", oAlumno.dni);
-		btn2.setAttribute("data-desc", tNotas[i].descripcion);
-		btn2.setAttribute("data-curso", tNotas[i].curso);
+		btn2.setAttribute("data-desc", tNotas[i].tarea);
+		btn2.setAttribute("data-curso", curso);
 		btn2.addEventListener("click", BorrarNota);
 		oCelda.appendChild(btn2);
+	}
 	}
 
 	document.getElementById("btnAddNota").setAttribute("data-dni", oAlumno.dni);
 	actualizaSelectCalificar(oAlumno.dni);
+
 }
 
 function BorrarNota()

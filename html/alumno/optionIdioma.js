@@ -1,6 +1,9 @@
 
 $.get("api/alumno.php?idioma=idioma",cargarOption);
 
+ 	btnEnviarMatri= document.querySelector("#btnEnviarMatri");
+	btnEnviarMatri.addEventListener("click", addCursoMatri, false);
+
 function cargarOption(oDatosDevueltos, sStatus, oAjax)
 {
 	$("#selectIdioma").empty(); 
@@ -102,28 +105,6 @@ function cambiarEstadoBoton()
 	var tipo= $('#selectTipo').val();
 }
 
-$('#btnAddCursoMatri').click(function(){
-	var idioma= $('#selectIdioma').val();
-	var nivel= $('#selectNivel').val();
-	var tipo= $('#selectTipo').val();
-
-	if (idioma != 0 && nivel != 0 &&  tipo !=0 )
-	{
-		var duracion=$('#duraCurso').val();
-		var precio=$('#preCurso').val();
-		var codigoCurso= document.querySelector("#preCurso").dataset.codigo;
-
-		var tBody=$('#tablaMatriCurso').append('<tbody>');
-		var tr=$('tBody').append('<tr data-codigo='+codigoCurso+ '>');
-
-		var tr= $('tBody tr').last('tr');
-		tr.append("<td>"+tipo+"</td>");
-		tr.append("<td>"+idioma+"</td>");
-		tr.append("<td>"+nivel+"</td>");
-		tr.append("<td>"+duracion+"</td>");
-		tr.append("<td>"+precio+"</td>");
-	}
-});
 
 
 

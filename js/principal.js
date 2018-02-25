@@ -7,7 +7,7 @@ function datosIniciales()
 	cargarUsuarios();
 	cargarCursos();
 	cargarMatriculas();
-	cargarCalificaciones();
+	//cargarCalificaciones();
 }
 
 function iniciarSesion(oEvento)
@@ -70,11 +70,33 @@ function cargarUsuarios()
 				        	estadoCobro = result;
 				        }
 				    });
+				    
             		academia.addUsuario(new Alumno(usuarios[i].nombre, usuarios[i].password, usuarios[i].apellidos, usuarios[i].dni, usuarios[i].telefono, usuarios[i].direccion, usuarios[i].email, usuarios[i].activo, estadoCobro));
+            		cargarCalificaciones(usuarios[i].dni);
+
             	}
             	else if (usuarios[i].tipo == 'profesor')
-            		academia.addUsuario(new Profesor(usuarios[i].nombre, usuarios[i].password, usuarios[i].apellidos, usuarios[i].dni, usuarios[i].telefono, usuarios[i].direccion, usuarios[i].email, usuarios[i].activo));
-            	else if (usuarios[i].tipo == 'administrador')
+            	   	{
+            		oProfesor=new Profesor(usuarios[i].nombre, usuarios[i].password, usuarios[i].apellidos, usuarios[i].dni, usuarios[i].telefono, usuarios[i].direccion, usuarios[i].email, usuarios[i].activo);
+  
+				    $.ajax({
+				        url: "api/profesor.php",
+				        type: "GET",
+				        data: { 'profesor': usuarios[i].dni },
+				        success: function(tabla) {
+				        	let tablaCursos= [];
+				        	for (let i = 0; i < tabla.length; i++) {
+				        		tablaCursos[i]=tabla[i].codigo;
+				        	}
+				        	
+                              oProfesor.listaCursos= tablaCursos;
+				            
+				        }
+
+				    });
+				    academia.addUsuario(oProfesor);
+            	
+            }else if (usuarios[i].tipo == 'administrador')
             		academia.addUsuario(new Administrador(usuarios[i].nombre, usuarios[i].password, usuarios[i].apellidos, usuarios[i].dni, usuarios[i].telefono, usuarios[i].direccion, usuarios[i].email, usuarios[i].activo));
             }
         }
@@ -129,20 +151,26 @@ function cargarMatriculas()
     });
 }
 
-function cargarCalificaciones()
+function cargarCalificaciones(sDni)
 {
     $.ajax(
     {
         url: "api/calificaciones.php",
         type: "GET",
         async: false,
-        data: { 'calificaciones': 1 },
+        data: { 'dni': sDni},
         success: function(calificaciones)
         {
+        	
         	for (var i=0; i<calificaciones.length; i++)
-				academia.addCalificacionesAlu(new Calificacion(calificaciones[i].matricula, calificaciones[i].tarea, calificaciones[i].nota));
+        	{
+        		oCalificacion=new Calificacion(calificaciones[i].matricula, calificaciones[i].tarea, calificaciones[i].nota);
+				academia.addCalificacionesAlu(sDni,oCalificacion);
+        		
+        	}
         }
     });
+
 }
 
 /*esta validación la dejo aqui porque puede servir casi perfecto tanto para crear alumnos, profesores, y administrativos*/
