@@ -73,8 +73,27 @@ function cargarUsuarios()
             		academia.addUsuario(new Alumno(usuarios[i].nombre, usuarios[i].password, usuarios[i].apellidos, usuarios[i].dni, usuarios[i].telefono, usuarios[i].direccion, usuarios[i].email, usuarios[i].activo, estadoCobro));
             	}
             	else if (usuarios[i].tipo == 'profesor')
-            		academia.addUsuario(new Profesor(usuarios[i].nombre, usuarios[i].password, usuarios[i].apellidos, usuarios[i].dni, usuarios[i].telefono, usuarios[i].direccion, usuarios[i].email, usuarios[i].activo));
-            	else if (usuarios[i].tipo == 'administrador')
+            	   	{
+            		oProfesor=new Profesor(usuarios[i].nombre, usuarios[i].password, usuarios[i].apellidos, usuarios[i].dni, usuarios[i].telefono, usuarios[i].direccion, usuarios[i].email, usuarios[i].activo);
+  
+				    $.ajax({
+				        url: "api/profesor.php",
+				        type: "GET",
+				        data: { 'profesor': usuarios[i].dni },
+				        success: function(tabla) {
+				        	let tablaCursos= [];
+				        	for (let i = 0; i < tabla.length; i++) {
+				        		tablaCursos[i]=tabla[i].codigo;
+				        	}
+				        	
+                              oProfesor.listaCursos= tablaCursos;
+				            
+				        }
+
+				    });
+				    academia.addUsuario(oProfesor);
+            	
+            }else if (usuarios[i].tipo == 'administrador')
             		academia.addUsuario(new Administrador(usuarios[i].nombre, usuarios[i].password, usuarios[i].apellidos, usuarios[i].dni, usuarios[i].telefono, usuarios[i].direccion, usuarios[i].email, usuarios[i].activo));
             }
         }
