@@ -163,18 +163,18 @@ INSERT INTO `matriculas` (`numero`, `alumno`, `curso`, `estado`) VALUES
 --
 
 CREATE TABLE `notas` (
-  `curso` int(20) NOT NULL,
-  `examen` varchar(60) NOT NULL,
+  `matricula` int(20) NOT NULL,
+  `tarea` varchar(60) NOT NULL,
   `nota` decimal(2,0) NOT NULL,
-  UNIQUE (`curso`, `examen`),
-  FOREIGN KEY (`curso`) REFERENCES `matriculas` (`numero`) ON DELETE CASCADE ON UPDATE CASCADE
+  UNIQUE (`matricula`, `tarea`),
+  FOREIGN KEY (`matricula`) REFERENCES `matriculas` (`numero`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Volcado de datos para la tabla `notas`
 --
 
-INSERT INTO `notas` (`curso`, `examen`, `Nota`) VALUES
+INSERT INTO `notas` (`matricula`, `tarea`, `nota`) VALUES
 (1, 'Examen 1', '8'),
 (1, 'Examen 2', '5'),
 (1, 'Examen 3', '9'),
