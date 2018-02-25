@@ -12,156 +12,160 @@ function datosIniciales()
 
 function iniciarSesion(oEvento)
 {
-    var sDni= document.querySelector("#dniAlu").value;
-    var sPass= document.querySelector("#passAlu").value;
+	var sDni= document.querySelector("#dniAlu").value;
+	var sPass= document.querySelector("#passAlu").value;
 
-    oUsuario = academia.inicioSesion(sDni,sPass);
+	oUsuario = academia.inicioSesion(sDni,sPass);
 
-    if (oUsuario == null)
-    {
-        mensaje(document.createTextNode("Fallo al iniciar sesión"));
-	    return false;
-    }
-    else
-    {
-    	if (oUsuario instanceof Administrador)
-    		oUsuario.tipo = 'administrador';
-    	else if (oUsuario instanceof Profesor)
-    		oUsuario.tipo = 'profesor';
-    	else
-    		oUsuario.tipo = 'alumno';
+	if (oUsuario == null)
+	{
+		mensaje(document.createTextNode("Fallo al iniciar sesión"));
+		return false;
+	}
+	else
+	{
+		if (oUsuario instanceof Administrador)
+			oUsuario.tipo = 'administrador';
+		else if (oUsuario instanceof Profesor)
+			oUsuario.tipo = 'profesor';
+		else
+			oUsuario.tipo = 'alumno';
 
-        sessionStorage.setItem('usuario', JSON.stringify(oUsuario));
-    }
+		sessionStorage.setItem('usuario', JSON.stringify(oUsuario));
+	}
 
-    return true;
+	return true;
 }
 
 function cerrarSesion()
 {
-    sessionStorage.removeItem('usuario');
-    location.href = "login.html";
+	sessionStorage.removeItem('usuario');
+	location.href = "login.html";
 }
-
-
 
 /******** validación y alta de alumno*************************/
 function cargarUsuarios()
 {
-    $.ajax(
-    {
-        url: "api/usuarios.php",
-        type: "GET",
-        async: false,
-        data: { 'usuarios': 1 },
-        success: function(usuarios)
-        {
-            for (let i=0; i<usuarios.length; i++)
-            {
-            	if (usuarios[i].tipo == 'alumno')
-            	{
-            		let estadoCobro = '';
-				    $.ajax(
-				    {
-				        url: "api/usuarios.php",
-				        type: "GET",
-				        data: { 'alumno': usuarios[i].dni },
-				        success: function(result) {
-				        	estadoCobro = result;
-				        }
-				    });
-            		academia.addUsuario(new Alumno(usuarios[i].nombre, usuarios[i].password, usuarios[i].apellidos, usuarios[i].dni, usuarios[i].telefono, usuarios[i].direccion, usuarios[i].email, usuarios[i].activo, estadoCobro));
-            	}
-            	else if (usuarios[i].tipo == 'profesor')
-            	   	{
-            		oProfesor=new Profesor(usuarios[i].nombre, usuarios[i].password, usuarios[i].apellidos, usuarios[i].dni, usuarios[i].telefono, usuarios[i].direccion, usuarios[i].email, usuarios[i].activo);
+	$.ajax(
+	{
+		url: "api/usuarios.php",
+		type: "GET",
+		async: false,
+		data: { 'usuarios': 1 },
+		success: function(usuarios)
+		{
+			for (let i=0; i<usuarios.length; i++)
+			{
+				if (usuarios[i].tipo == 'alumno')
+				{
+					let estadoCobro = '';
+					$.ajax(
+					{
+						url: "api/usuarios.php",
+						type: "GET",
+						data: { 'alumno': usuarios[i].dni },
+						success: function(result) {
+							estadoCobro = result;
+						}
+					});
+					academia.addUsuario(new Alumno(usuarios[i].nombre, usuarios[i].password, usuarios[i].apellidos, usuarios[i].dni, usuarios[i].telefono, usuarios[i].direccion, usuarios[i].email, usuarios[i].activo, estadoCobro));
+				}
+				else if (usuarios[i].tipo == 'profesor')
+				{
+					oProfesor = new Profesor(usuarios[i].nombre, usuarios[i].password, usuarios[i].apellidos, usuarios[i].dni, usuarios[i].telefono, usuarios[i].direccion, usuarios[i].email, usuarios[i].activo);
   
-				    $.ajax({
-				        url: "api/profesor.php",
-				        type: "GET",
-				        data: { 'profesor': usuarios[i].dni },
-				        success: function(tabla) {
-				        	let tablaCursos= [];
-				        	for (let i = 0; i < tabla.length; i++) {
-				        		tablaCursos[i]=tabla[i].codigo;
-				        	}
-				        	
-                              oProfesor.listaCursos= tablaCursos;
-				            
-				        }
+					$.ajax(
+					{
+						url: "api/profesor.php",
+						type: "GET",
+						data: { 'profesor': usuarios[i].dni },
+						success: function(tabla)
+						{
+							let tablaCursos= [];
+							for (let i = 0; i < tabla.length; i++)
+								tablaCursos[i]=tabla[i].codigo;
+							
+							oProfesor.listaCursos= tablaCursos;
+						}
 
-				    });
-				    academia.addUsuario(oProfesor);
-            	
-            }else if (usuarios[i].tipo == 'administrador')
-            		academia.addUsuario(new Administrador(usuarios[i].nombre, usuarios[i].password, usuarios[i].apellidos, usuarios[i].dni, usuarios[i].telefono, usuarios[i].direccion, usuarios[i].email, usuarios[i].activo));
-            }
-        }
-    });
+					});
+					academia.addUsuario(oProfesor);
+				}
+				else if (usuarios[i].tipo == 'administrador')
+					academia.addUsuario(new Administrador(usuarios[i].nombre, usuarios[i].password, usuarios[i].apellidos, usuarios[i].dni, usuarios[i].telefono, usuarios[i].direccion, usuarios[i].email, usuarios[i].activo));
+			}
+		}
+	});
 }
 
 function cargarCursos()
 {
-    $.ajax(
-    {
-        url: "api/cursos.php",
-        type: "GET",
-        async: false,
-        data: { 'cursos': 1 },
-        success: function(cursos)
-        {
-            for (let i=0; i<cursos.length; i++)
-            {
-        		let oCurso = new Curso(cursos[i].codigo, cursos[i].idioma, cursos[i].duracion, cursos[i].precio, cursos[i].tipo, cursos[i].nivel, cursos[i].activo);
-			    $.ajax(
-			    {
-			        url: "api/matriculas.php",
-			        type: "GET",
-			        data: { 'curso': cursos[i].codigo },
-			        success: function(result) {
-			    		oCurso.listaAlumnos = result;	
-			        }
-			    });
-			    academia.addCurso(oCurso);
-            }
-        }
-    });
+	$.ajax(
+	{
+		url: "api/cursos.php",
+		type: "GET",
+		async: false,
+		data: { 'cursos': 1 },
+		success: function(cursos)
+		{
+			for (let i=0; i<cursos.length; i++)
+			{
+				let oCurso = new Curso(cursos[i].codigo, cursos[i].idioma, cursos[i].duracion, cursos[i].precio, cursos[i].tipo, cursos[i].nivel, cursos[i].activo, cursos[i].profesor);
+				$.ajax(
+				{
+					url: "api/matriculas.php",
+					type: "GET",
+					data: { 'curso': cursos[i].codigo },
+					success: function(result) {
+						oCurso.listaAlumnos = result;	
+					}
+				});
+				academia.addCurso(oCurso);
+			}
+		}
+	});
 }
 
 function cargarMatriculas()
 {
-    $.ajax(
-    {
-        url: "api/matriculas.php",
-        type: "GET",
-        async: false,
-        data: { 'matriculas': 1 },
-        success: function(matriculas)
-        {
-        	for (var i=0; i<matriculas.length; i++)
-        	{
-        		let oAlumno = academia.getUsuario(matriculas[i].alumno);
-        		oAlumno.listaCursos.push(matriculas[i].curso);
+	$.ajax(
+	{
+		url: "api/matriculas.php",
+		type: "GET",
+		async: false,
+		data: { 'matriculas': 1 },
+		success: function(matriculas)
+		{
+			for (var i=0; i<matriculas.length; i++)
+			{
+				let oAlumno = academia.getUsuario(matriculas[i].alumno);
+				oAlumno.listaCursos.push(matriculas[i].curso);
 				academia.addMatricula(new Matricula(matriculas[i].numero, matriculas[i].estado, matriculas[i].alumno, matriculas[i].curso));
 			}
-        }
-    });
+		}
+	});
 }
 
 function cargarCalificaciones()
 {
-    $.ajax(
-    {
-        url: "api/calificaciones.php",
-        type: "GET",
-        async: false,
-        data: { 'calificaciones': 1 },
-        success: function(calificaciones)
-        {
-        	for (var i=0; i<calificaciones.length; i++)
-				academia.addCalificacionesAlu(new Calificacion(calificaciones[i].matricula, calificaciones[i].tarea, calificaciones[i].nota));
-        }
-    });
+	$.ajax(
+	{
+		url: "api/calificaciones.php",
+		type: "GET",
+		async: false,
+		data: { calificaciones: 1 },
+		success: function(calificaciones)
+		{
+			for (var i=0; i<calificaciones.length; i++)
+			{
+				let oCalificacion = new Calificacion(calificaciones[i].matricula, calificaciones[i].tarea, calificaciones[i].nota);
+				let oMatricula = academia.getMatricula(calificaciones[i].matricula);
+				let oUsuario = academia.getUsuario(oMatricula.dniAlumno);
+				if (oUsuario instanceof Alumno)
+					oUsuario.addNota(oCalificacion);
+			}
+		}
+	});
 }
 
 /*esta validación la dejo aqui porque puede servir casi perfecto tanto para crear alumnos, profesores, y administrativos*/

@@ -4,7 +4,7 @@ class Persona
 	{
 		this.nombre    = sNombre;
 		this.password  = sPassword;
-		this.apellidos  = sApellidos;
+		this.apellidos = sApellidos;
 		this.dni       = sDni;
 		this.telefono  = iTelefono;
 		this.direccion = sDireccion;
@@ -19,14 +19,18 @@ class Profesor extends Persona
 	{
 		super(sNombre, sPassword, sApellidos, sDni, iTelefono, sDireccion, sCorreo, bActivo);
 
-		this.salario     = iSalario;
-		this.listaCursos = [];
+		this.salario = iSalario;
 	}
 
-	addCurso(codigo)
+	getCursos()
 	{
-		if (!this.listaCursos.includes(codigo))
-			this.listaCursos.push(codigo); // Añade un curso al profesor
+		let listaCursos = [];
+		let tCursos = academia.getCursos();
+		for (let i=0; i<tCursos.length; i++)
+			if (tCursos[i].profesor == this.dni)
+				listaCursos.push(tCursos[i].codigo);
+
+		return listaCursos;
 	}
 }
 
@@ -73,7 +77,7 @@ class Calificacion
 
 class Curso
 {
-	constructor(sCodigo, sIdioma, sDuracion, fPrecio, sTipo, sNivel, bArchivado)
+	constructor(sCodigo, sIdioma, sDuracion, fPrecio, sTipo, sNivel, bActivo, sProfesor)
 	{
 		this.codigo       = sCodigo;
 		this.idioma       = sIdioma;
@@ -82,7 +86,8 @@ class Curso
 		this.tipo         = sTipo;
 		this.nivel        = sNivel;
 		this.listaAlumnos = []; // una lista de los alumnos que están matriculados en el curso
-		this.bArchivado   = bArchivado; // boolean para saber si el curso sigue activo, o ya termino, o se canceló
+		this.activo       = bActivo; // boolean para saber si el curso sigue activo, o ya termino, o se canceló
+		this.profesor     = sProfesor;
 	}
 
 	matricularAlumno(sDni)
@@ -95,10 +100,10 @@ class Matricula
 {
 	constructor(iNumero, sEstado, sDniAlumno, sCurso)
 	{
-		this.numero  = iNumero;
-		this.estado  = sEstado;
+		this.numero    = iNumero;
+		this.estado    = sEstado;
 		this.dniAlumno = sDniAlumno;
-		this.curso = sCurso;
+		this.curso     = sCurso;
 	}
 }
 
@@ -117,41 +122,25 @@ class Academia
 
 	addMatricula(oMatricula)
 	{
-		var bEncontrado = false;
+		let bEncontrado = false;
 		for (var i=0; i<this._matriculas.length && !bEncontrado; i++)
 			if (this._matriculas[i].numero == oMatricula.numero)
 				bEncontrado = true;
 
 		if (!bEncontrado)
 		{
-			var datosCorrectos=false;
-			$.ajax(
+			this._matriculas.push(oMatricula);
+			for (let i=0; i<this._usuarios.length && !bEncontrado; i++)
 			{
-				url: "api/alumno.php",
-				type: "POST",
-				aysnc: false,
-				data: {'matricular': JSON.stringify(oMatricula)},
-				dataType: "JSON",
-				success: function(result)
+				if (this._usuarios[i].dni == oMatricula.dniAlumno)
 				{
-					if (result == true)
-					{
-						datosCorrectos=true;
-					}
+					this._usuarios[i].addCurso(oMatricula.curso);
+					bEncontrado = true;
 				}
-			});
-
-			if (datosCorrectos == true)
-			{
-				this._matriculas.push(oMatricula);
-				var oAlumno = this.getUsuario(oMatricula.dniAlumno);
-				oAlumno.addCurso(oMatricula.curso);
-				this.modificarUsuario(oAlumno);
-				sessionStorage.setItem('tMatriculas', JSON.stringify(this._matriculas));
 			}
 		}
 
-		return !bEncontrado;
+		return bEncontrado;
 	}
 
 	addUsuario(oUsuario)
@@ -174,10 +163,8 @@ class Academia
 			if (this._cursos[i].codigo == oCurso.codigo)
 				bEncontrado = true;
 
-		if (!bEncontrado) {
+		if (!bEncontrado)
 			this._cursos.push(oCurso);
-			sessionStorage.setItem('tCursos', JSON.stringify(this._cursos));
-		}
 
 		return !bEncontrado;
 	}
@@ -204,44 +191,70 @@ class Academia
 		{
 			if (this._usuarios[i].dni == oUsuario.dni)
 			{
-				var nuevoUsuario = null;
+				let bUpdate = false;
+		        $.ajax(
+		        {
+		            url: "api/usuarios.php",
+		            type: "POST",
+		            async: false,
+		            data: oUsuario,
+		            success: function(result)
+		            {
+		            	if (result)
+							bUpdate = true;
+		            }
+		        });
 
-				if (this._usuarios[i] instanceof Administrador)
-				{
-					nuevoUsuario = new Administrador(oUsuario.nombre, oUsuario.password, oUsuario.apellidos, oUsuario.dni, oUsuario.telefono, oUsuario.direccion, oUsuario.correo, oUsuario.activo);
-				}
-				else if (this._usuarios[i] instanceof Profesor)
-				{
-					nuevoUsuario = new Profesor(oUsuario.nombre, oUsuario.password, oUsuario.apellidos, oUsuario.dni, oUsuario.telefono, oUsuario.direccion, oUsuario.correo, oUsuario.activo, 0);
-					nuevoUsuario.listaCursos = oUsuario.listaCursos;
-				}
-				else
-				{
-					nuevoUsuario = new Alumno(oUsuario.nombre, oUsuario.password, oUsuario.apellidos, oUsuario.dni, oUsuario.telefono, oUsuario.direccion, oUsuario.correo, oUsuario.activo, "");
-					nuevoUsuario.listaCursos = oUsuario.listaCursos;
-					nuevoUsuario.listaCalificaciones = oUsuario.listaCalificaciones;
-				}
+		        if (bUpdate)
+		        {
+					let nuevoUsuario = null;
+					if (this._usuarios[i] instanceof Administrador)
+						nuevoUsuario = new Administrador(oUsuario.nombre, oUsuario.password, oUsuario.apellidos, oUsuario.dni, oUsuario.telefono, oUsuario.direccion, oUsuario.correo, oUsuario.activo);
+					else if (this._usuarios[i] instanceof Profesor)
+						nuevoUsuario = new Profesor(oUsuario.nombre, oUsuario.password, oUsuario.apellidos, oUsuario.dni, oUsuario.telefono, oUsuario.direccion, oUsuario.correo, oUsuario.activo, 0);
+					else
+					{
+						nuevoUsuario = new Alumno(oUsuario.nombre, oUsuario.password, oUsuario.apellidos, oUsuario.dni, oUsuario.telefono, oUsuario.direccion, oUsuario.correo, oUsuario.activo, "");
+						nuevoUsuario.listaCursos = oUsuario.listaCursos;
+						nuevoUsuario.listaCalificaciones = oUsuario.listaCalificaciones;
+					}
+					this._usuarios[i] = nuevoUsuario;
+		        }
 
-				this._usuarios[i] = nuevoUsuario;
 				bEncontrado = true;
 			}
 		}
-		this.actualizarSesionUsuarios();
 	}
 
 	modificarCurso(oCurso)
 	{
-		// recorrer la array de cursos hasta encontrar a los que tengan el mismo codigo y modificarlo
-		var bEncontrado = false;
-		for (var i=0; i<this._cursos.length && bEncontrado==false; i++) 
+    	// recorrer la array de cursos hasta encontrar a los que tengan el mismo codigo y modificarlo
+    	let bEncontrado = false;
+
+		for (let i=0; i<this._cursos.length && bEncontrado==false; i++) 
 		{
 			if (this._cursos[i].codigo == oCurso.codigo)
 			{
-				this._cursos[i] = oCurso;
+				let bUpdate = false;
+		        $.ajax(
+		        {
+		            url: "api/cursos.php",
+		            type: "POST",
+		            async: false,
+		            data: oCurso,
+		            success: function(result)
+		            {
+		            	if (result)
+							bUpdate = true;
+		            }
+		        });
+
+		        if (bUpdate)
+					this._cursos[i] = oCurso;
+
 				bEncontrado = true;
 			}
 		}
-		sessionStorage.setItem('tCursos', JSON.stringify(this._cursos));
 	}
 
 	modificarMatricula(oMatricula)
@@ -256,7 +269,6 @@ class Academia
 				bEncontrado = true;
 			}
 		}
-		sessionStorage.setItem('tMatriculas', JSON.stringify(this._matriculas));
 	}
 
 	getUsuarios()
@@ -311,15 +323,12 @@ class Academia
 
 	getMatricula(numero)
 	{
-		var oMatri= null;
-		for (var i = 0; i < this._matriculas.length; i++) 
-		{
+		let oMatricula = null;
+		for (let i=0; i<this._matriculas.length; i++) 
 			if (this._matriculas[i].numero == numero)
-			{
-				oMatri=this._matriculas[i];
-			}
-		}
-		return oMatri;
+				oMatricula = this._matriculas[i];
+
+		return oMatricula;
 	}
 
 	getCursos()
@@ -351,40 +360,31 @@ class Academia
 		return oCursos;
 	}
 
-	actualizarSesionUsuarios()
-	{
-		var tUsuarios = this._usuarios;
-		for (var i=0; i<tUsuarios.length; i++)
-		{
-			if (tUsuarios[i] instanceof Administrador)
-				tUsuarios[i].tipo = 'administrador';
-			else if (tUsuarios[i] instanceof Profesor)
-				tUsuarios[i].tipo = 'profesor';
-			else
-				tUsuarios[i].tipo = 'alumno';
-		}
-		sessionStorage.setItem('tUsuarios', JSON.stringify(tUsuarios));
-	}
-
 	modificarNotaAlumno(sDni, oCalificacion)
 	{
+		
 		for (var i=0; i<this._usuarios.length; i++) 
 		{
 			if (this._usuarios[i].dni == sDni)
 			{
 				var oCalifca = this._usuarios[i].listaCalificaciones;
-
+       
 				for (var j=0; j<oCalifca.length; j++)
-				{
-					if (oCalifca[j].curso == oCalificacion.curso && oCalifca[j].descripcion == oCalificacion.descripcion)
-					{
+					if (oCalifca[j].matricula == oCalificacion.matricula && oCalifca[j].tarea == oCalificacion.tarea)
 						oCalifca[j].nota = oCalificacion.nota;
-						this.actualizarSesionUsuarios();
-					}
-				}
-
 			}
 		}
+
+		$.ajax(
+		{
+			url: "api/profesor.php",
+			type: "POST",
+			async: true,
+			data: {'notas': JSON.stringify(oCalificacion)},
+			dataType: "JSON",
+			success: function() {}
+		});
+
 	}
 
 	codNuevaMatri()
@@ -397,9 +397,7 @@ class Academia
 	{
 		for (var i=0; i<this._usuarios.length; i++) 
 			if (this._usuarios[i].dni == sDni)
-				this._usuarios[i].activo = "no";
-			
-		this.actualizarSesionUsuarios();
+				this._usuarios[i].activo = 0;
 	}
 
 	getCalificaciones(codCurso, dniAlu)
@@ -422,6 +420,17 @@ class Academia
 		for (var i=0; i<this._usuarios.length; i++) 
 			if (this._usuarios[i].dni == dni)
 				this._usuarios[i].addNota(oCalificacion);
+
+	    $.ajax({
+			url: "api/profesor.php",
+			type: "POST",
+			async: true,
+			data: {'add': JSON.stringify(oCalificacion)},
+			dataType: "JSON",
+			success: function()
+			{
+			}
+		});
 	}
 
 	cambiarEstadoMatri(oMatri)

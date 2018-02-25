@@ -2,8 +2,9 @@
 
 header('Content-type: application/json; charset=utf-8');
 
-$db = new mysqli('localhost', 'root', '', 'stpeter_school');
-$db->set_charset("utf8");
+include('database.php');
+
+$db = conexion_db();
 
 if (!empty($_GET['cursos']))
 {
@@ -14,6 +15,14 @@ if (!empty($_GET['cursos']))
 		$cursos[] = $fila;
 
 	echo json_encode($cursos, JSON_UNESCAPED_UNICODE);
+}
+else if (!empty($_POST))
+{
+	$sql = "UPDATE cursos SET idioma='".$_POST['idioma']."', duracion='".$_POST['duracion']."', precio='".$_POST['precio']."', tipo='".$_POST['tipo']."', nivel='".$_POST['nivel']."', activo='".$_POST['activo']."' WHERE codigo='".$_POST['codigo']."'";
+	if ($db->query($sql))
+		echo true;
+	else
+		echo false;
 }
 
 ?>

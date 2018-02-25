@@ -46,12 +46,12 @@ function mostrarPagina(pagina)
 			fila.insertCell(-1).appendChild(document.createTextNode(capitalize(cursos[i].tipo)));
 			fila.insertCell(-1).appendChild(document.createTextNode(cursos[i].duracion));
 			fila.insertCell(-1).appendChild(document.createTextNode(cursos[i].precio+" €"));
-			fila.insertCell(-1).appendChild(document.createTextNode(cursos[i].bArchivado.toUpperCase()));
+			fila.insertCell(-1).appendChild(document.createTextNode(cursos[i].activo));
 
-			fila.setAttribute("data-activo", cursos[i].bArchivado);
+			fila.setAttribute("data-activo", cursos[i].activo);
 
 			var acciones = fila.insertCell(-1);
-			if (cursos[i].bArchivado == 1)
+			if (cursos[i].activo == 1)
 			{
 				var btnEditar = document.createElement("input");
 				btnEditar.type = "button";
@@ -111,7 +111,7 @@ function mostrarPagina(pagina)
 			fila.insertCell(-1).appendChild(document.createTextNode(alumnos[i].apellidos));
 			fila.insertCell(-1).appendChild(document.createTextNode(alumnos[i].correo));
 			fila.insertCell(-1).appendChild(document.createTextNode(alumnos[i].direccion));
-			fila.insertCell(-1).appendChild(document.createTextNode(alumnos[i].activo.toUpperCase()));
+			fila.insertCell(-1).appendChild(document.createTextNode(alumnos[i].activo));
 
 			fila.setAttribute("data-activo", alumnos[i].activo);
 
@@ -175,7 +175,7 @@ function mostrarPagina(pagina)
 			fila.insertCell(-1).appendChild(document.createTextNode(profesores[i].nombre));
 			fila.insertCell(-1).appendChild(document.createTextNode(profesores[i].apellidos));
 			fila.insertCell(-1).appendChild(document.createTextNode(profesores[i].correo));
-			fila.insertCell(-1).appendChild(document.createTextNode(profesores[i].activo.toUpperCase()));
+			fila.insertCell(-1).appendChild(document.createTextNode(profesores[i].activo));
 
 			fila.setAttribute("data-activo", profesores[i].activo);
 
@@ -239,7 +239,7 @@ function mostrarPagina(pagina)
 			fila.insertCell(-1).appendChild(document.createTextNode(administradores[i].nombre));
 			fila.insertCell(-1).appendChild(document.createTextNode(administradores[i].apellidos));
 			fila.insertCell(-1).appendChild(document.createTextNode(administradores[i].correo));
-			fila.insertCell(-1).appendChild(document.createTextNode(administradores[i].activo.toUpperCase()));
+			fila.insertCell(-1).appendChild(document.createTextNode(administradores[i].activo));
 
 			fila.setAttribute("data-activo", administradores[i].activo);
 
@@ -364,45 +364,52 @@ function mostrarPagina(pagina)
 	}
 }
 
-function resetearCamposCurso()
-{
-	var input = document.querySelectorAll('#formEditarCurso .errorFormulario');
-    for (var i=0; i<input.length; i++)
-    input[i].classList.remove("errorFormulario");
-
-    var mensajes = document.querySelectorAll('#formEditarCurso .text-error');
-    for (var i=0; i<mensajes.length; i++)
-    mensajes[i].remove();
-}
-
 function editarCurso()
 {
 	document.querySelector('.modal-title').textContent = "Editar curso";
-	var forms = document.querySelectorAll('#modal form');
-	for (var i=0; i<forms.length; i++)
+	let forms = document.querySelectorAll('#modal form');
+	for (let i=0; i<forms.length; i++)
 		forms[i].style.display = "none";
 
-	var codigo = this.getAttribute("data-codigo");
-	var oCurso = academia.getCurso(codigo);
-	var form = document.getElementById("formEditarCurso");
+	let codigo = this.getAttribute("data-codigo");
+	let oCurso = academia.getCurso(codigo);
+	let form = document.getElementById("formEditarCurso");
 
-	resetearCamposCurso();
+	limpiarErrores(form);
 
 	form.codigo.value = oCurso.codigo;
 	form.idioma.value = oCurso.idioma;
 	form.nivel.value = oCurso.nivel;
 	form.tipo.value = oCurso.tipo;
 
-	var duracion = oCurso.duracion.split(" ");
+	let duracion = oCurso.duracion.split(" ");
 	form.duracion1.value = duracion[0];
 	form.duracion2.value = duracion[1];
 
-	form.precio.value = oCurso.precio;
-	form.activo.value = oCurso.bArchivado;
+	let tProfesores = academia.getProfesores();
+	let options = form.profesor.options;
+	for (let i=0; i<options.length; i++) 
+		options[i].remove();
 
+	for (let i=0; i<tProfesores.length; i++) 
+	{
+		let option = document.createElement("option");
+		option.value = tProfesores[i].dni;
+		option.textContent = tProfesores[i].nombre+' '+tProfesores[i].apellidos;
+
+		if (oCurso.profesor == tProfesores[i].dni)
+			option.selected = "selected";
+
+		form.profesor.appendChild(option);
+	}
+
+	form.precio.value = oCurso.precio;
+	form.activo.value = oCurso.activo;
+
+	$('#modal .btn-success').unbind("click");
 	document.querySelector('#modal .btn-success').id = "btnGuardarCurso";
 	document.querySelector('#btnGuardarCurso').setAttribute("data-codigo", codigo);
-	document.querySelector('#btnGuardarCurso').addEventListener("click", guardarCurso);
+	$('#btnGuardarCurso').click(guardarCurso);
 
 	form.style.display = "block";
 }
@@ -410,18 +417,17 @@ function editarCurso()
 function crearCurso()
 {
 	document.querySelector('.modal-title').textContent = "Crear curso";
-	var forms = document.querySelectorAll('#modal form');
-	for (var i=0; i<forms.length; i++)
+	let forms = document.querySelectorAll('#modal form');
+	for (let i=0; i<forms.length; i++)
 		forms[i].style.display = "none";
 
-	var form = document.getElementById("formEditarCurso");
+	let form = document.getElementById("formEditarCurso");
+	$('#modal .btn-success').unbind("click");
 	document.querySelector('#modal .btn-success').id = "btnGuardarCurso";
 	document.querySelector('#btnGuardarCurso').removeAttribute("data-codigo");
-	document.querySelector('#btnGuardarCurso').addEventListener("click", guardarCurso);
+	$('#btnGuardarCurso').click(guardarCurso);
 
-
-	resetearCamposCurso();
-
+	limpiarErrores(form);
 
 	form.codigo.removeAttribute("readonly");
 	form.codigo.value = "";
@@ -431,14 +437,14 @@ function crearCurso()
 	form.duracion1.value = "1";
 	form.duracion2.value = "meses";
 	form.precio.value = "0.00";
-	form.activo.value = "si";
+	form.activo.value = 1;
 	form.style.display = "block";
 }
 
 function desactivarMatricula(e)
 {
-	var numero = this.getAttribute("data-matricula");
-	var oMatricula = academia.getMatricula(numero);
+	let numero = this.getAttribute("data-matricula");
+	let oMatricula = academia.getMatricula(numero);
 
 	if (oMatricula.estado == "activa") {
 		oMatricula.estado = "inactiva";
@@ -449,11 +455,10 @@ function desactivarMatricula(e)
 		this.click();
 	}
 
-	//llamada ajax post para cambiar en la base de dato el estado de la matrícula
-	var oDatos={matricula:numero, estado:oMatricula.estado};
-	var sDatos = "cambiarEstado=" + JSON.stringify(oDatos);
-	$.post("api/matriculas.php", sDatos)
-
+	// llamada ajax post para cambiar en la base de dato el estado de la matrícula
+	let oDatos={matricula:numero, estado:oMatricula.estado};
+	let sDatos = "cambiarEstado=" + JSON.stringify(oDatos);
+	$.post("api/matriculas.php", sDatos);
 
 	academia.modificarMatricula(oMatricula);
 	mostrarPagina('matriculaciones');
@@ -461,24 +466,25 @@ function desactivarMatricula(e)
 
 function guardarCurso()
 {
-	var form = document.getElementById("formEditarCurso");
+	let form = document.getElementById("formEditarCurso");
 
-	if (comprobarFormCurso()==true)
+	if (validarFormCurso(form))
 	{
-		var sCodigo = form.codigo.value;
+		let sCodigo = form.codigo.value;
 
-		var dataCod = this.getAttribute("data-codigo");
+		let dataCod = this.getAttribute("data-codigo");
 		if (dataCod != null)
 			sCodigo = dataCod;
 
-		var sIdioma = form.idioma.value;
-		var sNivel = form.nivel.value;
-		var sTipo = form.tipo.value;
-		var fPrecio = parseFloat(form.precio.value);
-		var sDuracion = form.duracion1.value + " " + form.duracion2.value;
-		var bActivo = form.activo.value;
+		let sIdioma = form.idioma.value;
+		let sNivel = form.nivel.value;
+		let sTipo = form.tipo.value;
+		let fPrecio = parseFloat(form.precio.value);
+		let sDuracion = form.duracion1.value + " " + form.duracion2.value;
+		let bActivo = form.activo.value;
+		let sProfesor = form.profesor.value;
 
-		var oCurso = new Curso(sCodigo, sIdioma, sDuracion, fPrecio, sTipo, sNivel, bActivo);
+		let oCurso = new Curso(sCodigo, sIdioma, sDuracion, fPrecio, sTipo, sNivel, bActivo, sProfesor);
 
 		if (dataCod != null)
 			academia.modificarCurso(oCurso);
@@ -490,30 +496,19 @@ function guardarCurso()
 	}
 }
 
-function resetearCamposAlumno()
-{
-	var input = document.querySelectorAll('#formEditarAlumno .errorFormulario');
-    for (var i=0; i<input.length; i++)
-    input[i].classList.remove("errorFormulario");
-
-    var mensajes = document.querySelectorAll('#formEditarAlumno .text-error');
-    for (var i=0; i<mensajes.length; i++)
-    mensajes[i].remove();
-}
-
 
 function editarAlumno()
 {
 	document.querySelector('.modal-title').textContent = "Editar alumno";
-	var forms = document.querySelectorAll('#modal form');
-	for (var i=0; i<forms.length; i++)
+	let forms = document.querySelectorAll('#modal form');
+	for (let i=0; i<forms.length; i++)
 		forms[i].style.display = "none";
 
-	var dni = this.getAttribute("data-dni");
-	var oAlumno = academia.getUsuario(dni);
-	var form = document.getElementById("formEditarAlumno");
+	let dni = this.getAttribute("data-dni");
+	let oAlumno = academia.getUsuario(dni);
+	let form = document.getElementById("formEditarAlumno");
 
-	resetearCamposAlumno();
+	limpiarErrores(form);
 
 	form.dni.value = oAlumno.dni;
 	form.password.value = oAlumno.password;
@@ -523,11 +518,10 @@ function editarAlumno()
 	form.telefono.value = oAlumno.telefono;
 	form.direccion.value = oAlumno.direccion;
 
+	$('#modal .btn-success').unbind("click");
 	document.querySelector('#modal .btn-success').id = "btnGuardarAlumno";
 	document.querySelector('#btnGuardarAlumno').setAttribute("data-dni", dni);
-	document.querySelector('#btnGuardarAlumno').addEventListener("click", guardarAlumno);
-
-
+	$('#btnGuardarAlumno').click(guardarAlumno);
 
 	form.style.display = "block";
 }
@@ -535,16 +529,17 @@ function editarAlumno()
 function crearAlumno()
 {
 	document.querySelector('.modal-title').textContent = "Nuevo alumno";
-	var forms = document.querySelectorAll('#modal form');
-	for (var i=0; i<forms.length; i++)
+	let forms = document.querySelectorAll('#modal form');
+	for (let i=0; i<forms.length; i++)
 		forms[i].style.display = "none";
 
-	var form = document.getElementById("formEditarAlumno");
+	let form = document.getElementById("formEditarAlumno");
+	$('#modal .btn-success').unbind("click");
 	document.querySelector('#modal .btn-success').id = "btnGuardarAlumno";
 	document.querySelector('#btnGuardarAlumno').removeAttribute("data-dni");
-	document.querySelector('#btnGuardarAlumno').addEventListener("click", guardarAlumno);
+	$('#btnGuardarAlumno').click(guardarAlumno);
 
-	resetearCamposAlumno();
+	limpiarErrores(form);
 
 	form.dni.removeAttribute("readonly");
 	form.dni.value = "";
@@ -559,24 +554,24 @@ function crearAlumno()
 
 function guardarAlumno()
 {
-	var form = document.getElementById("formEditarAlumno");
+	let form = document.getElementById("formEditarAlumno");
 
-	if (comprobarAltaAlu()==true)
+	if (validarFormUsuario(form))
 	{
-		var sDNI = form.dni.value;
+		let sDNI = form.dni.value;
 
-		var dataDNI = this.getAttribute("data-dni");
+		let dataDNI = this.getAttribute("data-dni");
 		if (dataDNI != null)
 			sDNI = dataDNI;
 
-		var sPassword = form.password.value;
-		var sNombre = form.nombre.value;
-		var sApellidos = form.apellidos.value;
-		var sCorreo = form.email.value;
-		var sTelefono = form.telefono.value;
-		var sDireccion = form.direccion.value;
+		let sPassword = form.password.value;
+		let sNombre = form.nombre.value;
+		let sApellidos = form.apellidos.value;
+		let sCorreo = form.email.value;
+		let sTelefono = form.telefono.value;
+		let sDireccion = form.direccion.value;
 
-		var oAlumno = new Alumno(sNombre, sPassword, sApellidos, sDNI, sTelefono, sDireccion, sCorreo, "si", "");
+		let oAlumno = new Alumno(sNombre, sPassword, sApellidos, sDNI, sTelefono, sDireccion, sCorreo, 1, "");
 
 		if (dataDNI != null)
 			academia.modificarUsuario(oAlumno);
@@ -589,31 +584,18 @@ function guardarAlumno()
 	
 }
 
-
-function resetearCamposProfesor()
-{
-	var input = document.querySelectorAll('#formEditarProfesor .errorFormulario');
-    for (var i=0; i<input.length; i++)
-    input[i].classList.remove("errorFormulario");
-
-    var mensajes = document.querySelectorAll('#formEditarProfesor .text-error');
-    for (var i=0; i<mensajes.length; i++)
-    mensajes[i].remove();
-}
-
-
 function editarProfesor()
 {
 	document.querySelector('.modal-title').textContent = "Editar profesor";
-	var forms = document.querySelectorAll('#modal form');
-	for (var i=0; i<forms.length; i++)
+	let forms = document.querySelectorAll('#modal form');
+	for (let i=0; i<forms.length; i++)
 		forms[i].style.display = "none";
 
-	var dni = this.getAttribute("data-dni");
-	var oProfesor = academia.getUsuario(dni);
-	var form = document.getElementById("formEditarProfesor");
+	let dni = this.getAttribute("data-dni");
+	let oProfesor = academia.getUsuario(dni);
+	let form = document.getElementById("formEditarProfesor");
 
-	resetearCamposProfesor();
+	limpiarErrores(form);
 
 	form.dni.value = oProfesor.dni;
 	form.password.value = oProfesor.password;
@@ -623,26 +605,10 @@ function editarProfesor()
 	form.telefono.value = oProfesor.telefono;
 	form.direccion.value = oProfesor.direccion;
 
-	var tCursos = academia.getCursos();
-	var options = document.querySelectorAll('#formEditarProfesor #selectCursosProf option');
-	for (var i=0; i<options.length; i++)
-		options[i].parentNode.removeChild(options[i]);
-
-	for (var i=0; i<tCursos.length; i++) 
-	{
-		var option = document.createElement("option");
-		option.value = tCursos[i].codigo;
-		option.textContent = tCursos[i].idioma+", "+tCursos[i].nivel+", "+tCursos[i].tipo;
-
-		if (oProfesor.listaCursos.includes(tCursos[i].codigo))
-			option.selected = "selected";
-
-		form.cursos.appendChild(option);
-	}
-
+	$('#modal .btn-success').unbind("click");
 	document.querySelector('#modal .btn-success').id = "btnGuardarProfesor";
 	document.querySelector('#btnGuardarProfesor').setAttribute("data-dni", dni);
-	document.querySelector('#btnGuardarProfesor').addEventListener("click", guardarProfesor);
+	$('#btnGuardarProfesor').click(guardarProfesor);
 
 	form.style.display = "block";
 }
@@ -650,16 +616,17 @@ function editarProfesor()
 function crearProfesor()
 {
 	document.querySelector('.modal-title').textContent = "Nuevo profesor";
-	var forms = document.querySelectorAll('#modal form');
-	for (var i=0; i<forms.length; i++)
+	let forms = document.querySelectorAll('#modal form');
+	for (let i=0; i<forms.length; i++)
 		forms[i].style.display = "none";
 
-	var form = document.getElementById("formEditarProfesor");
+	let form = document.getElementById("formEditarProfesor");
+	$('#modal .btn-success').unbind("click");
 	document.querySelector('#modal .btn-success').id = "btnGuardarProfesor";
 	document.querySelector('#btnGuardarProfesor').removeAttribute("data-dni");
-	document.querySelector('#btnGuardarProfesor').addEventListener("click", guardarProfesor);
+	$('#btnGuardarProfesor').click(guardarProfesor);
 
-	resetearCamposProfesor();
+	limpiarErrores(form);
 
 	form.dni.removeAttribute("readonly");
 	form.dni.value = "";
@@ -670,47 +637,29 @@ function crearProfesor()
 	form.telefono.value = "";
 	form.direccion.value = "";
 
-	var tCursos = academia.getCursos();
-	var options = document.querySelectorAll('#formEditarProfesor #selectCursosProf option');
-	for (var i=0; i<options.length; i++)
-		options[i].parentNode.removeChild(options[i]);
-
-	for (var i=0; i<tCursos.length; i++) 
-	{
-		var option = document.createElement("option");
-		option.value = tCursos[i].codigo;
-		option.textContent = tCursos[i].idioma+", "+tCursos[i].nivel+", "+tCursos[i].tipo;
-		form.cursos.appendChild(option);
-	}
-
 	form.style.display = "block";
 }
 
 function guardarProfesor()
 {
-	if (comprobarFormProf()==true)
+	let form = document.getElementById("formEditarProfesor");
+
+	if (validarFormUsuario(form))
 	{
-		var form = document.getElementById("formEditarProfesor");
+		let sDNI = form.dni.value;
 
-		var sDNI = form.dni.value;
-
-		var dataDNI = this.getAttribute("data-dni");
+		let dataDNI = this.getAttribute("data-dni");
 		if (dataDNI != null)
 			sDNI = dataDNI;
 
-		var sPassword = form.password.value;
-		var sNombre = form.nombre.value;
-		var sApellidos = form.apellidos.value;
-		var sCorreo = form.email.value;
-		var sTelefono = form.telefono.value;
-		var sDireccion = form.direccion.value;
-		var listaCursos = form.cursos.options;
+		let sPassword = form.password.value;
+		let sNombre = form.nombre.value;
+		let sApellidos = form.apellidos.value;
+		let sCorreo = form.email.value;
+		let sTelefono = form.telefono.value;
+		let sDireccion = form.direccion.value;
 
-		var oProfesor = new Profesor(sNombre, sPassword, sApellidos, sDNI, sTelefono, sDireccion, sCorreo, "si", "");
-
-		for (var i=0; i<listaCursos.length; i++)
-			if (listaCursos[i].selected)
-				oProfesor.addCurso(listaCursos[i].value);
+		let oProfesor = new Profesor(sNombre, sPassword, sApellidos, sDNI, sTelefono, sDireccion, sCorreo, 1, "");
 
 		if (dataDNI != null)
 			academia.modificarUsuario(oProfesor);
@@ -722,30 +671,18 @@ function guardarProfesor()
 	}
 }
 
-function resetearCamposAdmin()
-{
-	var input = document.querySelectorAll('#formEditarAdministrador .errorFormulario');
-    for (var i=0; i<input.length; i++)
-    input[i].classList.remove("errorFormulario");
-
-    var mensajes = document.querySelectorAll('#formEditarAdministrador .text-error');
-    for (var i=0; i<mensajes.length; i++)
-    mensajes[i].remove();
-}
-
-
 function editarAdministrador()
 {
 	document.querySelector('.modal-title').textContent = "Editar administrador";
-	var forms = document.querySelectorAll('#modal form');
-	for (var i=0; i<forms.length; i++)
+	let forms = document.querySelectorAll('#modal form');
+	for (let i=0; i<forms.length; i++)
 		forms[i].style.display = "none";
 
-	var dni = this.getAttribute("data-dni");
-	var oAdministrador = academia.getUsuario(dni);
-	var form = document.getElementById("formEditarAdministrador");
+	let dni = this.getAttribute("data-dni");
+	let oAdministrador = academia.getUsuario(dni);
+	let form = document.getElementById("formEditarAdministrador");
 
-	resetearCamposAdmin();
+	limpiarErrores(form);
 
 	form.dni.value = oAdministrador.dni;
 	form.password.value = oAdministrador.password;
@@ -755,9 +692,10 @@ function editarAdministrador()
 	form.telefono.value = oAdministrador.telefono;
 	form.direccion.value = oAdministrador.direccion;
 
+	$('#modal .btn-success').unbind("click");
 	document.querySelector('#modal .btn-success').id = "btnGuardarAdministrador";
 	document.querySelector('#btnGuardarAdministrador').setAttribute("data-dni", dni);
-	document.querySelector('#btnGuardarAdministrador').addEventListener("click", guardarAdministrador);
+	$('#btnGuardarAdministrador').click(guardarAdministrador);
 
 	form.style.display = "block";
 }
@@ -765,16 +703,17 @@ function editarAdministrador()
 function crearAdministrador()
 {
 	document.querySelector('.modal-title').textContent = "Nuevo administrador";
-	var forms = document.querySelectorAll('#modal form');
-	for (var i=0; i<forms.length; i++)
+	let forms = document.querySelectorAll('#modal form');
+	for (let i=0; i<forms.length; i++)
 		forms[i].style.display = "none";
 
-	var form = document.getElementById("formEditarAdministrador");
+	let form = document.getElementById("formEditarAdministrador");
+	$('#modal .btn-success').unbind("click");
 	document.querySelector('#modal .btn-success').id = "btnGuardarAdministrador";
 	document.querySelector('#btnGuardarAdministrador').removeAttribute("data-dni");
-	document.querySelector('#btnGuardarAdministrador').addEventListener("click", guardarAdministrador);
+	$('#btnGuardarAdministrador').click(guardarAdministrador);
 
-	resetearCamposAdmin();
+	limpiarErrores(form);
 
 	form.dni.removeAttribute("readonly");
 	form.dni.value = "";
@@ -789,24 +728,24 @@ function crearAdministrador()
 
 function guardarAdministrador()
 {
-	var form = document.getElementById("formEditarAdministrador");
+	let form = document.getElementById("formEditarAdministrador");
 
-	if (comprobarFormAdmin()==true)
+	if (validarFormUsuario(form))
 	{
-		var sDNI = form.dni.value;
+		let sDNI = form.dni.value;
 
-		var dataDNI = this.getAttribute("data-dni");
+		let dataDNI = this.getAttribute("data-dni");
 		if (dataDNI != null)
 			sDNI = dataDNI;
 
-		var sPassword = form.password.value;
-		var sNombre = form.nombre.value;
-		var sApellidos = form.apellidos.value;
-		var sCorreo = form.email.value;
-		var sTelefono = form.telefono.value;
-		var sDireccion = form.direccion.value;
+		let sPassword = form.password.value;
+		let sNombre = form.nombre.value;
+		let sApellidos = form.apellidos.value;
+		let sCorreo = form.email.value;
+		let sTelefono = form.telefono.value;
+		let sDireccion = form.direccion.value;
 
-		var oAdministrador = new Administrador(sNombre, sPassword, sApellidos, sDNI, sTelefono, sDireccion, sCorreo, "si", "");
+		let oAdministrador = new Administrador(sNombre, sPassword, sApellidos, sDNI, sTelefono, sDireccion, sCorreo, 1, "");
 
 		if (dataDNI != null)
 			academia.modificarUsuario(oAdministrador);
@@ -820,14 +759,14 @@ function guardarAdministrador()
 
 function switchActivo()
 {
-	var lblActivo = document.createElement("label");
+	let lblActivo = document.createElement("label");
 	lblActivo.classList.add("switch-container");
-	var chkActivo = document.createElement("input");
+	let chkActivo = document.createElement("input");
 	chkActivo.type = "checkbox";
 	chkActivo.classList.add("switch-activo");
-	var divOuter = document.createElement("div");
+	let divOuter = document.createElement("div");
 	divOuter.classList.add("switch-outer");
-	var divInner = document.createElement("div");
+	let divInner = document.createElement("div");
 	divInner.classList.add("switch-inner");
 	divOuter.appendChild(divInner);
 	lblActivo.appendChild(chkActivo);
@@ -836,42 +775,30 @@ function switchActivo()
 	return lblActivo;
 }
 
-function resetearCamposMatricula()
-{
-	var input = document.querySelectorAll('#formModMatri .errorFormulario');
-    for (var i=0; i<input.length; i++)
-    input[i].classList.remove("errorFormulario");
-
-	
-    var mensajes = document.querySelectorAll('#formModMatri .text-error');
-    for (var i=0; i<mensajes.length; i++)
-    mensajes[i].remove();
-}
-
 function editarMatricula()
 {
-	var numero = this.getAttribute('data-matricula');
+	let numero = this.getAttribute('data-matricula');
 	oMatricula = academia.getMatricula(numero);
   	document.querySelector('.modal-title').textContent = "Editar matrícula";
-	var forms = document.querySelectorAll('#modal form');
+	let forms = document.querySelectorAll('#modal form');
 
-	for (var i=0; i<forms.length; i++)
+	for (let i=0; i<forms.length; i++)
 		forms[i].style.display = "none";
 
-	var codigo = numero;
-	var dni = oMatricula.dniAlumno;
-	var form = document.getElementById("formModMatri");
+	let codigo = numero;
+	let dni = oMatricula.dniAlumno;
+	let form = document.getElementById("formModMatri");
 	form.numMatri.value = codigo;
 	form.dniMatri.value = dni;
-	var listaCursos = academia.getCursos();
+	let listaCursos = academia.getCursos();
 
-	resetearCamposMatricula();
+	limpiarErrores(form);
 
-	var oP = document.querySelectorAll("OPTION");
-	for (var i=0; i<oP.length; i++) 
+	let oP = document.querySelectorAll("OPTION");
+	for (let i=0; i<oP.length; i++) 
 		oP[i].parentNode.removeChild(oP[i]);
 
-	for (var i=0; i<listaCursos.length; i++) 
+	for (let i=0; i<listaCursos.length; i++) 
 	{
 		oP = document.createElement("OPTION");
 		oP.value = listaCursos[i].codigo;
@@ -882,32 +809,35 @@ function editarMatricula()
 
 		form.seleCurMatri.appendChild(oP);
 	}
-	//academia.actualizarSesionMatriculas();
+
+	$('#modal .btn-success').unbind("click");
 	document.querySelector('#modal .btn-success').id = "btnGuardarMatricula";
 	document.querySelector('#btnGuardarMatricula').setAttribute("data-estado", oMatricula.estado);
-	document.querySelector('#btnGuardarMatricula').addEventListener("click", guardarMatricula);
+	$('#btnGuardarMatricula').click(guardarMatricula);
+
 	form.style.display = "block";
 }
 
 function guardarMatricula()
 {
-	if (comprobarFormMatricula())
-	{
-		var form = document.getElementById("formModMatri");
-		var dataEstado = this.getAttribute("data-estado");
+	let form = document.getElementById("formModMatri");
 
-		var sNumero = form.numMatri.value;
-		var sDni = form.dniMatri.value;
-		var sCurso = "";
+	if (validarCampoCursos(form))
+	{
+		let dataEstado = this.getAttribute("data-estado");
+
+		let sNumero = form.numMatri.value;
+		let sDni = form.dniMatri.value;
+		let sCurso = "";
 
 		listaOp=document.querySelectorAll("OPTION");
-		for (var i = 0; i < listaOp.length; i++) {
+		for (let i = 0; i < listaOp.length; i++) {
 			if (listaOp[i].selected)
 				sCurso = listaOp[i].value;
 		}
 
-		var oMatricula = new Matricula(sNumero, dataEstado, sDni, sCurso);
-		var oAlumno = academia.getUsuario(sDni); 
+		let oMatricula = new Matricula(sNumero, dataEstado, sDni, sCurso);
+		let oAlumno = academia.getUsuario(sDni); 
 
 		if (sNumero != null)
 		{
@@ -929,9 +859,9 @@ function guardarMatricula()
 
 function borrarCurso()
 {
-	var codigo = this.getAttribute("data-curso");
-	var oCurso = academia.getCurso(codigo);
-	oCurso.bArchivado = "no";
+	let codigo = this.getAttribute("data-curso");
+	let oCurso = academia.getCurso(codigo);
+	oCurso.activo = 0;
 
 	academia.modificarCurso(oCurso);
 	mostrarPagina('cursos');
@@ -939,9 +869,9 @@ function borrarCurso()
 
 function borrarAlumno()
 {
-	var dni = this.getAttribute("data-dni");
-	var oUsuario = academia.getUsuario(dni);
-	oUsuario.activo = "no";
+	let dni = this.getAttribute("data-dni");
+	let oUsuario = academia.getUsuario(dni);
+	oUsuario.activo = 0;
 
 	academia.modificarUsuario(oUsuario);
 	mostrarPagina('alumnos');
@@ -949,9 +879,9 @@ function borrarAlumno()
 
 function borrarProfesor()
 {
-	var dni = this.getAttribute("data-dni");
-	var oUsuario = academia.getUsuario(dni);
-	oUsuario.activo = "no";
+	let dni = this.getAttribute("data-dni");
+	let oUsuario = academia.getUsuario(dni);
+	oUsuario.activo = 0;
 
 	academia.modificarUsuario(oUsuario);
 	mostrarPagina('profesores');
@@ -959,9 +889,9 @@ function borrarProfesor()
 
 function borrarAdministrador()
 {
-	var dni = this.getAttribute("data-dni");
-	var oUsuario = academia.getUsuario(dni);
-	oUsuario.activo = "no";
+	let dni = this.getAttribute("data-dni");
+	let oUsuario = academia.getUsuario(dni);
+	oUsuario.activo = 0;
 
 	academia.modificarUsuario(oUsuario);
 	mostrarPagina('administradores');
@@ -969,35 +899,35 @@ function borrarAdministrador()
 
 function filtrarTablaCursos()
 {
-	var filtro = document.querySelector("#selectFiltrarCursos");
+	let filtro = document.querySelector("#selectFiltrarCursos");
 	filtrarTabla(filtro.value);
 }
 
 function filtrarTablaAlumnos()
 {
-	var filtro = document.querySelector("#selectFiltrarAlumnos");
+	let filtro = document.querySelector("#selectFiltrarAlumnos");
 	filtrarTabla(filtro.value);
 }
 
 function filtrarTablaProfesores()
 {
-	var filtro = document.querySelector("#selectFiltrarProfesores");
+	let filtro = document.querySelector("#selectFiltrarProfesores");
 	filtrarTabla(filtro.value);
 }
 
 function filtrarTablaAdministradores()
 {
-	var filtro = document.querySelector("#selectFiltrarAdministradores");
+	let filtro = document.querySelector("#selectFiltrarAdministradores");
 	filtrarTabla(filtro.value);
 }
 
 function filtrarTabla(filtro)
 {
-	var filas = document.querySelectorAll("tr");
+	let filas = document.querySelectorAll("tr");
 
 	if (filtro != "todo")
 	{
-		for (var i=0; i<filas.length; i++)
+		for (let i=0; i<filas.length; i++)
 		{
 			if (filas[i].getAttribute("data-activo") != null)
 			{
@@ -1010,7 +940,7 @@ function filtrarTabla(filtro)
 	}
 	else
 	{
-		for (var i=0; i<filas.length; i++)
+		for (let i=0; i<filas.length; i++)
 			filas[i].classList.remove("ocultar");	
 	}
 }
