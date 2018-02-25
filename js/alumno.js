@@ -4,13 +4,12 @@
 
 	$("#enlaceMisDatos").click(cargaDatosAlumno);
 	$("#enlaceMatricular").click(cargaAltaMatricula);
-	/*$("#mnuAltaCasa").click(cargaAltaCasa);*/ //aqui iria la de curso, dejarlo para el último
 	$("#enlaceBaja").click(cargarBajaMatricula);
-
 
 	function cargaDatosAlumno() {
 	    // Oculto todos los formularios menos este
 	    $("form:not('#frmModUsuario')").hide("normal");
+	    $('#listaCalificaciones').hide("normal");
 
 
 	    // Verifico si ya he cargado el formulario antes
@@ -31,6 +30,7 @@
 	function cargaAltaMatricula() {
 	    // Oculto todos los formularios menos este
 	    $("form:not('#frmAltaMod')").hide("normal");
+	    $('#listaCalificaciones').hide("normal");
 
 	    // Verifico si ya he cargado el formulario antes
 	    if ($('#frmAltaMod').length == 0) {
@@ -48,6 +48,7 @@
 	function cargarBajaMatricula() {
 	    // Oculto todos los formularios menos este
 	    $("form:not('#frmDarBaja')").hide("normal");
+	     $('#listaCalificaciones').hide("normal");
 
 	    // Verifico si ya he cargado el formulario antes
 	    if ($('#frmDarBaja').length == 0) {
@@ -63,10 +64,6 @@
 	}
 
    } );
-
-
-
-
 
 
 function resetearCamposModMatricula()
@@ -294,7 +291,7 @@ function addCursoMatri(oEvento)
 					if (result == true)
 					{
 						academia.addMatricula(oMatricula);
-						academia.actualizarSesionUsuarios();
+						academia.actualizarSesionUsuarios(); //no sirve no actualiza la sesion.
 					}
 					else
 					{
@@ -321,7 +318,6 @@ function cargarListadoCurso(oEvento)
 	limpiarListadoCurso();
 	oE = oEvento || window.event;
 	var listaNotas = academia.getCalificaciones(oE.target.value, sesion.dni);
-
 	if (listaNotas.length == 0)
 	{
 		var div = document.createElement("div");
@@ -426,10 +422,11 @@ function cargarListadoCurso(oEvento)
 
 function limpiarListadoCurso()
 {
-	oDiv = document.createElement("DIV");
+	$('#listaCalificaciones').empty();
+	/*oDiv = document.createElement("DIV");
 	oDiv.id = "listaCalificaciones";
 	oDivBorrar = document.querySelector("#listaCalificaciones");
-	oDivBorrar.parentNode.replaceChild(oDiv, oDivBorrar);
+	oDivBorrar.parentNode.replaceChild(oDiv, oDivBorrar);*/
 }
 
 

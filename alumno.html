@@ -52,7 +52,9 @@
 
 			<div class="container-fluid">
 				<!-- formulario modificar datos alumno -->
-				<div id="formularios"></div>
+				<div id="formularios">
+					<div id="listaCalificaciones"></div>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -78,46 +80,19 @@
 
 		/*zona de configuración de eventos*/
 
-		/*var enlaces = document.getElementsByTagName("a");
+		var enlaces = document.getElementsByTagName("a");
 		for (var i = 0; i < enlaces.length ; i++) 
 		{  
 			enlaces[i].addEventListener("click", function (event)
 			{
 				event.preventDefault();
-				mostrar(event);
+				//mostrar(event);
 			}, false);
-		}*/
+		}
 
 		document.querySelector("#enlaceMisDatos").click();
 
-		/*var btnModDatosAlu= document.querySelector("#btnModDatosUsu");
-		btnModDatosUsu.addEventListener("click", comprobarFrmModDatosUsu, false);
-		//var btnResetModDatosAlu= document.querySelector("#btnResetModDatosAlu");
 
-		oSelectIdioma= document.querySelector("#selectIdioma");
-		oSelectIdioma.addEventListener("change", cargarNivel, false);
-		oSelectIdioma.addEventListener("change", cargarTipo, false);
-
-		oSelectNivel= document.querySelector("#selectNivel");
-		oSelectNivel.addEventListener("change", cargarTipo, false);
-
-		oSelectTipo= document.querySelector("#selectTipo");
-		oSelectTipo.addEventListener("change", cargarCurso, false);
-
-		btnAddCursoMatri= document.querySelector("#btnAddCursoMatri");
-		btnAddCursoMatri.addEventListener("click", addCursoMatri, false); 
-
-		btnEnviarMatri= document.querySelector("#btnEnviarMatri");
-		btnEnviarMatri.addEventListener("click", realizarMatricula, false);
-
-		btnDarBajaAca= document.querySelector("#btnDarBajaAca"); 
-		btnDarBajaAca.addEventListener("click", function(oEvento){
-			var oE = oEvento || window.event;
-			oE.preventDefault();
-			academia.borrarUsuario(sesion.dni);
-			location.href = "login.html";
-
-		}, false); */
 
 
 		menuCursoUsuario(); //llamada al método para que cargue los cursos en los que esté inicialmente matriculado
@@ -139,7 +114,7 @@
 			{
 				for (var i=0; i<sesion.listaCursos.length; i++) 
 				{
-					/*var oCurso = academia.getCurso(sesion.listaCursos[i]);
+					var oCurso = academia.getCurso(sesion.listaCursos[i]);
 					var oLi = document.createElement("LI");
 					var oA = document.createElement("A");
 					oA.href = "#listaCalificaciones";
@@ -150,7 +125,14 @@
 					oLi.appendChild(oA);
 					oLiCurso.appendChild(oLi);
 					// meterle eventos a los nuevos a creados
-					document.querySelectorAll("#enlaceMisCursos")[i].addEventListener("click", function (event) { event.preventDefault(); mostrar(event); this.parentNode.classList.add("active"); }, false);*/
+					document.querySelectorAll("#enlaceMisCursos")[i].addEventListener("click", function (event) 
+						{ 
+							event.preventDefault(); 
+							cargarListadoCurso(event); 
+							this.parentNode.classList.add("active"); 
+						    $('#listaCalificaciones').show("normal");}, false
+
+					   );
 				}   
 			}
 
@@ -169,59 +151,6 @@
 				oLis[i].parentNode.removeChild(oLis[i]);
 			}
 		}
-
-		/* zona para mostrar y ocultar div*/
-		/*function mostrar(oEvento)
-		{
-
-			var menus = document.querySelectorAll('nav li');
-        	for (var i=0; i<menus.length; i++)
-            menus[i].classList.remove('active');
-
-       
-			oE= oEvento || window.event;
-			if (oE.target.id == "enlaceMisDatos")
-			{
-				document.getElementById("capaModificarAlu").classList.remove("ocultar");
-				document.getElementById("capaMatriCurso").classList.add("ocultar");
-				document.getElementById("capaDarBaja").classList.add("ocultar");
-				document.getElementById("listaCalificaciones").classList.add("ocultar");
-				document.querySelector('#enlaceMisDatos').parentNode.classList.add('active');
-				resetearCamposModMatricula();
-				cargarDatosUsuario();
-
-			}
-			else if (oE.target.id == "enlaceMatricular")
-			{
-				document.getElementById("capaMatriCurso").classList.remove("ocultar");
-				document.getElementById("capaModificarAlu").classList.add("ocultar");
-				document.getElementById("capaDarBaja").classList.add("ocultar");
-				document.getElementById("listaCalificaciones").classList.add("ocultar");
-				document.querySelector('#enlaceMatricular').parentNode.classList.add('active');
-				resetearSelectIdiomas();
-				cargarCursos();
-
-
-			}
-			else if (oE.target.id == "enlaceBaja")
-			{
-				document.getElementById("capaDarBaja").classList.remove("ocultar");
-				document.getElementById("capaModificarAlu").classList.add("ocultar");
-				document.getElementById("capaMatriCurso").classList.add("ocultar");
-				document.getElementById("listaCalificaciones").classList.add("ocultar");
-				document.querySelector('#enlaceBaja').parentNode.classList.add('active');
-			}
-			else if (oE.target.id == "enlaceMisCursos")
-			{
-				document.getElementById("listaCalificaciones").classList.remove("ocultar");
-				document.getElementById("capaModificarAlu").classList.add("ocultar");
-				document.getElementById("capaMatriCurso").classList.add("ocultar");
-				document.getElementById("capaDarBaja").classList.add("ocultar");
-				document.querySelector('#pageSubmenu1').parentNode.classList.add('active');
-				cargarListadoCurso(oEvento);
-
-			}
-		}*/
 	</script>
 </body>
 </html>

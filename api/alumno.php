@@ -113,6 +113,27 @@ else if (!empty($_POST["matricular"]))
 	}
 	echo json_encode($info);
 }
+else if (!empty($_POST["matriculas"]))
+{
+	header('Content-type: application/json; charset=utf-8');
+	$sMatricula=$_POST['matricular'];
+	$oMatricula= json_decode($sMatricula);
+
+	
+
+	$sql = "SELECT tarea, nota from notas where matricula in ";
+
+	$query = $db->query($sql);
+	if ( $db->affected_rows == 0)
+	{
+		$info=false;
+	}
+	else
+	{
+		$info=true;
+	}
+	echo json_encode($info);
+}
 
 
 
