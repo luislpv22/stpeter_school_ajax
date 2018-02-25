@@ -74,7 +74,7 @@ function mostrarPagina(oEvento)
 		oFieldset[0].appendChild(oTabla);
 
 		var oProfesor = academia.getUsuario(sesion.dni);
-		var tCursos = oProfesor.listaCursos;
+		var tCursos = oProfesor.getCursos();
 		var oSelec = document.querySelector("#selectCursoConsultar");
 		var bEnc = false;
 
@@ -119,7 +119,7 @@ function actualizaSelectCalificar(sDni)
 	var oAlumno = academia.getUsuario(sDni);
 	var oProfesor = academia.getUsuario(sesion.dni);
 	var oTablaActu = oAlumno.listaCursos;
-	var oTablaActuProf = oProfesor.listaCursos;
+	var oTablaActuProf = oProfesor.getCursos();
 	var oSelec = document.querySelector("#selectCursoCalificar");
 	var bEnc = false;
 
@@ -291,7 +291,7 @@ function modificarCalificacion()
 function consultarNotas(sDni,SFiltro)
 {
 	var oProfesor = academia.getUsuario(sDni);
-	var oTablaCurProv = oProfesor.listaCursos;
+	var oTablaCurProv = oProfesor.getCursos();
 
 	var oTabla = document.querySelector("#tablaListadoAlumnos");
 	if (oTabla != null)
@@ -496,7 +496,7 @@ function ocultarFormularioCalificar()
 function consultarCursos(sDni)
 {
 	var oProfesor = academia.getUsuario(sDni);
-	var oTablaCurProv = oProfesor.listaCursos;
+	var oTablaCurProv = oProfesor.getCursos();
 
 	var oTabla = document.querySelector("#tablaListadoCursos");
 	if (oTabla != null)

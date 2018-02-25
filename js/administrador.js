@@ -386,6 +386,23 @@ function editarCurso()
 	form.duracion1.value = duracion[0];
 	form.duracion2.value = duracion[1];
 
+	let tProfesores = academia.getProfesores();
+	let options = form.profesor.options;
+	for (let i=0; i<options.length; i++) 
+		options[i].remove();
+
+	for (let i=0; i<tProfesores.length; i++) 
+	{
+		let option = document.createElement("option");
+		option.value = tProfesores[i].dni;
+		option.textContent = tProfesores[i].nombre+' '+tProfesores[i].apellidos;
+
+		if (oCurso.profesor == tProfesores[i].dni)
+			option.selected = "selected";
+
+		form.profesor.appendChild(option);
+	}
+
 	form.precio.value = oCurso.precio;
 	form.activo.value = oCurso.activo;
 
@@ -465,8 +482,9 @@ function guardarCurso()
 		let fPrecio = parseFloat(form.precio.value);
 		let sDuracion = form.duracion1.value + " " + form.duracion2.value;
 		let bActivo = form.activo.value;
+		let sProfesor = form.profesor.value;
 
-		let oCurso = new Curso(sCodigo, sIdioma, sDuracion, fPrecio, sTipo, sNivel, bActivo);
+		let oCurso = new Curso(sCodigo, sIdioma, sDuracion, fPrecio, sTipo, sNivel, bActivo, sProfesor);
 
 		if (dataCod != null)
 			academia.modificarCurso(oCurso);

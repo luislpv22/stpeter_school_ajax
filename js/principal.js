@@ -72,7 +72,7 @@ function cargarUsuarios()
 				}
 				else if (usuarios[i].tipo == 'profesor')
 				{
-					oProfesor=new Profesor(usuarios[i].nombre, usuarios[i].password, usuarios[i].apellidos, usuarios[i].dni, usuarios[i].telefono, usuarios[i].direccion, usuarios[i].email, usuarios[i].activo);
+					oProfesor = new Profesor(usuarios[i].nombre, usuarios[i].password, usuarios[i].apellidos, usuarios[i].dni, usuarios[i].telefono, usuarios[i].direccion, usuarios[i].email, usuarios[i].activo);
   
 					$.ajax(
 					{
@@ -110,7 +110,7 @@ function cargarCursos()
 		{
 			for (let i=0; i<cursos.length; i++)
 			{
-				let oCurso = new Curso(cursos[i].codigo, cursos[i].idioma, cursos[i].duracion, cursos[i].precio, cursos[i].tipo, cursos[i].nivel, cursos[i].activo);
+				let oCurso = new Curso(cursos[i].codigo, cursos[i].idioma, cursos[i].duracion, cursos[i].precio, cursos[i].tipo, cursos[i].nivel, cursos[i].activo, cursos[i].profesor);
 				$.ajax(
 				{
 					url: "api/matriculas.php",

@@ -4,7 +4,7 @@ class Persona
 	{
 		this.nombre    = sNombre;
 		this.password  = sPassword;
-		this.apellidos  = sApellidos;
+		this.apellidos = sApellidos;
 		this.dni       = sDni;
 		this.telefono  = iTelefono;
 		this.direccion = sDireccion;
@@ -19,14 +19,18 @@ class Profesor extends Persona
 	{
 		super(sNombre, sPassword, sApellidos, sDni, iTelefono, sDireccion, sCorreo, bActivo);
 
-		this.salario     = iSalario;
-		this.listaCursos = [];
+		this.salario = iSalario;
 	}
 
-	addCurso(codigo)
+	getCursos()
 	{
-		if (!this.listaCursos.includes(codigo))
-			this.listaCursos.push(codigo); // Añade un curso al profesor
+		let listaCursos = [];
+		let tCursos = academia.getCursos();
+		for (let i=0; i<tCursos.length; i++)
+			if (tCursos[i].profesor == this.dni)
+				listaCursos.push(tCursos[i].codigo);
+
+		return listaCursos;
 	}
 }
 
@@ -73,7 +77,7 @@ class Calificacion
 
 class Curso
 {
-	constructor(sCodigo, sIdioma, sDuracion, fPrecio, sTipo, sNivel, bActivo)
+	constructor(sCodigo, sIdioma, sDuracion, fPrecio, sTipo, sNivel, bActivo, sProfesor)
 	{
 		this.codigo       = sCodigo;
 		this.idioma       = sIdioma;
@@ -82,7 +86,8 @@ class Curso
 		this.tipo         = sTipo;
 		this.nivel        = sNivel;
 		this.listaAlumnos = []; // una lista de los alumnos que están matriculados en el curso
-		this.activo   = bActivo; // boolean para saber si el curso sigue activo, o ya termino, o se canceló
+		this.activo       = bActivo; // boolean para saber si el curso sigue activo, o ya termino, o se canceló
+		this.profesor     = sProfesor;
 	}
 
 	matricularAlumno(sDni)
@@ -95,10 +100,10 @@ class Matricula
 {
 	constructor(iNumero, sEstado, sDniAlumno, sCurso)
 	{
-		this.numero  = iNumero;
-		this.estado  = sEstado;
+		this.numero    = iNumero;
+		this.estado    = sEstado;
 		this.dniAlumno = sDniAlumno;
-		this.curso = sCurso;
+		this.curso     = sCurso;
 	}
 }
 
@@ -208,10 +213,7 @@ class Academia
 					if (this._usuarios[i] instanceof Administrador)
 						nuevoUsuario = new Administrador(oUsuario.nombre, oUsuario.password, oUsuario.apellidos, oUsuario.dni, oUsuario.telefono, oUsuario.direccion, oUsuario.correo, oUsuario.activo);
 					else if (this._usuarios[i] instanceof Profesor)
-					{
 						nuevoUsuario = new Profesor(oUsuario.nombre, oUsuario.password, oUsuario.apellidos, oUsuario.dni, oUsuario.telefono, oUsuario.direccion, oUsuario.correo, oUsuario.activo, 0);
-						nuevoUsuario.listaCursos = oUsuario.listaCursos;
-					}
 					else
 					{
 						nuevoUsuario = new Alumno(oUsuario.nombre, oUsuario.password, oUsuario.apellidos, oUsuario.dni, oUsuario.telefono, oUsuario.direccion, oUsuario.correo, oUsuario.activo, "");
