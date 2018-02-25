@@ -36,7 +36,7 @@
 	    if ($('#frmAltaMod').length == 0) {
 	        $("<div>").appendTo('#formularios').load("html/alumno/alumatricula.html",
 	            function() {
-	                $.getScript("html/alumno/optionIdioma.js");
+	            	$.getScript("html/alumno/optionIdioma.js");
 	            });
 
 	    } else {
@@ -53,7 +53,10 @@
 
 	    // Verifico si ya he cargado el formulario antes
 	    if ($('#frmDarBaja').length == 0) {
-	        $("<div>").appendTo('#formularios').load("html/alumno/alueliminar.html", function(){$.getScript("html/alumno/alueliminar.js"); });
+	        $("<div>").appendTo('#formularios').load("html/alumno/alueliminar.html", 
+	        	function(){
+	        		$.getScript("html/alumno/alueliminar.js"); 
+	        	});
 
 	    } else {
 	        // Lo muestro si está oculto

@@ -29,15 +29,13 @@ function respuestaModAlu(oDatosDevueltos, sStatus, oAjax) {
     if (oDatosDevueltos[0] == false) {
         // Mensaje
         alert(oDatosDevueltos[1]);
-        
+        academia.actualizarSesionUsuarios();
+
 
     } else {
         alert(oDatosDevueltos[1]);
     }
 }
-
-
-
 
 function comprobarFrmModDatosAlu(oEvento)
 {

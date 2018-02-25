@@ -1,5 +1,5 @@
 <?php
-header('Content-type: application/json; charset=utf-8');
+
 include('lib/password.php');
 
 $db = new mysqli('localhost', 'root', '', 'stpeter_school');
@@ -7,6 +7,7 @@ $db->set_charset("utf8");
 
 if (!empty($_POST['datos']))
 {
+	header('Content-type: application/json; charset=utf-8');
 	$sDatos = $_POST["datos"];
 	$oDatos = json_decode($sDatos);
 	$sql = "UPDATE usuarios
@@ -29,10 +30,16 @@ if (!empty($_POST['datos']))
 	}
 	$respuesta = array($error, $mensaje);
 	$sRespuesta = json_encode($respuesta);
-	echo $sql;
-	
+	echo $sRespuesta;
 }
-
+else if (!empty($_REQUEST["usu"]))
+{
+	$sDni= $_REQUEST["usu"];
+	$sql = "UPDATE usuarios SET activo = 0 WHERE dni = '".$sDni."'";
+	$query = $db->query($sql);
+	$respuesta = "Se ha dado de baja";
+	echo $respuesta;
+}
 
 /*else if (!empty($_GET['alumno']))
 {
