@@ -22,5 +22,13 @@ else if (!empty($_GET['alumno']))
 	$result = $query->fetch_object();
 	echo $result->estadoCobro;
 }
+else if (!empty($_POST))
+{
+	$sql = "UPDATE usuarios SET nombre='".$_POST['nombre']."', apellidos='".$_POST['apellidos']."', password='".$_POST['password']."', email='".$_POST['correo']."', telefono=".$_POST['telefono'].", direccion='".$_POST['direccion']."', activo='".$_POST['activo']."' WHERE dni='".$_POST['dni']."'";
+	if ($db->query($sql))
+		echo true;
+	else
+		echo false;
+}
 
 ?>

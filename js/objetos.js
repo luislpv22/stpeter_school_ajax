@@ -73,7 +73,7 @@ class Calificacion
 
 class Curso
 {
-	constructor(sCodigo, sIdioma, sDuracion, fPrecio, sTipo, sNivel, bArchivado)
+	constructor(sCodigo, sIdioma, sDuracion, fPrecio, sTipo, sNivel, bActivo)
 	{
 		this.codigo       = sCodigo;
 		this.idioma       = sIdioma;
@@ -82,7 +82,7 @@ class Curso
 		this.tipo         = sTipo;
 		this.nivel        = sNivel;
 		this.listaAlumnos = []; // una lista de los alumnos que están matriculados en el curso
-		this.bArchivado   = bArchivado; // boolean para saber si el curso sigue activo, o ya termino, o se canceló
+		this.activo   = bActivo; // boolean para saber si el curso sigue activo, o ya termino, o se canceló
 	}
 
 	matricularAlumno(sDni)
@@ -117,7 +117,7 @@ class Academia
 
 	addMatricula(oMatricula)
 	{
-		var bEncontrado = false;
+		let bEncontrado = false;
 		for (var i=0; i<this._matriculas.length && !bEncontrado; i++)
 			if (this._matriculas[i].numero == oMatricula.numero)
 				bEncontrado = true;
@@ -125,15 +125,17 @@ class Academia
 		if (!bEncontrado)
 		{
 			this._matriculas.push(oMatricula);
-
-			var oAlumno = this.getUsuario(oMatricula.dniAlumno);
-			oAlumno.addCurso(oMatricula.curso);
-
-			this.modificarUsuario(oAlumno);
-			sessionStorage.setItem('tMatriculas', JSON.stringify(this._matriculas));
+			for (let i=0; i<this._usuarios.length && !bEncontrado; i++)
+			{
+				if (this._usuarios[i].dni == oMatricula.dniAlumno)
+				{
+					this._usuarios[i].addCurso(oMatricula.curso);
+					bEncontrado = true;
+				}
+			}
 		}
 
-		return !bEncontrado;
+		return bEncontrado;
 	}
 
 	addUsuario(oUsuario)
@@ -186,44 +188,73 @@ class Academia
 		{
 			if (this._usuarios[i].dni == oUsuario.dni)
 			{
-				var nuevoUsuario = null;
+				let bUpdate = false;
+		        $.ajax(
+		        {
+		            url: "api/usuarios.php",
+		            type: "POST",
+		            async: false,
+		            data: oUsuario,
+		            success: function(result)
+		            {
+		            	if (result)
+							bUpdate = true;
+		            }
+		        });
 
-				if (this._usuarios[i] instanceof Administrador)
-				{
-					nuevoUsuario = new Administrador(oUsuario.nombre, oUsuario.password, oUsuario.apellidos, oUsuario.dni, oUsuario.telefono, oUsuario.direccion, oUsuario.correo, oUsuario.activo);
-				}
-				else if (this._usuarios[i] instanceof Profesor)
-				{
-					nuevoUsuario = new Profesor(oUsuario.nombre, oUsuario.password, oUsuario.apellidos, oUsuario.dni, oUsuario.telefono, oUsuario.direccion, oUsuario.correo, oUsuario.activo, 0);
-					nuevoUsuario.listaCursos = oUsuario.listaCursos;
-				}
-				else
-				{
-					nuevoUsuario = new Alumno(oUsuario.nombre, oUsuario.password, oUsuario.apellidos, oUsuario.dni, oUsuario.telefono, oUsuario.direccion, oUsuario.correo, oUsuario.activo, "");
-					nuevoUsuario.listaCursos = oUsuario.listaCursos;
-					nuevoUsuario.listaCalificaciones = oUsuario.listaCalificaciones;
-				}
+		        if (bUpdate)
+		        {
+					let nuevoUsuario = null;
+					if (this._usuarios[i] instanceof Administrador)
+						nuevoUsuario = new Administrador(oUsuario.nombre, oUsuario.password, oUsuario.apellidos, oUsuario.dni, oUsuario.telefono, oUsuario.direccion, oUsuario.correo, oUsuario.activo);
+					else if (this._usuarios[i] instanceof Profesor)
+					{
+						nuevoUsuario = new Profesor(oUsuario.nombre, oUsuario.password, oUsuario.apellidos, oUsuario.dni, oUsuario.telefono, oUsuario.direccion, oUsuario.correo, oUsuario.activo, 0);
+						nuevoUsuario.listaCursos = oUsuario.listaCursos;
+					}
+					else
+					{
+						nuevoUsuario = new Alumno(oUsuario.nombre, oUsuario.password, oUsuario.apellidos, oUsuario.dni, oUsuario.telefono, oUsuario.direccion, oUsuario.correo, oUsuario.activo, "");
+						nuevoUsuario.listaCursos = oUsuario.listaCursos;
+						nuevoUsuario.listaCalificaciones = oUsuario.listaCalificaciones;
+					}
+					this._usuarios[i] = nuevoUsuario;
+		        }
 
-				this._usuarios[i] = nuevoUsuario;
 				bEncontrado = true;
 			}
 		}
-		this.actualizarSesionUsuarios();
 	}
 
 	modificarCurso(oCurso)
 	{
-		// recorrer la array de cursos hasta encontrar a los que tengan el mismo codigo y modificarlo
-		var bEncontrado = false;
-		for (var i=0; i<this._cursos.length && bEncontrado==false; i++) 
+    	// recorrer la array de cursos hasta encontrar a los que tengan el mismo codigo y modificarlo
+    	let bEncontrado = false;
+
+		for (let i=0; i<this._cursos.length && bEncontrado==false; i++) 
 		{
 			if (this._cursos[i].codigo == oCurso.codigo)
 			{
-				this._cursos[i] = oCurso;
+				let bUpdate = false;
+		        $.ajax(
+		        {
+		            url: "api/cursos.php",
+		            type: "POST",
+		            async: false,
+		            data: oCurso,
+		            success: function(result)
+		            {
+		            	if (result)
+							bUpdate = true;
+		            }
+		        });
+
+		        if (bUpdate)
+					this._cursos[i] = oCurso;
+
 				bEncontrado = true;
 			}
 		}
-		sessionStorage.setItem('tCursos', JSON.stringify(this._cursos));
 	}
 
 	modificarMatricula(oMatricula)
