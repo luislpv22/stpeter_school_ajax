@@ -349,23 +349,43 @@ class Academia
 
 	modificarNotaAlumno(sDni, oCalificacion)
 	{
+		/*
 		for (var i=0; i<this._usuarios.length; i++) 
 		{
 			if (this._usuarios[i].dni == sDni)
 			{
 				var oCalifca = this._usuarios[i].listaCalificaciones;
-
+       
 				for (var j=0; j<oCalifca.length; j++)
 				{
-					if (oCalifca[j].curso == oCalificacion.curso && oCalifca[j].descripcion == oCalificacion.descripcion)
+					if (oCalifca[j].matricula == oCalificacion.matricula && oCalifca[j].tarea == oCalificacion.tarea)
 					{
+						
 						oCalifca[j].nota = oCalificacion.nota;
 						this.actualizarSesionUsuarios();
 					}
 				}
 
 			}
-		}
+		}*/
+		//console.log(oCalificacion);
+					
+			$.ajax(
+			{
+				url: "api/profesor.php",
+				type: "POST",
+				async: true,
+				data: {'notas': JSON.stringify(oCalificacion)},
+				dataType: "JSON",
+				success: function()
+				{
+					
+						
+						academia.actualizarSesionUsuarios();
+					
+				}
+			});
+
 	}
 
 	codNuevaMatri()

@@ -16,6 +16,14 @@ if (!empty($_GET['profesor']))
 		$cursos[] = $fila;
 	
 	echo json_encode($cursos, JSON_UNESCAPED_UNICODE);	
+}else if(!empty($_POST['notas']))
+{
+$sCalificacion=$_POST['notas'];
+$oCalificacion= json_decode($sCalificacion);
+
+$sql = "UPDATE notas SET nota = ".$oCalificacion->nota." WHERE matricula = '".$oCalificacion->matricula."'";
+$sql .="AND tarea ='".$oCalificacion->tarea."'";
+$query = $db->query($sql);
 }
 
 
