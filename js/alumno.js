@@ -11,7 +11,6 @@
 	    $("form:not('#frmModUsuario')").hide("normal");
 	    $('#listaCalificaciones').hide("normal");
 
-
 	    // Verifico si ya he cargado el formulario antes
 	   if ($('#frmModUsuario').length == 0) {
 	        $("<div>").appendTo('#formularios').load("html/alumno/alumoddatos.html",
@@ -126,136 +125,16 @@ function cargarCursos()
 	}
 }
 
-
-function cargarNivel()
+function resetearDatosAltaMatricula()
 {
-	oListaCursos = academia.getCursos();
-	oSelectIdioma = document.querySelector("#selectIdioma");
-	oSelectNivel = document.querySelector("#selectNivel");
-	resetearSelectNivel();
-	resetearCamposDatosCurso();
-	if (oSelectIdioma.value != "seleIdi")
-	{
-		var arrayNivel=[];
-		for (var i=0; i<oListaCursos.length; i++) 
-		{
-			if (oListaCursos[i].idioma == oSelectIdioma.value && !arrayNivel.includes(oListaCursos[i].nivel))
-				arrayNivel.push(oListaCursos[i].nivel);
-		}
-
-		for (var i=0; i<arrayNivel.length; i++) 
-		{
-			oOption = document.createElement("OPTION");
-			oOption.textContent = arrayNivel[i];
-			oOption.value = arrayNivel[i];
-			oSelectNivel.appendChild(oOption);      
-		}
-	}
-}
-
-function resetearSelectIdiomas()
-{
-	listaOptions=document.querySelectorAll("#selectIdioma OPTION");
-	for (var i=0; i<listaOptions.length; i++) 
-		listaOptions[i].parentNode.removeChild(listaOptions[i]);
-
-	oOption = document.createElement("OPTION");
-	oOption.textContent = "Seleccione Idioma";
-	oOption.value = "seleIdioma";
-	document.querySelector("#selectIdioma").appendChild(oOption); 
-
-}
-
-function resetearSelectNivel()
-{
-	listaOptions=document.querySelectorAll("#selectNivel OPTION");
-	for (var i=0; i<listaOptions.length; i++) 
-		listaOptions[i].parentNode.removeChild(listaOptions[i]);
-
-	oOption = document.createElement("OPTION");
-	oOption.textContent = "Seleccione Nivel";
-	oOption.value = "seleNi";
-	oSelectNivel.appendChild(oOption); 
-}
-
-function cargarTipo()
-{
-	oListaCursos = academia.getCursos();
-	oSelectIdioma = document.querySelector("#selectIdioma");
-	oSelectNivel = document.querySelector("#selectNivel");
-	oSelctTipo = document.querySelector("#selectTipo");
-
-	resetearSelectTipo();
-	resetearCamposDatosCurso();
-
-	if (oSelectIdioma.value != "seleIdi" && oSelectNivel.value != "seleNi" )
-	{
-		var arrayTipo=[];
-		for (var i = 0; i < oListaCursos.length; i++) 
-		{
-			if (oListaCursos[i].idioma== oSelectIdioma.value && oListaCursos[i].nivel == oSelectNivel.value)
-				if (!arrayTipo.includes(oListaCursos[i].tipo))
-					arrayTipo.push(oListaCursos[i].tipo);
-		}
-
-		for (var i = 0; i < arrayTipo.length; i++) 
-		{
-			oOption=document.createElement("OPTION");
-			oOption.textContent = arrayTipo[i];
-			oOption.value = arrayTipo[i];
-			oSelctTipo.appendChild(oOption);    
-		}
-
-		oSelctTipo.removeAttribute("disabled"); 
-		
-	 }
-	 else
-	 {
-		oSelctTipo.disabled="disabled"; 
-		document.querySelector("#btnAddCursoMatri").disabled="disabled";    
-	 }
-}
-
-function resetearSelectTipo()
-{
-	document.querySelector("#txtInformacion span").textContent = "";
-	document.querySelector("#txtInformacion").classList.add("hide");
-	oSelctTipo = document.querySelector("#selectTipo");
-	listaOptions = document.querySelectorAll("#selectTipo OPTION");
-	for (var i=0; i<listaOptions.length; i++) 
-		listaOptions[i].parentNode.removeChild(listaOptions[i]);
-
-	oOption=document.createElement("OPTION");
-	oOption.textContent = "Seleccione Tipo";
-	oOption.value = "seleTipo";
-	oSelctTipo.appendChild(oOption); 
-
-}
-
-function resetearCamposDatosCurso()
-{
-	oDuracinCurso= document.querySelector("#duraCurso").value = "";
-	oPrecioCurso= document.querySelector("#preCurso").value = "";
-}
-
-function cargarCurso()
-{
-	resetearCamposDatosCurso();
-
-	sSelectIdioma = document.querySelector("#selectIdioma").value;
-	sSelectNivel = document.querySelector("#selectNivel").value;
-	sSelctTipo = document.querySelector("#selectTipo").value;
-
-	var tCursos = academia.getCursos();
-	var oCurso = null;
-	for (var i=0; i<tCursos.length && oCurso==null; i++) 
-		if (tCursos[i].idioma == sSelectIdioma && tCursos[i].nivel == sSelectNivel && tCursos[i].tipo == sSelctTipo)
-			oCurso= tCursos[i];
-
-	oDuracionCurso = document.querySelector("#duraCurso").value = oCurso.duracion;
-	oPrecioCurso = document.querySelector("#preCurso").value = oCurso.precio;
-	
-	document.querySelector("#btnAddCursoMatri").removeAttribute("disabled"); 
+	$("#selectIdioma").empty(); 
+	$("#selectIdioma").append("<option value='0'>Seleccione idioma</option>");
+	$("#selectTipo").empty(); 
+	$("#selectTipo").append("<option value='0'>Seleccione Tipo</option>");
+	$("#selectNivel").empty(); 
+	$("#selectNivel").append("<option value='0'>Seleccione Nivel</option>");
+	$("#duraCurso").val("");
+	$("#preCurso").val("");
 }
 
 function addCursoMatri(oEvento)
@@ -263,56 +142,72 @@ function addCursoMatri(oEvento)
 	sSelectIdioma = document.querySelector("#selectIdioma").value;
 	sSelectNivel = document.querySelector("#selectNivel").value;
 	sSelctTipo = document.querySelector("#selectTipo").value;
+   if (sSelectIdioma  != 0 && sSelectNivel != 0 && sSelctTipo  !=0 )
+   {
+		var tCursos = academia.getCursos();
+		var oCurso = null;
+		for (var i=0; i<tCursos.length && oCurso==null; i++) 
+			if (tCursos[i].idioma == sSelectIdioma && tCursos[i].nivel == sSelectNivel && tCursos[i].tipo == sSelctTipo)
+				oCurso= tCursos[i];
 
-	var tCursos = academia.getCursos();
-	var oCurso = null;
-	for (var i=0; i<tCursos.length && oCurso==null; i++) 
-		if (tCursos[i].idioma == sSelectIdioma && tCursos[i].nivel == sSelectNivel && tCursos[i].tipo == sSelctTipo)
-			oCurso= tCursos[i];
 
-
-	if (oCurso  != null)
-	{
-		var oE = oEvento || window.event;
-		oE.preventDefault();
-
-		if (!sesion.listaCursos.includes(oCurso.codigo))
+		if (oCurso  != null)
 		{
-			oMatricula = new Matricula(academia.codNuevaMatri(), "activa", sesion.dni, oCurso);
-			$.ajax(
+			var oE = oEvento || window.event;
+			oE.preventDefault();
+
+			if (!sesion.listaCursos.includes(oCurso.codigo))
 			{
-				url: "api/alumno.php",
-				type: "POST",
-				aysnc: true,
-				data: {'matricular': JSON.stringify(oMatricula)},
-				dataType: "JSON",
-				success: function(result)
+				oMatricula = new Matricula(academia.codNuevaMatri(), "activa", sesion.dni, oCurso);
+				$.ajax(
 				{
-					if (result == true)
+					url: "api/alumno.php",
+					type: "POST",
+					aysnc: true,
+					data: {'matricular': JSON.stringify(oMatricula)},
+					dataType: "JSON",
+					success: function(result)
 					{
-						academia.addMatricula(oMatricula);
-						academia.actualizarSesionUsuarios(); //no sirve no actualiza la sesion.
+						if (result == true)
+						{
+								resetearDatosAltaMatricula();
+								$.get("api/alumno.php?idioma=idioma",cargarOption);
+								sesion.listaCursos.push(oCurso.codigo);
+								sessionStorage.usuario= JSON.stringify(sesion);
+
+								cargarMatriculas();
+								menuCursoUsuario();
+								oAlumno= academia.getUsuario(sesion.dni);
+								oAlumno.addCurso(oCurso.codigo);
+						}
+						else
+						{
+							document.querySelector("#txtInformacion span").textContent = "Se ha producido un error al insertar";
+							document.querySelector("#txtInformacion").classList.remove("alert-success", "alert-warning", "alert-danger", "hide");
+							document.querySelector("#txtInformacion").classList.add("alert-danger");
+						}
 					}
-					else
-					{
-						document.querySelector("#txtInformacion span").textContent = "Se ha producido un error al insertar";
-						document.querySelector("#txtInformacion").classList.remove("alert-success", "alert-warning", "alert-danger", "hide");
-						document.querySelector("#txtInformacion").classList.add("alert-danger");
-					}
-				}
-			});
+				});
+			}
+			else
+			{
+				document.querySelector("#txtInformacion span").textContent = "Ya estás matriculado en ese curso";
+				document.querySelector("#txtInformacion").classList.remove("alert-success", "alert-warning", "alert-danger", "hide");
+				document.querySelector("#txtInformacion").classList.add("alert-danger");
+			}
 		}
-		else
-		{
-			document.querySelector("#txtInformacion span").textContent = "Ya estás matriculado en ese curso";
-			document.querySelector("#txtInformacion").classList.remove("alert-success", "alert-warning", "alert-danger", "hide");
-			document.querySelector("#txtInformacion").classList.add("alert-danger");
-		}
+	}
+	else
+	{
+		document.querySelector("#txtInformacion span").textContent = "Error al elegir la configuración del curso";
+		document.querySelector("#txtInformacion").classList.remove("alert-success", "alert-warning", "alert-danger", "hide");
+		document.querySelector("#txtInformacion").classList.add("alert-danger");
 	}
 }
 
 
 function cargarListadoCurso(oEvento)
+
 {
 	//tengo que hacer un método que replace el nodo div por otro nuevo cada vez que se inicie este método
 	limpiarListadoCurso();
@@ -425,10 +320,6 @@ function cargarListadoCurso(oEvento)
 function limpiarListadoCurso()
 {
 	$('#listaCalificaciones').empty();
-	/*oDiv = document.createElement("DIV");
-	oDiv.id = "listaCalificaciones";
-	oDivBorrar = document.querySelector("#listaCalificaciones");
-	oDivBorrar.parentNode.replaceChild(oDiv, oDivBorrar);*/
 }
 
 

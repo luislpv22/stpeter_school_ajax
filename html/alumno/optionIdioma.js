@@ -74,6 +74,7 @@ $("#selectTipo").change(function()
 	var nivel= $('#selectNivel').val();
 	var tipo= $('#selectTipo').val();
 	cambiarEstadoBoton();
+	
 	if (tipo ==0)
 		resetDatos();
 	

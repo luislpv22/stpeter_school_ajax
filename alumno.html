@@ -102,7 +102,7 @@
 			var oLiCurso = document.querySelector("#pageSubmenu1");
 
 			borrarLi();
-
+			
 			var oLinkCurso = document.querySelector('a[href="#pageSubmenu1"]');
 			var badge = document.createElement("span");
 			badge.classList.add("badge");
@@ -129,14 +129,24 @@
 						{ 
 							event.preventDefault(); 
 							cargarListadoCurso(event); 
+							quitarLiActivos();
 							this.parentNode.classList.add("active"); 
-						    $('#listaCalificaciones').show("normal");}, false
+						    $('#listaCalificaciones').show("normal");
+						    $("form").hide("normal");
+						}, false
 
 					   );
 				}   
 			}
 
 			oLinkCurso.appendChild(badge);
+		}
+
+		function quitarLiActivos()
+		{
+			$('li').each( function(){
+				$(this).removeClass("active");
+			});
 		}
 
 		function borrarLi()
