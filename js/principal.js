@@ -152,14 +152,20 @@ function cargarCalificaciones()
 	{
 		url: "api/calificaciones.php",
 		type: "GET",
+		dataType: "xml",
 		async: false,
 		data: { calificaciones: 1 },
-		success: function(calificaciones)
+		success: function(xml)
 		{
+			var calificaciones= $(xml).children().children();
+
 			for (var i=0; i<calificaciones.length; i++)
 			{
-				let oCalificacion = new Calificacion(calificaciones[i].matricula, calificaciones[i].tarea, calificaciones[i].nota);
-				let oMatricula = academia.getMatricula(calificaciones[i].matricula);
+				var matricula =parseInt(calificaciones[i].querySelector("matricula").textContent);
+				var tarea = calificaciones[i].querySelector("tarea").textContent;
+				var nota = calificaciones[i].querySelector("nota").textContent;
+				let oCalificacion = new Calificacion(matricula, tarea, nota);
+				let oMatricula = academia.getMatricula(matricula);
 				let oUsuario = academia.getUsuario(oMatricula.dniAlumno);
 				if (oUsuario instanceof Alumno)
 					oUsuario.addNota(oCalificacion);

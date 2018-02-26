@@ -387,7 +387,7 @@ class Academia
 		for (let i=0; i<this._matriculas.length; i++) 
 			if (this._matriculas[i].numero == numero)
 				oMatricula = this._matriculas[i];
-
+			
 		return oMatricula;
 	}
 
