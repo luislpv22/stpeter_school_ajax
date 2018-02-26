@@ -1,12 +1,24 @@
-
  $( function() 
  {
+ 	function quitarActiveMenu()
+ 	{
+ 		var menus = document.querySelectorAll('nav li');
+		for (var i=0; i<menus.length; i++)
+		menus[i].classList.remove('active');
+ 	}
+
 
 	$("#enlaceMisDatos").click(cargaDatosAlumno);
 	$("#enlaceMatricular").click(cargaAltaMatricula);
 	$("#enlaceBaja").click(cargarBajaMatricula);
+	$("#enlaceMatricular").parent().next().click(function(){
+		quitarActiveMenu();
+	});
 
 	function cargaDatosAlumno() {
+		quitarActiveMenu();
+		document.querySelector('#enlaceMisDatos').parentNode.classList.add('active');
+
 	    // Oculto todos los formularios menos este
 	    $("form:not('#frmModUsuario')").hide("normal");
 	    $('#listaCalificaciones').hide("normal");
@@ -27,6 +39,9 @@
 	}
 
 	function cargaAltaMatricula() {
+		quitarActiveMenu();
+		document.querySelector('#enlaceMatricular').parentNode.classList.add('active');
+
 	    // Oculto todos los formularios menos este
 	    $("form:not('#frmAltaMod')").hide("normal");
 	    $('#listaCalificaciones').hide("normal");
@@ -45,6 +60,8 @@
 	}
 
 	function cargarBajaMatricula() {
+		quitarActiveMenu();
+		document.querySelector('#enlaceBaja').parentNode.classList.add('active');
 	    // Oculto todos los formularios menos este
 	    $("form:not('#frmDarBaja')").hide("normal");
 	     $('#listaCalificaciones').hide("normal");
