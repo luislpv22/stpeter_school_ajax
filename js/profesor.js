@@ -448,7 +448,21 @@ function actualizarTablaNotas(dni,curso)
 function BorrarNota()
 {
 	var fila = this.parentNode.parentNode;
+	var dni = this.getAttribute("data-dni");
+	var curso = this.getAttribute("data-curso");
+	var tarea = this.getAttribute("data-desc");
 	fila.classList.add("ocultar");
+	
+			$.ajax(
+		{
+			url: "api/profesor.php",
+			type: "GET",
+			async: true,
+			data: {'dni': dni, 'curso' : curso, 'tarea' : tarea},
+			success: function() {
+				
+			}
+		});
 }
 
 function mostrarFormularioCalificar()
