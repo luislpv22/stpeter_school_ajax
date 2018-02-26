@@ -438,27 +438,38 @@ function crearCurso()
 	form.duracion2.value = "meses";
 	form.precio.value = "0.00";
 	form.activo.value = 1;
+
+	let tProfesores = academia.getProfesores();
+	let options = form.profesor.options;
+	for (let i=0; i<options.length; i++) 
+		options[i].remove();
+
+	for (let i=0; i<tProfesores.length; i++) 
+	{
+		let option = document.createElement("option");
+		option.value = tProfesores[i].dni;
+		option.textContent = tProfesores[i].nombre+' '+tProfesores[i].apellidos;
+		form.profesor.appendChild(option);
+	}
+
 	form.style.display = "block";
 }
 
-function desactivarMatricula(e)
+function desactivarMatricula()
 {
 	let numero = this.getAttribute("data-matricula");
 	let oMatricula = academia.getMatricula(numero);
 
-	if (oMatricula.estado == "activa") {
+	if (oMatricula.estado == "activa")
+	{
 		oMatricula.estado = "inactiva";
 		this.click();
 	}
-	else {
+	else
+	{
 		oMatricula.estado = "activa";
 		this.click();
 	}
-
-	// llamada ajax post para cambiar en la base de dato el estado de la matrícula
-	let oDatos={matricula:numero, estado:oMatricula.estado};
-	let sDatos = "cambiarEstado=" + JSON.stringify(oDatos);
-	$.post("api/matriculas.php", sDatos);
 
 	academia.modificarMatricula(oMatricula);
 	mostrarPagina('matriculaciones');
@@ -489,7 +500,10 @@ function guardarCurso()
 		if (dataCod != null)
 			academia.modificarCurso(oCurso);
 		else
+		{
+			oCurso.nuevo = true;
 			academia.addCurso(oCurso);
+		}
 
 		mostrarPagina('cursos');
 		document.querySelector('#modal .close').click();
@@ -576,7 +590,11 @@ function guardarAlumno()
 		if (dataDNI != null)
 			academia.modificarUsuario(oAlumno);
 		else
+		{
+			oAlumno.nuevo = true;
+			oAlumno.tipo = 'alumno';
 			academia.addUsuario(oAlumno);
+		}
 
 		mostrarPagina('alumnos');
 		document.querySelector('#modal .close').click();
@@ -664,7 +682,11 @@ function guardarProfesor()
 		if (dataDNI != null)
 			academia.modificarUsuario(oProfesor);
 		else
+		{
+			oProfesor.nuevo = true;
+			oProfesor.tipo = 'profesor';
 			academia.addUsuario(oProfesor);
+		}
 
 		mostrarPagina('profesores');
 		document.querySelector('#modal .close').click();
@@ -750,7 +772,11 @@ function guardarAdministrador()
 		if (dataDNI != null)
 			academia.modificarUsuario(oAdministrador);
 		else
+		{
+			oAdministrador.nuevo = true;
+			oAdministrador.tipo = 'administrador';
 			academia.addUsuario(oAdministrador);
+		}
 
 		mostrarPagina('administradores');
 		document.querySelector('#modal .close').click();
@@ -785,29 +811,27 @@ function editarMatricula()
 	for (let i=0; i<forms.length; i++)
 		forms[i].style.display = "none";
 
-	let codigo = numero;
-	let dni = oMatricula.dniAlumno;
-	let form = document.getElementById("formModMatri");
-	form.numMatri.value = codigo;
-	form.dniMatri.value = dni;
-	let listaCursos = academia.getCursos();
+	let form = document.getElementById("formEditarMatricula");
+	form.numero.value = numero;
+	form.dni.value = oMatricula.dniAlumno;
 
 	limpiarErrores(form);
 
-	let oP = document.querySelectorAll("OPTION");
-	for (let i=0; i<oP.length; i++) 
-		oP[i].parentNode.removeChild(oP[i]);
+	let tCursos = academia.getCursos();
+	let options = form.curso.options;
+	for (let i=0; i<options.length; i++) 
+		options[i].remove();
 
-	for (let i=0; i<listaCursos.length; i++) 
+	for (let i=0; i<tCursos.length; i++) 
 	{
-		oP = document.createElement("OPTION");
-		oP.value = listaCursos[i].codigo;
-		oP.textContent = listaCursos[i].idioma+", "+listaCursos[i].nivel+", "+listaCursos[i].tipo;
+		let option = document.createElement("option");
+		option.value = tCursos[i].codigo;
+		option.textContent = tCursos[i].idioma+", "+tCursos[i].nivel+", "+tCursos[i].tipo;
 
-		if (oMatricula.curso == listaCursos[i].codigo)
-			oP.selected = "selected";
+		if (oMatricula.curso == tCursos[i].codigo)
+			option.selected = "selected";
 
-		form.seleCurMatri.appendChild(oP);
+		form.curso.appendChild(option);
 	}
 
 	$('#modal .btn-success').unbind("click");
@@ -820,37 +844,22 @@ function editarMatricula()
 
 function guardarMatricula()
 {
-	let form = document.getElementById("formModMatri");
+	let form = document.getElementById("formEditarMatricula");
 
 	if (validarCampoCursos(form))
 	{
 		let dataEstado = this.getAttribute("data-estado");
 
-		let sNumero = form.numMatri.value;
-		let sDni = form.dniMatri.value;
-		let sCurso = "";
-
-		listaOp=document.querySelectorAll("OPTION");
-		for (let i = 0; i < listaOp.length; i++) {
-			if (listaOp[i].selected)
-				sCurso = listaOp[i].value;
-		}
+		let sNumero = form.numero.value;
+		let sDni = form.dni.value;
+		let sCurso = form.curso.value;
 
 		let oMatricula = new Matricula(sNumero, dataEstado, sDni, sCurso);
-		let oAlumno = academia.getUsuario(sDni); 
 
 		if (sNumero != null)
-		{
-			// quitar curso y notas que se hayan quitado
-			oAlumno.listaCursos.splice(oAlumno.listaCursos.indexOf(sCurso), 1);
 			academia.modificarMatricula(oMatricula);
-		}
 		else
-		{
-			oAlumno.listaCursos.push(sCurso);
 			academia.addMatricula(oMatricula);
-		}
-		academia.modificarAlumno(oAlumno);
 
 		mostrarPagina('matriculaciones');
 		document.querySelector('#modal .close').click();

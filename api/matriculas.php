@@ -26,13 +26,13 @@ else if (!empty($_GET['curso']))
 
 	echo json_encode($alumnos, JSON_UNESCAPED_UNICODE);
 }
-else if (!empty($_POST['cambiarEstado']))
+else if (!empty($_POST))
 {
-	$oEstado=json_decode($_POST['cambiarEstado']);
-	$sql= "UPDATE matriculas set estado = '".$oEstado->estado."' where numero = ".$oEstado->matricula;
-	$query = $db->query($sql);
-	$info= "Se ha realizado el cambio en el estado de la matrícula";
-	echo json_encode($info, JSON_UNESCAPED_UNICODE);
+	$sql = "UPDATE matriculas SET curso='".$_POST['curso']."', estado='".$_POST['estado']."' WHERE numero = ".$_POST['numero'];
+	if ($db->query($sql))
+		echo true;
+	else
+		echo false;
 }
 
 ?>
