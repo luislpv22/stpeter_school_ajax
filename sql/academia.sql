@@ -84,6 +84,42 @@ INSERT INTO `alumnos` (`dni`, `estadoCobro`) VALUES
 ('72158961T', 'pendiente');
 
 
+--
+-- Estructura de tabla para la tabla `profesores`
+--
+
+CREATE TABLE `profesores` (
+  `dni` varchar(9) CHARACTER SET utf8 NOT NULL,
+  `salario` int(9) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+
+INSERT INTO `profesores` (`dni`, `salario`) VALUES
+('23420102E', 700),
+('24568716R', 1000),
+('45625815Q', 900),
+('46231111Z', 1000),
+('54629812T', 1700),
+('66666666B', 1500);
+
+--
+-- Índices para tablas volcadas
+--
+--
+-- Indices de la tabla `profesores`
+--
+ALTER TABLE `profesores`
+  ADD PRIMARY KEY (`dni`);
+--
+-- Restricciones para tablas volcadas
+--
+--
+-- Filtros para la tabla `profesores`
+--
+ALTER TABLE `profesores`
+  ADD CONSTRAINT `profesores_ibfk_1` FOREIGN KEY (`dni`) REFERENCES `usuarios` (`dni`);
+COMMIT;
+
 -- --------------------------------------------------------
 
 --
