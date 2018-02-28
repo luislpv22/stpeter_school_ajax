@@ -20,7 +20,6 @@ CREATE TABLE `usuarios` (
   `dni` varchar(9) NOT NULL,
   `nombre` varchar(30) NOT NULL,
   `apellidos` varchar(60) NOT NULL,
-  `usuario` varchar(60) NOT NULL UNIQUE,
   `password` varchar(30) NOT NULL,
   `email` varchar(60) NOT NULL,
   `telefono` int(9) NOT NULL,
@@ -34,23 +33,23 @@ CREATE TABLE `usuarios` (
 -- Volcado de datos para la tabla `usuarios`
 --
 
-INSERT INTO `usuarios` (`dni`, `nombre`, `apellidos`, `usuario`, `password`, `email`, `telefono`, `direccion`, `activo`, `tipo`) VALUES
-('23420102E', 'Carlos', 'Prieto', 'Carlos1', '1234', 'carlos@gmail.com', 624153852, 'C/ Mandel', 1, 'profesor'),
-('54629812T', 'Rocio', 'Villar', 'Rocio1', '1234', 'rocio@gmail.com', 978645312, 'C/ Avenida del Salesman 23', 1, 'profesor'),
-('42010210B', 'Sonia', 'Sanchez', 'Sonia1', '1234', 'sonia@gmail.com', 912345678, 'C/ Capitán Apodaca 4', 1, 'alumno'),
-('24568716R', 'Juan', 'Perez', 'Juan1', '1234', 'juan@gmail.com', 912546212, 'C/ Avenida del Cid', 1, 'profesor'),
-('12456879E', 'Diego', 'García', 'Diego1', '1234', 'diego@gmail.com', 689124653, 'C/  Amoral', 1, 'alumno'),
-('68789122A', 'David', 'Alves', 'David1', '1234', 'david@gmail.com', 687562300, 'C/ Estepa', 0, 'alumno'),
-('46231111Z', 'Luis', 'Dominguez', 'Luis1', '1234', 'luis@gmail.com', 900156112, 'C/ Avenida de Javascript', 1, 'profesor'),
-('98765432D', 'Adrian', 'Gonzalez', 'Adrian1', '1234', 'adrian@gmail.com', 900012345, 'C/ PHP 7', 0, 'alumno'),
-('85214796Y', 'Clara', 'De Guis', 'Clara1', '1234', 'clara@gmail.com', 910289463, 'C/ Montreal', 1, 'alumno'),
-('45625815Q', 'Emilio', 'Marquez', 'Emilio1', '1234', 'emilio@gmail.com', 901023567, 'C/ Avenida del Insert', 0, 'profesor'),
-('66666666B', 'profesor', 'profesor', 'profesor', 'profesor', 'profesor@gmail.com', 901023567, 'C/ Undefined', 1, 'profesor'),
-('88888888P', 'alumno', 'alumno', 'alumno', 'alumno', 'alumno@gmail.com', 910289463, 'C/ alumno', 1, 'alumno'),
-('72158961T', 'Ivan', 'Mendez', 'Ivan1', '1234', 'ivanSales@gmail.com', 612458910, 'C/ Puerto Delete', 1, 'alumno'),
-('11111111R', 'Andrea', 'Villar', 'Andrea1', '1234', 'andreaAd@gmail.com', 978645312, 'C/ Avenida del Salesman 23', 1, 'administrador'),
-('33333333P', 'Manuel', 'Perez', 'Manuel1', '1234', 'manuelAd@gmail.com', 912546212, 'C/ Avenida del Cid 29', 1, 'administrador'),
-('44444444C', 'administrador', 'administrador', 'administrador', 'administrador', 'administrador@gmail.com', 612458910, 'C/ Puerto Rico 14', 1, 'administrador');
+INSERT INTO `usuarios` (`dni`, `nombre`, `apellidos`, `password`, `email`, `telefono`, `direccion`, `activo`, `tipo`) VALUES
+('23420102E', 'Carlos', 'Prieto', '1234', 'carlos@gmail.com', 624153852, 'C/ Mandel', 1, 'profesor'),
+('54629812T', 'Rocio', 'Villar', '1234', 'rocio@gmail.com', 978645312, 'C/ Avenida del Salesman 23', 1, 'profesor'),
+('42010210B', 'Sonia', 'Sanchez', '1234', 'sonia@gmail.com', 912345678, 'C/ Capitán Apodaca 4', 1, 'alumno'),
+('24568716R', 'Juan', 'Perez', '1234', 'juan@gmail.com', 912546212, 'C/ Avenida del Cid', 1, 'profesor'),
+('12456879E', 'Diego', 'García', '1234', 'diego@gmail.com', 689124653, 'C/  Amoral', 1, 'alumno'),
+('68789122A', 'David', 'Alves', '1234', 'david@gmail.com', 687562300, 'C/ Estepa', 0, 'alumno'),
+('46231111Z', 'Luis', 'Dominguez', '1234', 'luis@gmail.com', 900156112, 'C/ Avenida de Javascript', 1, 'profesor'),
+('98765432D', 'Adrian', 'Gonzalez', '1234', 'adrian@gmail.com', 900012345, 'C/ PHP 7', 0, 'alumno'),
+('85214796Y', 'Clara', 'De Guis', '1234', 'clara@gmail.com', 910289463, 'C/ Montreal', 1, 'alumno'),
+('45625815Q', 'Emilio', 'Marquez', '1234', 'emilio@gmail.com', 901023567, 'C/ Avenida del Insert', 0, 'profesor'),
+('66666666B', 'profesor', 'profesor', 'profesor', 'profesor@gmail.com', 901023567, 'C/ Undefined', 1, 'profesor'),
+('88888888P', 'alumno', 'alumno', 'alumno', 'alumno@gmail.com', 910289463, 'C/ alumno', 1, 'alumno'),
+('72158961T', 'Ivan', 'Mendez', '1234', 'ivanSales@gmail.com', 612458910, 'C/ Puerto Delete', 1, 'alumno'),
+('11111111R', 'Andrea', 'Villar', '1234', 'andreaAd@gmail.com', 978645312, 'C/ Avenida del Salesman 23', 1, 'administrador'),
+('33333333P', 'Manuel', 'Perez', '1234', 'manuelAd@gmail.com', 912546212, 'C/ Avenida del Cid 29', 1, 'administrador'),
+('44444444C', 'administrador', 'administrador', 'administrador', 'administrador@gmail.com', 612458910, 'C/ Puerto Rico 14', 1, 'administrador');
 
 
 -- --------------------------------------------------------

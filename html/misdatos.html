@@ -1,0 +1,74 @@
+<form class="form-horizontal" name="frmMisDatos" id="frmMisDatos" action="#">
+	<fieldset>
+		<legend>Modificar mis datos</legend>
+		<br/>
+		<!-- Text input-->
+		<div class="form-group">
+			<label class="col-md-2 control-label" for="modDNI">DNI:</label>  
+			<div class="col-md-4">
+				<input id="modDNI" name="dni" type="text" placeholder="DNI" class="form-control input-md" disabled>
+			</div>
+		</div>
+
+		<div class="form-group" id="mod">
+			<label class="col-md-2 control-label" for="modNombre">Nombre:</label>  
+			<div class="col-md-4">
+				<input id="modNombre" name="nombre" type="text" placeholder="Nombre" class="form-control input-md" disabled > 
+			</div>
+		</div>
+
+		<!-- Text input-->
+		<div class="form-group">
+			<label class="col-md-2 control-label" for="modApellidos">Apellidos:</label>  
+			<div class="col-md-4">
+				<input id="modApellidos" name="apellidos" type="text" placeholder="Apellidos" class="form-control input-md" disabled>
+			</div>
+		</div>
+
+		<!-- password input-->
+		<div class="form-group">
+			<label class="col-md-2 control-label" for="modPassword">Contraseña:</label>  
+			<div class="col-md-4">
+				<input id="modPassword" name="password" type="password" placeholder="Contraseña" class="form-control input-md" required="">
+			</div>
+		</div>
+
+		<!-- Text input-->
+		<div class="form-group">
+			<label class="col-md-2 control-label" for="modEmail">Email:</label>  
+			<div class="col-md-4">
+				<input id="modEmail" name="email" type="text" placeholder="Email" class="form-control input-md" required="">
+			</div>
+		</div>
+
+		<!-- Text input-->
+		<div class="form-group">
+			<label class="col-md-2 control-label" for="modTelefono">Teléfono:</label>  
+			<div class="col-md-4">
+				<input id="modTelefono" name="telefono" type="text" placeholder="Teléfono" class="form-control input-md" required="">
+			</div>
+		</div>
+
+		<!-- Text input-->
+		<div class="form-group">
+			<label class="col-md-2 control-label" for="modDireccion">Dirección:</label>  
+			<div class="col-md-4">
+				<input id="modDireccion" name="direccion" type="text" placeholder="Dirección" class="form-control input-md" required="">
+			</div>
+		</div>
+
+		<!-- Button (Double) -->
+		<div class="form-group">
+			<label class="col-md-2 control-label" for="ModAlu"></label>
+			<div class="col-md-4">
+				<button id="btnModDatosUsu" type="button" name="btnModDatosUsu" class="btn btn-success">Modificar</button>
+			</div>
+		</div>
+	</fieldset>
+</form>
+<script>
+	let form = $('#frmMisDatos');
+	btnModDatosUsu = document.querySelector("#btnModDatosUsu");
+	btnModDatosUsu.addEventListener("click", modificarMisDatos, false);
+</script>
+

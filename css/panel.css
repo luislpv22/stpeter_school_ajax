@@ -235,7 +235,14 @@ input[type="checkbox"].switch-activo:checked + .switch-outer .switch-inner{
 #sidebar li > ul > li.active a {
   background: #fff;
   color: #7386D5;
-} 
+}
+
+.alert {
+  position: absolute;
+  top: 100px;
+  right: 50px;
+  width: 300px;
+}
 
 @media (max-width: 768px) {
   #sidebar {

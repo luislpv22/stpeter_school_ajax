@@ -1,96 +1,118 @@
- $( function() 
- {
- 	function quitarActiveMenu()
- 	{
- 		var menus = document.querySelectorAll('nav li');
-		for (var i=0; i<menus.length; i++)
+function quitarActiveMenu()
+{
+	$('.alert').remove();
+
+	var menus = document.querySelectorAll('nav li');
+	for (var i=0; i<menus.length; i++)
 		menus[i].classList.remove('active');
- 	}
+}
 
+$("#enlaceMisDatos").click(cargaDatosAlumno);
+$("#enlaceMatricular").click(cargaAltaMatricula);
+$("#enlaceBaja").click(cargarBajaMatricula);
+$("#enlaceMatricular").parent().next().click(function() { quitarActiveMenu(); });
 
-	$("#enlaceMisDatos").click(cargaDatosAlumno);
-	$("#enlaceMatricular").click(cargaAltaMatricula);
-	$("#enlaceBaja").click(cargarBajaMatricula);
-	$("#enlaceMatricular").parent().next().click(function(){
-		quitarActiveMenu();
-	});
+function cargaDatosAlumno() {
+	quitarActiveMenu();
+	document.querySelector('#enlaceMisDatos').parentNode.classList.add('active');
 
-	function cargaDatosAlumno() {
-		quitarActiveMenu();
-		document.querySelector('#enlaceMisDatos').parentNode.classList.add('active');
+	// Oculto todos los formularios menos este
+	$("form:not('#frmMisDatos')").hide("normal");
+	$('#listaCalificaciones').hide("normal");
 
-	    // Oculto todos los formularios menos este
-	    $("form:not('#frmModUsuario')").hide("normal");
-	    $('#listaCalificaciones').hide("normal");
+	// Verifico si ya he cargado el formulario antes
+	if ($('#frmMisDatos').length == 0)
+	{
+		$("<div>").appendTo('#formularios').load("html/misdatos.html", function()
+		{
+			let form = document.getElementById("frmMisDatos");
 
-	    // Verifico si ya he cargado el formulario antes
-	   if ($('#frmModUsuario').length == 0) {
-	        $("<div>").appendTo('#formularios').load("html/alumno/alumoddatos.html",
-	            function() {
-	                $.getScript("html/alumno/alumoddatos.js");
-	                 cargarDatosUsuario();
-	            });
-
-	    } else {
-	        // Lo muestro si está oculto
-	        $('#frmModUsuario').show("normal");
-
-	    }
+			form.nombre.value = sesion.nombre;
+			form.apellidos.value = sesion.apellidos;
+			form.dni.value = sesion.dni;
+			form.password.value = sesion.password;
+			form.telefono.value = sesion.telefono;
+			form.direccion.value = sesion.direccion;
+			form.email.value = sesion.correo;
+		});
 	}
+	else
+		$('#frmMisDatos').show();
+}
 
-	function cargaAltaMatricula() {
-		quitarActiveMenu();
-		document.querySelector('#enlaceMatricular').parentNode.classList.add('active');
+function modificarMisDatos()
+{
+	let form = document.getElementById("frmMisDatos");
 
-	    // Oculto todos los formularios menos este
-	    $("form:not('#frmAltaMod')").hide("normal");
-	    $('#listaCalificaciones').hide("normal");
+	if (validarFormUsuario(form))
+	{
+		sNombre = form.nombre.value;
+		sPassword = form.password.value;
+		sApellidos = form.apellidos.value;
+		sDni = form.dni.value;
+		sTelefono = form.telefono.value;
+		sDireccion = form.direccion.value;
+		sEmail = form.email.value;
+		let oAlumno = new Alumno(sNombre, sPassword, sApellidos, sDni, sTelefono, sDireccion, sEmail, 1, "");
+		academia.modificarUsuario(oAlumno);
 
-	    // Verifico si ya he cargado el formulario antes
-	    if ($('#frmAltaMod').length == 0) {
-	        $("<div>").appendTo('#formularios').load("html/alumno/alumatricula.html",
-	            function() {
-	            	$.getScript("html/alumno/optionIdioma.js");
-	            });
-
-	    } else {
-	        // Lo muestro si está oculto
-	        $('#frmAltaMod').show("normal");
-	    }
+		let alert = $('<div class="alert alert-success alert-dismissible"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>Datos modificados.</div>');
+		$('#formularios').append(alert);
 	}
+}
 
-	function cargarBajaMatricula() {
-		quitarActiveMenu();
-		document.querySelector('#enlaceBaja').parentNode.classList.add('active');
-	    // Oculto todos los formularios menos este
-	    $("form:not('#frmDarBaja')").hide("normal");
-	     $('#listaCalificaciones').hide("normal");
+function cargaAltaMatricula()
+{
+	quitarActiveMenu();
+	document.querySelector('#enlaceMatricular').parentNode.classList.add('active');
 
-	    // Verifico si ya he cargado el formulario antes
-	    if ($('#frmDarBaja').length == 0) {
-	        $("<div>").appendTo('#formularios').load("html/alumno/alueliminar.html", 
-	        	function(){
-	        		$.getScript("html/alumno/alueliminar.js"); 
-	        	});
+	// Oculto todos los formularios menos este
+	$("form:not('#frmAltaMod')").hide("normal");
+	$('#listaCalificaciones').hide("normal");
 
-	    } else {
-	        // Lo muestro si está oculto
-	        $('#frmDarBaja').show("normal");
-	    }
+	// Verifico si ya he cargado el formulario antes
+	if ($('#frmAltaMod').length == 0) {
+		$("<div>").appendTo('#formularios').load("html/alumno/alumatricula.html",
+			function() {
+				$.getScript("html/alumno/optionIdioma.js");
+			});
+
+	} else {
+		// Lo muestro si está oculto
+		$('#frmAltaMod').show("normal");
 	}
+}
 
-   } );
+function cargarBajaMatricula()
+{
+	quitarActiveMenu();
+	document.querySelector('#enlaceBaja').parentNode.classList.add('active');
+	// Oculto todos los formularios menos este
+	$("form:not('#frmDarBaja')").hide("normal");
+	 $('#listaCalificaciones').hide("normal");
 
+	// Verifico si ya he cargado el formulario antes
+	if ($('#frmDarBaja').length == 0) {
+		$("<div>").appendTo('#formularios').load("html/alumno/alueliminar.html", 
+			function(){
+				$.getScript("html/alumno/alueliminar.js"); 
+			});
+
+	} else {
+		// Lo muestro si está oculto
+		$('#frmDarBaja').show("normal");
+	}
+}
 
 function resetearCamposModMatricula()
 {
 	var input = document.querySelectorAll('#frmModUsuario input');
-    for (var i=0; i<input.length; i++)
-    input[i].classList.remove("errorFormulario");
+	for (var i=0; i<input.length; i++)
+	input[i].classList.remove("errorFormulario");
 
-    var mensajes = document.querySelectorAll('#frmModUsuario .text-error');
-    for (var i=0; i<mensajes.length; i++)
-    mensajes[i].remove();
+	var mensajes = document.querySelectorAll('#frmModUsuario .text-error');
+	for (var i=0; i<mensajes.length; i++)
+	mensajes[i].remove();
 }
 
 

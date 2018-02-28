@@ -36,16 +36,12 @@ else if (!empty($_POST["add"]))
 }
 else if (!empty($_GET["dni"]))
 {
-
-
 	$sql = "SELECT n.matricula, n.tarea FROM notas n,matriculas m WHERE m.numero=n.matricula AND m.alumno='".$_GET["dni"]."'";
 	$sql .="AND n.tarea='".$_GET["tarea"]."' AND m.curso='".$_GET["curso"]."'";
 	$query = $db->query($sql);
 	$fila = $query->fetch_object();
 	$sql = "DELETE FROM notas WHERE matricula=".$fila->matricula." AND tarea='".$fila->tarea."'";	
 	$query = $db->query($sql);
-	
-	
 }
 
 ?>

@@ -231,6 +231,7 @@ class Academia
 	{
 		// recorrer la array de usuarios hasta encontrar a los que tengan el mismo dni y modificarlo
 		var bEncontrado = false;
+
 		for (var i=0; i<this._usuarios.length && bEncontrado==false; i++) 
 		{
 			if (this._usuarios[i].dni == oUsuario.dni)
@@ -253,15 +254,27 @@ class Academia
 		        {
 					let nuevoUsuario = null;
 					if (this._usuarios[i] instanceof Administrador)
+					{
 						nuevoUsuario = new Administrador(oUsuario.nombre, oUsuario.password, oUsuario.apellidos, oUsuario.dni, oUsuario.telefono, oUsuario.direccion, oUsuario.correo, oUsuario.activo);
+						nuevoUsuario.tipo = 'administrador';
+					}
 					else if (this._usuarios[i] instanceof Profesor)
+					{
 						nuevoUsuario = new Profesor(oUsuario.nombre, oUsuario.password, oUsuario.apellidos, oUsuario.dni, oUsuario.telefono, oUsuario.direccion, oUsuario.correo, oUsuario.activo, 0);
+						nuevoUsuario.tipo = 'profesor';
+					}
 					else
 					{
 						nuevoUsuario = new Alumno(oUsuario.nombre, oUsuario.password, oUsuario.apellidos, oUsuario.dni, oUsuario.telefono, oUsuario.direccion, oUsuario.correo, oUsuario.activo, "");
 						nuevoUsuario.listaCursos = oUsuario.listaCursos;
 						nuevoUsuario.listaCalificaciones = oUsuario.listaCalificaciones;
+						nuevoUsuario.tipo = 'alumno';
 					}
+
+					let sesion = JSON.parse(sessionStorage.usuario);
+					if (nuevoUsuario.dni == sesion.dni)
+						sessionStorage.setItem('usuario',  JSON.stringify(nuevoUsuario));
+
 					this._usuarios[i] = nuevoUsuario;
 		        }
 
