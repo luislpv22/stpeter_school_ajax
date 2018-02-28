@@ -302,7 +302,7 @@ function modificarCalificacion()
 		nota.parentNode.appendChild(div);
 	}
 	else
-		academia.modificarNotaAlumno(oAlumno.dni, new Calificacion(oMatricula.numero, desc, nota.value));
+		academia.modificarCalificacion(oAlumno.dni, new Calificacion(oMatricula.numero, desc, nota.value));
 
 }
 
@@ -468,14 +468,8 @@ function BorrarNota()
 	var curso = this.getAttribute("data-curso");
 	var tarea = this.getAttribute("data-desc");
 	fila.classList.add("ocultar");
-	
-	$.ajax(
-	{
-		url: "api/profesor.php",
-		type: "GET",
-		async: true,
-		data: {'dni': dni, 'curso' : curso, 'tarea' : tarea}
-	});
+
+	academia.borrarCalificacion(dni, curso, tarea);
 }
 
 function mostrarFormularioCalificar()

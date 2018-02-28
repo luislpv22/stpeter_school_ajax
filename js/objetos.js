@@ -433,18 +433,19 @@ class Academia
 		return oCursos;
 	}
 
-	modificarNotaAlumno(sDni, oCalificacion)
+	modificarCalificacion(sDni, oCalificacion)
 	{
-		
-		for (var i=0; i<this._usuarios.length; i++) 
+		for (let i=0; i<this._usuarios.length; i++) 
 		{
 			if (this._usuarios[i].dni == sDni)
 			{
-				var oCalifca = this._usuarios[i].listaCalificaciones;
+				let tCalificaciones = this._usuarios[i].listaCalificaciones;
        
-				for (var j=0; j<oCalifca.length; j++)
-					if (oCalifca[j].matricula == oCalificacion.matricula && oCalifca[j].tarea == oCalificacion.tarea)
-						oCalifca[j].nota = oCalificacion.nota;
+				for (let j=0; j<tCalificaciones.length; j++)
+					if (tCalificaciones[j].matricula == oCalificacion.matricula && tCalificaciones[j].tarea == oCalificacion.tarea)
+						tCalificaciones[j].nota = oCalificacion.nota;
+
+				this._usuarios[i].listaCalificaciones = tCalificaciones;
 			}
 		}
 
@@ -457,7 +458,34 @@ class Academia
 			dataType: "JSON",
 			success: function() {}
 		});
+	}
 
+	borrarCalificacion(sDni, sCurso, sTarea)
+	{
+		for (let i=0; i<this._usuarios.length; i++) 
+		{
+			if (this._usuarios[i].dni == sDni)
+			{
+				let tCalificaciones = this._usuarios[i].listaCalificaciones;
+       
+				for (let j=0; j<tCalificaciones.length; j++)
+				{
+					let oMatricula = this.getMatricula(tCalificaciones[j].matricula);
+					if (oMatricula.curso == sCurso && tCalificaciones[j].tarea == sTarea)
+						tCalificaciones.splice(j, 1);
+				}
+
+				this._usuarios[i].listaCalificaciones = tCalificaciones;
+			}
+		}
+
+		$.ajax(
+		{
+			url: "api/profesor.php",
+			type: "GET",
+			async: true,
+			data: {'dni': sDni, 'curso' : sCurso, 'tarea' : sTarea}
+		});
 	}
 
 	codNuevaMatri()
