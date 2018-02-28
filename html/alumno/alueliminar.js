@@ -25,7 +25,6 @@ function eliminarAlumno (oEvento)
             if (oAjax.readyState == 4 && oAjax.status == 200)
             {
                  alert(oAjax.responseText);
-                 academia.actualizarSesionUsuarios();
                  cerrarSesion();
                  location.href = "index.html";
             }
