@@ -155,20 +155,20 @@ class Academia
 			if (oUsuario.nuevo)
 			{
 				let bInsert = false;
-		        $.ajax(
-		        {
-		            url: "api/usuarios.php",
-		            type: "POST",
-		            async: false,
-		            data: oUsuario,
-		            success: function(result)
-		            {
-		            	if (result)
+				$.ajax(
+				{
+					url: "api/usuarios.php",
+					type: "POST",
+					async: false,
+					data: oUsuario,
+					success: function(result)
+					{
+						if (result)
 							bInsert = true;
-		            }
-		        });
+					}
+				});
 
-		        if (bInsert)
+				if (bInsert)
 					this._usuarios.push(oUsuario);
 			}
 			else
@@ -190,20 +190,20 @@ class Academia
 			if (oCurso.nuevo)
 			{
 				let bInsert = false;
-		        $.ajax(
-		        {
-		            url: "api/cursos.php",
-		            type: "POST",
-		            async: false,
-		            data: oCurso,
-		            success: function(result)
-		            {
-		            	if (result)
+				$.ajax(
+				{
+					url: "api/cursos.php",
+					type: "POST",
+					async: false,
+					data: oCurso,
+					success: function(result)
+					{
+						if (result)
 							bInsert = true;
-		            }
-		        });
+					}
+				});
 
-		        if (bInsert)
+				if (bInsert)
 					this._cursos.push(oCurso);
 			}
 			else
@@ -237,21 +237,21 @@ class Academia
 			if (this._usuarios[i].dni == oUsuario.dni)
 			{
 				let bUpdate = false;
-		        $.ajax(
-		        {
-		            url: "api/usuarios.php",
-		            type: "POST",
-		            async: false,
-		            data: oUsuario,
-		            success: function(result)
-		            {
-		            	if (result)
+				$.ajax(
+				{
+					url: "api/usuarios.php",
+					type: "POST",
+					async: false,
+					data: oUsuario,
+					success: function(result)
+					{
+						if (result)
 							bUpdate = true;
-		            }
-		        });
+					}
+				});
 
-		        if (bUpdate)
-		        {
+				if (bUpdate)
+				{
 					let nuevoUsuario = null;
 					if (this._usuarios[i] instanceof Administrador)
 					{
@@ -276,7 +276,7 @@ class Academia
 						sessionStorage.setItem('usuario',  JSON.stringify(nuevoUsuario));
 
 					this._usuarios[i] = nuevoUsuario;
-		        }
+				}
 
 				bEncontrado = true;
 			}
@@ -285,28 +285,28 @@ class Academia
 
 	modificarCurso(oCurso)
 	{
-    	// recorrer la array de cursos hasta encontrar a los que tengan el mismo codigo y modificarlo
-    	let bEncontrado = false;
+		// recorrer la array de cursos hasta encontrar a los que tengan el mismo codigo y modificarlo
+		let bEncontrado = false;
 
 		for (let i=0; i<this._cursos.length && bEncontrado==false; i++) 
 		{
 			if (this._cursos[i].codigo == oCurso.codigo)
 			{
 				let bUpdate = false;
-		        $.ajax(
-		        {
-		            url: "api/cursos.php",
-		            type: "POST",
-		            async: false,
-		            data: oCurso,
-		            success: function(result)
-		            {
-		            	if (result)
+				$.ajax(
+				{
+					url: "api/cursos.php",
+					type: "POST",
+					async: false,
+					data: oCurso,
+					success: function(result)
+					{
+						if (result)
 							bUpdate = true;
-		            }
-		        });
+					}
+				});
 
-		        if (bUpdate)
+				if (bUpdate)
 					this._cursos[i] = oCurso;
 
 				bEncontrado = true;
@@ -323,20 +323,20 @@ class Academia
 			if (this._matriculas[i].numero == oMatricula.numero)
 			{
 				let bUpdate = false;
-		        $.ajax(
-		        {
-		            url: "api/matriculas.php",
-		            type: "POST",
-		            async: false,
-		            data: oMatricula,
-		            success: function(result)
-		            {
-		            	if (result)
+				$.ajax(
+				{
+					url: "api/matriculas.php",
+					type: "POST",
+					async: false,
+					data: oMatricula,
+					success: function(result)
+					{
+						if (result)
 							bUpdate = true;
-		            }
-		        });
+					}
+				});
 
-		        if (bUpdate)
+				if (bUpdate)
 					this._matriculas[i] = oMatricula;
 
 				bEncontrado = true;
@@ -440,7 +440,7 @@ class Academia
 			if (this._usuarios[i].dni == sDni)
 			{
 				let tCalificaciones = this._usuarios[i].listaCalificaciones;
-       
+	   
 				for (let j=0; j<tCalificaciones.length; j++)
 					if (tCalificaciones[j].matricula == oCalificacion.matricula && tCalificaciones[j].tarea == oCalificacion.tarea)
 						tCalificaciones[j].nota = oCalificacion.nota;
@@ -467,7 +467,7 @@ class Academia
 			if (this._usuarios[i].dni == sDni)
 			{
 				let tCalificaciones = this._usuarios[i].listaCalificaciones;
-       
+	   
 				for (let j=0; j<tCalificaciones.length; j++)
 				{
 					let oMatricula = this.getMatricula(tCalificaciones[j].matricula);
@@ -524,7 +524,7 @@ class Academia
 			if (this._usuarios[i].dni == dni)
 				this._usuarios[i].addNota(oCalificacion);
 
-	    $.ajax({
+		$.ajax({
 			url: "api/profesor.php",
 			type: "POST",
 			async: true,

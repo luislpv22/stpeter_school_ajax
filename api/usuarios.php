@@ -28,7 +28,7 @@ else if (!empty($_POST))
 	$sql = "UPDATE usuarios SET nombre='".$_POST['nombre']."', apellidos='".$_POST['apellidos']."', password='".$_POST['password']."', email='".$_POST['correo']."', telefono=".$_POST['telefono'].", direccion='".$_POST['direccion']."', activo='".$_POST['activo']."' WHERE dni='".$_POST['dni']."'";
 
 	if (isset($_POST['nuevo']))
-		$sql = "INSERT INTO usuarios (`dni`, `nombre`, `apellidos`, `usuario`, `password`, `email`, `telefono`, `direccion`, `activo`, `tipo`) VALUES ('".$_POST['dni']."', '".$_POST['nombre']."', '".$_POST['apellidos']."', '', '".$_POST['password']."', '".$_POST['correo']."', '".$_POST['telefono']."', '".$_POST['direccion']."', 1, '".$_POST['tipo']."')";
+		$sql = "INSERT INTO usuarios (`dni`, `nombre`, `apellidos`, `password`, `email`, `telefono`, `direccion`, `activo`, `tipo`) VALUES ('".$_POST['dni']."', '".$_POST['nombre']."', '".$_POST['apellidos']."', '".$_POST['password']."', '".$_POST['correo']."', '".$_POST['telefono']."', '".$_POST['direccion']."', 1, '".$_POST['tipo']."')";
 
 	if ($db->query($sql))
 		echo true;
